@@ -1,0 +1,61 @@
+name: Verify and attest Obsidian release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Existing Obsidian release tag (for example, 1.2.3)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+  artifact-metadata: write
+
+jobs:
+  attest:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+    steps:
+      - name: Check out tagged plugin source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+          persist-credentials: false
+
+      - name: Verify release assets exactly match source files
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$RELEASE_TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo 'Release tag must be plain SemVer without a v prefix' >&2
+            exit 1
+          fi
+          expected_version="$(node -p "require('./manifest.json').version")"
+          test "$expected_version" = "$RELEASE_TAG"
+
+          mkdir -p release
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --dir release \
+            --pattern 'main.js' --pattern 'styles.css' --pattern 'manifest.json'
+
+          for file in main.js styles.css manifest.json; do
+            test -s "release/$file"
+            cmp "$file" "release/$file"
+          done
+          count="$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets | length')"
+          test "$count" -eq 3
+          echo 'Release contains exactly the three verified Obsidian plugin files.'
+
+      - name: Sign release artifacts with GitHub build provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            main.js
+            styles.css
+            manifest.json

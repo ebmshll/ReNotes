@@ -62,10 +62,12 @@ Explore the new full-resolution marketing visuals: [hero](docs/images/marketing/
 
 *All visuals use ReNotes interface components and illustrative sample content, rendered with HTML, CSS and SVG.*
 
+**Release 1.2.3:** Improves CSS compatibility with Obsidian 1.4.5, removes an unnecessary `!important`, and introduces signed artifact provenance via GitHub Actions. User-facing features and note data remain unchanged.
+
 ## Installation
 
-1. [Download ReNotes from GitHub Releases](https://github.com/ebmshll/ReNotes/releases/latest).
-2. Extract `main.js`, `styles.css`, and `manifest.json` into `.obsidian/plugins/recent-notes-feed/` inside your Obsidian vault.
+1. Open the [latest GitHub Release](https://github.com/ebmshll/ReNotes/releases/latest) and download the three individual assets: `main.js`, `manifest.json`, and `styles.css`.
+2. Place all three files inside `.obsidian/plugins/recent-notes-feed/` in your Obsidian vault.
 3. Restart Obsidian, then enable **ReNotes** in **Settings → Community plugins**.
 4. To change the interface language, open **Settings → Community plugins → ReNotes → Interface language**.
 
@@ -77,7 +79,7 @@ Explore the new full-resolution marketing visuals: [hero](docs/images/marketing/
 
 **Can I use it on mobile?** ReNotes includes mobile-friendly layouts. Dragging Markdown into Canvas is a desktop-oriented feature.
 
-**Is the plugin listed in Obsidian's Community Plugins directory?** Installation is currently available through the GitHub release archive.
+**Is the plugin listed in Obsidian's Community Plugins directory?** Installation is currently available through the individual GitHub Release assets.
 
 ## Source license
 
@@ -133,14 +135,13 @@ ReNotes 提供**釘選筆記、關鍵字搜尋、檔案類型篩選、資料夾�
 
 目前透過 **GitHub Releases** 提供手動安裝：
 
-1. [下載最新版本的 ReNotes ZIP](https://github.com/ebmshll/ReNotes/releases/latest)。
-2. 解壓縮取得 `main.js`、`styles.css`、`manifest.json`。
-3. 將三個檔案放進 Obsidian Vault 的 `.obsidian/plugins/recent-notes-feed/` 資料夾。
-4. 重新啟動 Obsidian，進入「**設定 → 社群外掛**」，啟用 **ReNotes**。
+1. 前往 [ReNotes 最新 GitHub Release](https://github.com/ebmshll/ReNotes/releases/latest)，在 Assets 分別下載 `main.js`、`manifest.json` 與 `styles.css`。
+2. 將這三個檔案放入 Obsidian Vault 的 `.obsidian/plugins/recent-notes-feed/` 資料夾。
+3. 重新啟動 Obsidian，進入「**設定 → 社群外掛**」，啟用 **ReNotes**。
 
 在「**設定 → 社群外掛 → ReNotes → 介面語言**」可選擇「自動（跟隨 Obsidian）」、「繁體中文」或「英文」。
 
-**目前版本：** v1.2.2 · **外掛 ID：** `recent-notes-feed` · **Manifest 最低版本：** Obsidian 1.4.0
+**目前版本：** 1.2.3 · **外掛 ID：** `recent-notes-feed` · **Manifest 最低版本：** Obsidian 1.4.0
 
 ## 常見問題（FAQ）
 
@@ -157,7 +158,7 @@ ReNotes 提供**釘選筆記、關鍵字搜尋、檔案類型篩選、資料夾�
 外掛包含行動裝置版面與觸控操作；Markdown 拖曳進 Canvas 的功能則主要針對桌面版 Obsidian。
 
 ### 需要從 Obsidian 社群外掛目錄安裝嗎？
-目前請使用本頁的 GitHub Release ZIP 手動安裝。
+目前請從 GitHub Release 的 Assets 下載三個必要外掛檔案，依上述步驟手動安裝。
 
 ### 宣傳圖片與下載
 

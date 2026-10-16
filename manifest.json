@@ -1,9 +1,9 @@
 {
   "id": "recent-notes-feed",
   "name": "ReNotes",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "minAppVersion": "1.4.0",
-  "description": "ReNotes: 近期筆記與 Canvas 側欄 / Recent notes and Canvas sidebar. 繁體中文 + English.",
+  "description": "Recent Markdown notes and Canvas boards in one sidebar, with previews, pins, date navigation, and English/Traditional Chinese interface.",
   "author": "ReNotes",
   "authorUrl": "",
   "isDesktopOnly": false

@@ -1,5 +1,13 @@
 # Changelog / 更新紀錄
 
+## 1.2.3 — Obsidian review compatibility
+
+- Remove unsupported CSS `display: contents` while preserving responsive cards and the date navigator.
+- Hide the date popover without CSS `!important`.
+- Update `manifest.json` description and release assets for community review.
+- Add a GitHub Actions workflow to cryptographically attest release artifacts (`main.js`, `styles.css`, `manifest.json`).
+- **繁體中文：**改善 Obsidian CSS 相容性、版本描述與發布檔案驗證；原有操作功能保留。
+
 ## v1.2.2 — English and Traditional Chinese / 雙語介面
 
 - Automatically follows the Obsidian language or allows manual Traditional Chinese and English selection.
