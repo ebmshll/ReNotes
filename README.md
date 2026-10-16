@@ -81,9 +81,9 @@ Explore the new full-resolution marketing visuals: [hero](docs/images/marketing/
 
 **Is the plugin listed in Obsidian's Community Plugins directory?** Installation is currently available through the individual GitHub Release assets.
 
-## Source license
+## License
 
-Source code is publicly viewable. No separate open-source license has been granted at this time.
+ReNotes is released under the [MIT License](LICENSE). You may use, modify, distribute, and use it commercially, provided that the copyright notice and license text are retained in copies or substantial portions of the software.
 
 ---
 
@@ -159,6 +159,10 @@ ReNotes 提供**釘選筆記、關鍵字搜尋、檔案類型篩選、資料夾�
 
 ### 需要從 Obsidian 社群外掛目錄安裝嗎？
 目前請從 GitHub Release 的 Assets 下載三個必要外掛檔案，依上述步驟手動安裝。
+
+### 授權條款
+
+ReNotes 採用 [MIT License](LICENSE) 開源授權，允許使用、修改、散布及商業使用。重新散布軟體副本或其主要部分時，請保留著作權與授權聲明。
 
 ### 宣傳圖片與下載
 
