@@ -1,16 +1,24 @@
-# ReNotes｜Obsidian 近期筆記與 Canvas 白板側欄外掛 · Recent Notes Plugin
+# ReNotes — Recent Notes & Canvas Sidebar for Obsidian
 
-**把最近編輯的筆記、Canvas 白板與重要內容，整理成隨手就能找到的側欄。**
+*Obsidian 近期筆記與 Canvas 白板側欄外掛*
+
+**Find the note. Keep the flow.**
+
+把最近編輯的筆記、Canvas 白板與重要內容，整理成隨手就能找到的側欄。
 
 ReNotes 是一款 **Obsidian 近期筆記外掛（Recent Notes Plugin）**。無論你使用 Markdown 寫每日紀錄、以 Canvas 整理構想，還是在不同專案間切換，都能透過日期分組、視覺縮圖、釘選與快速搜尋，直接回到需要的筆記。
 
 **ReNotes** brings your recently edited **Markdown notes and Canvas boards** into one visual **Obsidian sidebar**, with thumbnails, pinned notes, date navigation, search, and Traditional Chinese / English support.
 
-[**下載 ReNotes v1.2.2 / Download**](https://github.com/jason6666h/ReNotes/releases/latest) · [功能圖文介紹](#功能圖文介紹) · [安裝教學](#安裝-renotes) · [English](#english--obsidian-recent-notes--canvas-sidebar)
+[**Download / 下載 ReNotes**](https://github.com/jason6666h/ReNotes/releases/latest) · [Feature showcase](#feature-showcase) · [安裝教學](#安裝-renotes) · [English documentation](#english--obsidian-recent-notes--canvas-sidebar)
 
-![ReNotes Obsidian 近期筆記外掛介面：Markdown 筆記、Canvas 白板縮圖、釘選卡片和日期分組](docs/images/feature-overview-zh-tw.png)
+![ReNotes Obsidian recent notes plugin hero banner: visual Markdown and Canvas sidebar, date groups, and pinned note previews](docs/images/marketing/01-renotes-hero-en.png)
 
-*ReNotes 近期筆記側欄實際介面樣式，搭配示範筆記呈現。*
+*ReNotes interface showcase, code-rendered with HTML, CSS and SVG using illustrative notes.*
+
+## Feature showcase
+
+Explore ReNotes at a glance: **recent Markdown and Canvas notes, jump-to-date navigation, linked documents, and bilingual interface options.** All visuals below are designed in English and rendered from the plugin UI.
 
 ## 為什麼使用 ReNotes？
 
@@ -26,13 +34,17 @@ ReNotes 是一款 **Obsidian 近期筆記外掛（Recent Notes Plugin）**。無
 
 支援多種排序依據，包括**檔案修改時間、有效編輯時間、最近開啟時間及本機編輯時間**；可依使用情境選擇。
 
+![ReNotes overview: recent Markdown notes and Obsidian Canvas boards in one pinned and searchable sidebar](docs/images/marketing/02-renotes-overview-en.png)
+
+*ONE SIDEBAR. EVERY RECENT IDEA. — Visual previews, pinned cards, and quick search.*
+
 ### 02｜日期快速跳轉：回到某一天，不必篩掉其他筆記
 
 點擊日期標題旁的 **`⋯`**，即可查看最近 **7 個有筆記的日期**與各日期筆數；更早的日期可以按月份展開。選擇日期後會**捲動到該天**，原本的近期筆記清單仍完整保留。
 
-![ReNotes Obsidian 日期導覽功能：最近七個有筆記的日期、每日筆數、月份展開與一鍵跳轉](docs/images/feature-date-jump-en.png)
+![ReNotes Obsidian date navigation feature: seven recent active days, note counts and older monthly navigation](docs/images/marketing/03-renotes-date-navigation-en.png)
 
-*日期跳轉示範：選擇日期是定位到該日期區塊，不是只顯示當天筆記。日期和筆數以示範資料呈現。*
+*YOUR NOTES. ANY DAY. — Jump to the selected day without filtering the rest of the list.*
 
 ### 03｜Canvas 連結筆記：用極細圓框快速開啟關聯文件
 
@@ -40,9 +52,9 @@ ReNotes 是一款 **Obsidian 近期筆記外掛（Recent Notes Plugin）**。無
 
 右下角的**檔案類型圖示＋時間**與上方縮圖保持水平置中，讓卡片資訊更整齊，也減少視覺干擾。
 
-![ReNotes Obsidian Canvas 連結筆記示範：Markdown 與 Canvas 圓框、最多五字標題、縮圖及時間置中](docs/images/feature-canvas-links-zh-tw.png)
+![ReNotes Canvas linked notes feature: Markdown and Canvas links in fine-outline chips with thumbnail-aligned timestamps](docs/images/marketing/04-renotes-canvas-links-en.png)
 
-*Canvas 關聯筆記示範：只列出筆記與白板連結，保留原有 Canvas 縮圖。*
+*FOLLOW THE CONNECTIONS. — Compact link chips keep Markdown and Canvas documents within reach.*
 
 ### 04｜釘選、搜尋與自適應卡片版面
 
@@ -54,9 +66,9 @@ ReNotes 提供**釘選筆記、關鍵字搜尋、檔案類型篩選、資料夾�
 
 支援 **繁體中文（Traditional Chinese）與英文（English）**，可自動跟隨 Obsidian 語言，或在 ReNotes 設定中手動選擇。側欄、日期名稱、設定選項與操作提示都有對應翻譯。
 
-![ReNotes Obsidian Recent Notes Plugin English sidebar interface with Canvas boards, Markdown notes and pinned previews](docs/images/feature-overview-en.png)
+![ReNotes Obsidian bilingual plugin interface: English and Traditional Chinese recent notes sidebar layouts](docs/images/marketing/05-renotes-languages-en.png)
 
-*English interface preview — recent notes, Canvas boards, pinned items and date groups.*
+*YOUR WORKFLOW. YOUR LANGUAGE. — English and Traditional Chinese, right inside Obsidian.*
 
 ## 安裝 ReNotes
 
@@ -111,9 +123,9 @@ It is a useful companion for **daily notes, Bullet Journaling, project notes, kn
 
 ### Screenshots
 
-Explore the illustrated features above, or open the full-size screenshots: [English recent notes](docs/images/feature-overview-en.png), [date navigator](docs/images/feature-date-jump-en.png), and [Canvas linked documents](docs/images/feature-canvas-links-zh-tw.png).
+Explore the new full-resolution marketing visuals: [hero](docs/images/marketing/01-renotes-hero-en.png), [recent notes](docs/images/marketing/02-renotes-overview-en.png), [date navigation](docs/images/marketing/03-renotes-date-navigation-en.png), [Canvas links](docs/images/marketing/04-renotes-canvas-links-en.png), and [bilingual interface](docs/images/marketing/05-renotes-languages-en.png). A [1280 × 640 social preview](docs/images/marketing/renotes-social-preview-en.png) is also available.
 
-*The feature images use the ReNotes interface with illustrative sample content.*
+*All visuals use ReNotes interface components and illustrative sample content, rendered with HTML, CSS and SVG.*
 
 ### Installation
 
