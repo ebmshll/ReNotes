@@ -9,8 +9,329 @@ const {
   TFile,
   Platform,
   setIcon,
-  addIcon
+  addIcon,
+  moment
 } = require("obsidian");
+
+// ReNotes interface localization (bundled so the plugin has no additional runtime files).
+const EN_TRANSLATIONS = Object.freeze({
+  "沒有其他文字": "No additional text",
+  "Canvas 白板": "Canvas board",
+  "{0} 個元素": "{0} elements",
+  "{0} 筆記": "{0} notes",
+  "{0} 文字": "{0} text nodes",
+  "{0} 分組": "{0} groups",
+  "{0} 網頁": "{0} links",
+  "{0} 連線": "{0} connections",
+  "空白 Canvas": "Empty Canvas",
+  "連結筆記：": "Linked notes:",
+  "分組：": "Groups:",
+  "網頁：": "Web links:",
+  "今天": "Today",
+  "昨天": "Yesterday",
+  "過去 7 天": "Past 7 days",
+  "剛剛": "Just now",
+  "{0} 分鐘": "{0} min",
+  "{0} 小時": "{0} hr",
+  "{0} 天前": "{0} days ago",
+  "Canvas · {0} 筆記": "Canvas · {0} notes",
+  "筆記": "Note",
+  "依檔案修改時間排序；跨裝置通常較接近，但 Dropbox 等同步工具可能更動時間。": "Sorts by file modification time. Results tend to be more consistent across devices, but sync services may change timestamps.",
+  "最近開啟時間只記錄在目前裝置；其他電腦或手機可能顯示不同順序。": "Recently opened times are stored on this device only. The order may differ on other devices.",
+  "本機編輯時間不會同步到其他裝置；不同裝置的排序可能不同。": "Local edit times are not synced to other devices, so sorting may differ.",
+  "智慧排序含本機開啟與編輯紀錄；不同裝置的順序可能不同。": "Smart sorting includes local open and edit history. The order may differ between devices.",
+  "有效編輯時間採本機內容紀錄；首次觀察與同步狀態不同時，裝置間排序可能不同。": "Effective edit times rely on local content history. Differences in first observation and sync state may affect the order across devices.",
+  "有效編輯": "Effective edit",
+  "最近開啟": "Recently opened",
+  "檔案修改": "File modified",
+  "本機編輯": "Local edit",
+  "載入最近修改...": "Loading recent notes…",
+  "ReNotes 載入失敗，請查看 Console": "ReNotes failed to load. Check the console.",
+  "近期": "Recent",
+  "載入失敗。": "Could not load.",
+  "搜尋與篩選": "Search and filter",
+  "篩選": "Filter",
+  "重新整理": "Refresh",
+  "複製 Debug 資訊": "Copy debug information",
+  "搜尋": "Search",
+  "清除搜尋": "Clear search",
+  "全部": "All",
+  "只顯示{0}": "Show {0} only",
+  "類型": "Type",
+  "資料夾": "Folders",
+  "排除資料夾": "Exclude folders",
+  "排除標籤": "Exclude tags",
+  "多個項目以逗號分隔": "Separate multiple entries with commas",
+  "排序方式": "Sort by",
+  "有效編輯時間（忽略無內容變更的重寫）": "Effective edit time (ignores rewrites without content changes)",
+  "智慧": "Smart",
+  "修改時間": "Modified time",
+  "清除篩選": "Clear filters",
+  "項目": "items",
+  "{0} / {1} 個{2}": "{0} / {1} {2}",
+  "{0} 個項目": "{0} items",
+  "讀取 {0}｜快取 {1}/{2}｜解析 {3}｜{4}ms": "Reads {0} · Cache {1}/{2} · Parsed {3} · {4} ms",
+  "跳轉日期": "Jump to date",
+  " 筆，跳轉": " notes, jump to date",
+  " 筆": " notes",
+  "更多日期（依月份）": "More dates (by month)",
+  "沒有符合的項目": "No matching items",
+  "試試其他條件，或清除篩選。": "Try different criteria or clear the filters.",
+  "開啟或建立筆記後，項目會顯示在這裡。": "Open or create a note to see it here.",
+  "偵錯：Markdown {0} 篇，Canvas {1} 個，通過資料夾篩選 {2} 個，實際讀取 {3} 個，快取命中 {4} 個，快取寫入 {5} 個，排除標籤 {6} 篇，耗時 {7}ms。": "Debug: {0} Markdown files, {1} Canvas boards, {2} after folder filtering, {3} reads, {4} cache hits, {5} cache writes, {6} tag exclusions, {7} ms.",
+  "釘選": "Pinned",
+  "拖曳筆記到 Canvas": "Drag note to Canvas",
+  "拖曳 ": "Drag ",
+  " 到 Canvas": " to Canvas",
+  "無法拖曳此筆記，請從 Obsidian 檔案總管拖入 Canvas。": "Unable to drag this note. Drag it into Canvas from the Obsidian file explorer instead.",
+  "此 Obsidian 版本無法使用 ReNotes 拖曳，請改由檔案總管拖入。": "Drag is unavailable in this version of Obsidian. Use the file explorer instead.",
+  "開啟 {0}": "Open {0}",
+  "Markdown 筆記": "Markdown note",
+  "開啟 ": "Open ",
+  " 的選單": " menu",
+  "ReNotes 設定": "ReNotes settings",
+  "活動紀錄只存本裝置，手機與電腦各自獨立；釘選會隨 vault 同步。": "Activity history is stored on this device; pinned notes follow your Vault sync.",
+  "版面": "Layout",
+  "顯示摘要": "Show previews",
+  "顯示連結筆記晶片": "Show linked-note chips",
+  "在 Canvas 卡片底部以 A1 極細圓框顯示連結筆記，每個名稱最多五字；點擊可開啟。": "Show links below Canvas cards as A1 fine-outline chips (up to five visible characters each). Click to open the linked document.",
+  "顯示 Canvas 詳細統計": "Show detailed Canvas statistics",
+  "在寬版底部列下方顯示灰色統計文字，預設關閉。": "Show small statistics below the card footer in wide layouts. Off by default.",
+  "依日期分組": "Group by date",
+  "所有寬度均使用日期膠囊；更早項目依月份分組，跨年保留年份。": "Use date pills at every width; older notes are grouped by month, with years shown when needed.",
+  "顯示圖片縮圖": "Show image thumbnails",
+  "右側顯示筆記第一張 vault 內圖片，預設開啟；忽略外部網址與超過 6 MB 的圖片。窄版隱藏。": "Show the first image stored in the Vault on the right of a note. Enabled by default; skips external images and images larger than 6 MB. Hidden in narrow layouts.",
+  "顯示 Canvas 縮圖": "Show Canvas thumbnails",
+  "右側顯示快取的 Canvas 節點縮圖，預設開啟；窄版隱藏。": "Show cached previews of Canvas nodes on the right. Enabled by default; hidden in narrow layouts.",
+  "顯示資料夾": "Show folders",
+  "在卡片下方左側顯示資料夾名稱，保留右側的時間對齊；預設關閉。": "Show the folder at the lower left of the card to keep the right-aligned timestamp centered. Off by default.",
+  "顯示標籤": "Show tags",
+  "在卡片下方左側附上最多兩個標籤，預設關閉。": "Show up to two tags at the lower left of the card. Off by default.",
+  "預覽行數（進階）": "Preview lines (advanced)",
+  "預設跟隨版面密度（1／2／3 行）；明確選擇後覆蓋密度。窄版最多 2 行，tiny 隱藏預覽。": "Follow the layout density by default (1/2/3 lines). Explicit selections override the density. Narrow layouts show up to 2 lines; tiny layouts hide previews.",
+  "跟隨密度": "Follow density",
+  "1 行": "1 line",
+  "2 行": "2 lines",
+  "3 行": "3 lines",
+  "版面密度": "Card density",
+  "緊湊／標準／寬鬆控制卡片內距、標題、預覽行數與縮圖尺寸；寬度改變時仍有效。": "Compact, Standard, and Spacious control card padding, titles, preview lines, and thumbnail size. Still applies when sidebar width changes.",
+  "緊湊": "Compact",
+  "標準": "Standard",
+  "寬鬆": "Spacious",
+  "一般設定": "General",
+  "顯示最近幾篇": "Maximum recent items",
+  "建議 20–100。數字越大，讀取摘要越多。": "20–100 recommended. Higher values load more previews.",
+  "手機版優化": "Mobile options",
+  "啟用手機版優化": "Optimize for mobile",
+  "手機版會加大觸控區、調整搜尋與篩選列、支援長按開啟選單。": "Increase touch targets, adjust search and filter controls, and enable long-press menus on mobile.",
+  "手機列表樣式": "Mobile list style",
+  "保留手機偏好：標準版面密度時使用此樣式；明確選擇緊湊或寬鬆版面密度時優先使用版面密度。": "Use this when card density is Standard; an explicit Compact or Spacious density takes priority.",
+  "舒適": "Comfortable",
+  "閱讀": "Reading",
+  "手機預覽行數（進階）": "Mobile preview lines (advanced)",
+  "預設沿用桌機的密度或預覽覆蓋，最多 3 行；窄版最多 2 行，tiny 隱藏。": "Follow desktop density or the preview override by default, up to 3 lines. Narrow layouts allow up to 2; tiny layouts hide previews.",
+  "沿用桌機設定": "Use desktop setting",
+  "手機顯示選單按鈕": "Show mobile menu button",
+  "在每筆項目右側顯示 ⋯，方便開新分頁、重新命名、刪除或在資料夾中顯示。": "Show a ⋯ button on each card to open it in a new tab, rename, delete, or reveal it in its folder.",
+  "手機長按開啟右鍵選單": "Long-press context menu",
+  "在手機上長按筆記項目約半秒，會開啟和右鍵相同的選單。": "Long-press a note on mobile for about half a second to open the same menu as right-click.",
+  "手機壓縮頂部工具列": "Compact mobile header",
+  "減少標題、搜尋與篩選列佔用高度，避免列表被鍵盤與工具列擠壓。": "Reduce the space used by the title, search, and filters so the keyboard and toolbar do not crowd the list.",
+  "手機隱藏 Canvas 詳細資訊": "Hide Canvas details on mobile",
+  "只保留 Canvas 標題與摘要，不顯示統計晶片與連結筆記晶片；適合小螢幕。": "Show only the Canvas title and preview, hiding stats and linked-note chips. Useful on small screens.",
+  "拖曳筆記到 Canvas（桌面版）": "Drag notes into Canvas (desktop)",
+  "在 Markdown 卡片右上方提供拖曳把手，放進 Canvas 時使用 Obsidian 原生檔案引用；不複製筆記或修改筆記內容。": "Show a drag handle at the upper right of Markdown cards. Dropping into Canvas uses an Obsidian file reference; it does not copy the note or change its contents.",
+  "排序模式": "Sorting mode",
+  "有效編輯時間只在內容指紋改變時更新，排序、卡片時間與日期分組都使用它。紀錄只存本機，不會同步。首次觀察以當時 mtime 為基準；已被重寫的舊時間無法回推，不會自我修正。未讀取、超大或讀取失敗的檔案以 mtime 暫代。其他排序沿用原本時間。": "Effective edit time changes only when the content fingerprint changes. Card timestamps, ordering, and date groups use this time. History stays on this device. Initial observation uses the current mtime; earlier overwritten times cannot be recovered. Unreadable, oversized, or failed files fall back to mtime. Other sorting modes use their usual timestamps.",
+  "檔案修改時間": "File modification time",
+  "最近開啟時間": "Recently opened time",
+  "本機編輯時間": "Local edit time",
+  "智慧排序：本機編輯 / 開啟 / 檔案修改": "Smart sorting: local edit / open / file modification",
+  "重設有效編輯時間基準": "Reset effective edit-time baseline",
+  "清空本機內容指紋與有效時間；下次摘要讀取以目前 mtime 為基準。無法恢復被重寫前的時間，不會修改筆記或同步設定。": "Clear local content fingerprints and effective times. On the next preview read, current mtime becomes the baseline. Earlier timestamps cannot be restored; notes and synced settings are unchanged.",
+  "重設基準": "Reset baseline",
+  "已重設有效編輯時間基準": "Effective edit-time baseline reset",
+  "記錄最近開啟": "Track recently opened notes",
+  "只寫入本裝置儲存，不會同步。用於最近開啟與智慧排序。": "Store open activity on this device only for Recently opened and Smart sorting.",
+  "記錄本機編輯": "Track local edits",
+  "偵測 Obsidian 編輯器變更，記錄本機編輯時間；同步工具改 mtime 時不會被當成本機編輯。": "Detect changes in the Obsidian editor and record local edit time. Sync-tool changes to mtime are not treated as local edits.",
+  "內容變更確認": "Confirm content changes",
+  "v0.3.1 新增。只有內容 hash 真的改變時，才記為本機編輯；可避免手機只是點出鍵盤就排序更新。": "Record local edits only when the content hash actually changes. Prevents reordering on mobile from merely opening the keyboard.",
+  "手機防誤判模式": "Prevent false mobile edits",
+  "手機版開啟筆記後短時間內，若內容沒有變化，會被視為焦點 / 鍵盤事件，不記為本機編輯。": "Soon after opening a note on mobile, focus or keyboard events without content changes are ignored as edits.",
+  "內容確認延遲": "Content check delay",
+  "桌機 / 手機的 hash debounce。數字越大越省電，也越不容易受連續事件干擾。": "Hash debounce times for desktop and mobile. Larger values use less power and reduce interference from repeated events.",
+  "桌機 ms，例如 900": "Desktop ms, e.g. 900",
+  "手機 ms，例如 1800": "Mobile ms, e.g. 1800",
+  "大檔案略過門檻": "Skip hashing large files",
+  "超過此大小就不做內容 hash，避免大型筆記或 Canvas 影響手機效能。單位：KB。": "Skip content hashing above this size to avoid slowing down large notes or Canvas boards on mobile. Unit: KB.",
+  "顯示排序來源": "Show sort-time source",
+  "在每個項目時間旁顯示：有效編輯、檔案修改、最近開啟或本機編輯。": "Show Effective edit, File modified, Recently opened, or Local edit next to each card timestamp.",
+  "清除本機排序紀錄": "Clear local sorting history",
+  "清除外掛記錄的最近開啟與本機編輯時間；不會刪除任何筆記。": "Clear recorded open and local edit times without deleting any notes.",
+  "清除": "Clear",
+  "確定要清除 ReNotes 的本機排序紀錄嗎？\n\n這不會刪除任何筆記，只會清除最近開啟 / 本機編輯時間。": "Clear ReNotes local sorting history?\n\nThis only clears recent-open and local-edit times; it does not delete notes.",
+  "已清除本機排序紀錄": "Local sorting history cleared",
+  "標題來源": "Title source",
+  "自動：優先使用第一個 H1，沒有 H1 時使用檔名。": "Auto: prefer the first H1, or use the filename if there is no H1.",
+  "自動": "Auto",
+  "檔名": "Filename",
+  "第一個 H1": "First H1",
+  "點擊筆記開啟方式": "Open notes by clicking",
+  "固定行為：左鍵取代目前主要分頁；滑鼠中鍵或 Ctrl/Cmd 點擊另開新分頁。右鍵選單包含開新分頁、新視窗開啟與刪除，並保留 Obsidian 原本的檔案選單項目。": "Fixed behavior: left-click replaces the current main tab; middle-click or Ctrl/Cmd-click opens a new tab. The context menu includes opening in a new tab, opening in a new window, and deleting, while retaining Obsidian file-menu actions.",
+  "包含 Canvas": "Include Canvas",
+  "開啟後，.canvas 檔會和 Markdown 筆記一起依最近修改時間排序顯示；不會建立新的 Canvas。": "Include .canvas files alongside Markdown notes in the recent list; does not create new Canvas files.",
+  "Canvas 深度支援": "Canvas options",
+  "Canvas 摘要模式": "Canvas preview mode",
+  "智慧模式會依序使用白板文字、分組名稱、連結筆記與結構統計。": "Smart preview uses board text, group labels, linked notes, then structural statistics.",
+  "智慧摘要": "Smart preview",
+  "優先顯示文字節點": "Prefer text nodes",
+  "優先顯示連結筆記": "Prefer linked notes",
+  "只顯示結構統計": "Structural statistics only",
+  "Canvas 預覽項目數": "Canvas preview item limit",
+  "控制 Canvas 摘要與連結筆記晶片最多顯示幾個項目。": "Maximum number of items in Canvas previews and linked-note chips.",
+  "顯示搜尋框": "Show search field",
+  "顯示類型篩選": "Show type filter",
+  "在篩選面板內顯示：全部 / 筆記 / Canvas。": "Show All / Notes / Canvas in the filter panel.",
+  "預設類型篩選": "Default type filter",
+  "最近修改面板開啟時預設顯示的檔案類型。": "File type selected when the Recent sidebar opens.",
+  "顯示結果數量": "Show result count",
+  "在標題下方顯示目前列表項目數。": "Show the number of listed items beneath the title.",
+  "固定頂部工具列": "Sticky header",
+  "捲動列表時，標題、搜尋與篩選區會固定在面板上方。": "Keep the title, search, and filters at the top when scrolling the list.",
+  "時間格式": "Time format",
+  "控制游標停留時的時間提示；清單固定今天／昨天 HH:mm、七天內星期、更早日期。": "Controls hover-time details; list timestamps show HH:mm today/yesterday, weekday within the past week, and dates for older entries.",
+  "簡短": "Short",
+  "完整日期時間": "Full date and time",
+  "只包含這些資料夾": "Include only these folders",
+  "每行一個資料夾。留空代表全 Vault。": "One folder per line. Leave blank to include the entire Vault.",
+  "日記\n專案": "Journal\nProjects",
+  "每行一個資料夾，例如 Templates、Archive。": "One folder per line, e.g. Templates or Archive.",
+  "每行一個標籤，例如 #archive、#封存。": "One tag per line, e.g. #archive or #archived.",
+  "最近修改面板位置": "Recent sidebar position",
+  "建議選左側，會比較接近 UpNote 的筆記列表。": "Left is recommended for a familiar notes-list layout.",
+  "左側": "Left",
+  "右側": "Right",
+  "面板位置設定已儲存，請關閉舊的最近修改面板後重新開啟。": "Sidebar position saved. Close and reopen the old Recent sidebar to apply it.",
+  "效能與快取": "Performance and cache",
+  "啟用摘要快取": "Enable preview cache",
+  "檔案修改時間與大小沒有改變時，重用已解析的標題、摘要、標籤與 Canvas 結構，減少重複讀取檔案。": "Reuse parsed titles, previews, tags, and Canvas structure when file size and mtime are unchanged.",
+  "快取上限": "Cache entry limit",
+  "最多保留幾個檔案的解析結果。大量筆記建議 800–2000。": "Maximum number of parsed file entries to keep. 800–2000 recommended for large Vaults.",
+  "可快取檔案大小上限": "Maximum cacheable file size",
+  "超過此大小仍可顯示，但不會放入摘要快取，避免快取占用過多記憶體。單位：KB。": "Larger files can still be shown but will not enter the preview cache. Unit: KB.",
+  "分批渲染列表": "Render list in batches",
+  "大量項目時分批畫出列表，減少手機版或大型 Vault 開啟面板時的卡頓。": "Draw large lists in batches to reduce pauses when opening the sidebar on mobile or with a large Vault.",
+  "每批渲染數量": "Items per batch",
+  "分批渲染開啟時，每次畫出幾筆。手機建議 15–30；桌機可 30–60。": "How many cards to render at once. Recommended: 15–30 on mobile, 30–60 on desktop.",
+  "顯示效能統計": "Show performance statistics",
+  "Debug 模式開啟時，在標題下方顯示讀取數、快取命中數、解析數與耗時。": "When Debug mode is on, show reads, cache hits, parsed entries, and elapsed time below the title.",
+  "清除摘要快取": "Clear preview cache",
+  "清除記憶體中的摘要快取。下一次重新整理會重新讀取並建立快取；不會影響任何筆記內容。": "Clear the in-memory preview cache. It will be rebuilt on the next refresh without changing note contents.",
+  "清除快取": "Clear cache",
+  "已清除 {0} 筆摘要快取": "Cleared {0} preview cache entries",
+  "Debug 模式": "Debug mode",
+  "列表為空時顯示讀取統計，方便排查資料夾或標籤篩選。": "Show read statistics when the list is empty to diagnose folder or tag filters.",
+  "空摘要文字": "Empty preview text",
+  "筆記沒有可顯示內容時出現的文字。": "Text shown when a note has no previewable content.",
+  "說明": "Help",
+  "若使用 Lazy Loader，建議把 ReNotes 設為『instant』，可避免側欄分頁短暫顯示幽靈圖示": "If you use Lazy Loader, set ReNotes to “instant” to avoid a brief ghost icon in the sidebar.",
+  "要刪除這張 Canvas 嗎？": "Delete this Canvas board?",
+  "要刪除這份筆記嗎？": "Delete this note?",
+  "請先確認下方檔案，只有按下確認才會執行刪除。": "Confirm the file below. Nothing is deleted until you confirm.",
+  "Vault 根目錄": "Vault root",
+  "檔案會移至系統垃圾桶，可依系統設定嘗試還原。": "The file will be moved to the system trash and may be recoverable depending on your system settings.",
+  "檔案會移至這個 Vault 的 .trash 資料夾。": "The file will be moved to the .trash folder in this Vault.",
+  "目前 Obsidian 設定為永久刪除，這項操作可能無法復原。": "Obsidian is currently set to permanent deletion. This action may not be recoverable.",
+  "實際刪除方式依 Obsidian 的垃圾桶設定而定；部分方式可能無法復原。": "The deletion method depends on your Obsidian trash settings, and some methods cannot be undone.",
+  "取消": "Cancel",
+  "永久刪除": "Delete permanently",
+  "移至垃圾桶": "Move to trash",
+  "確認刪除": "Confirm deletion",
+  "處理中…": "Processing…",
+  "操作未完成，請稍後再試。": "The operation was not completed. Please try again.",
+  "發生非預期錯誤，檔案尚未確認刪除成功。": "An unexpected error occurred. The file has not been confirmed deleted.",
+  "重新命名": "Rename",
+  "輸入新的檔名。若沒有輸入副檔名，會自動保留原本的副檔名。": "Enter a new filename. The original file extension will be kept if you do not provide one.",
+  "新的檔名": "New filename",
+  "開啟 ReNotes": "Open ReNotes",
+  "重新整理 ReNotes": "Refresh ReNotes",
+  "釘選目前檔案": "Pin current file",
+  "取消釘選目前檔案": "Unpin current file",
+  "釘選儲存失敗，下一次操作會重試": "Could not save pins. The next operation will retry.",
+  "已複製 Debug 資訊": "Debug information copied",
+  "複製 Debug 資訊失敗，請查看 Console": "Could not copy debug information. Check the console.",
+  "找不到檔案：{0}": "File not found: {0}",
+  "已複製 Obsidian 連結": "Obsidian link copied",
+  "複製連結失敗": "Could not copy link",
+  "已嘗試在 Obsidian 檔案列表中顯示": "Requested reveal in the Obsidian file explorer",
+  "無法在資料夾中顯示": "Could not reveal the file in its folder",
+  "找不到 Canvas 連結筆記：{0}": "Canvas linked note not found: {0}",
+  "這不是 Canvas 檔案": "This is not a Canvas file",
+  "這個 Canvas 沒有連結筆記": "This Canvas has no linked notes",
+  "已複製 {0} 個 Canvas 連結筆記": "Copied {0} Canvas linked notes",
+  "複製 Canvas 連結筆記失敗": "Could not copy Canvas linked notes",
+  "取消釘選": "Unpin",
+  "開啟": "Open",
+  "開新分頁": "Open in new tab",
+  "複製 Obsidian 連結": "Copy Obsidian link",
+  "複製 Canvas 連結筆記清單": "Copy Canvas linked-note list",
+  "無法顯示選單": "Could not open the menu",
+  "找不到筆記：{0}": "Note not found: {0}",
+  "開啟失敗：{0}": "Could not open: {0}",
+  "無法開啟新視窗，已改用新分頁開啟": "Could not open a new window. Opened in a new tab instead.",
+  "檔名不可空白": "Filename cannot be empty",
+  "重新命名只支援改檔名，不支援移動資料夾": "Renaming only supports a new filename, not moving to a different folder",
+  "已存在同名檔案：{0}": "A file with this name already exists: {0}",
+  "已重新命名為：{0}": "Renamed to: {0}",
+  "重新命名失敗：{0}": "Rename failed: {0}",
+  "找不到檔案：": "File not found: ",
+  "檔案已移動或不存在，請關閉視窗後重新整理列表。": "The file was moved or is missing. Close this dialog and refresh the list.",
+  "刪除失敗：": "Delete failed: ",
+  "無法刪除這個檔案，請確認權限或檢查 Obsidian 記錄。": "Unable to delete this file. Check permissions or the Obsidian logs.",
+  "已刪除：": "Deleted: "
+});
+const EXTRA_I18N_TRANSLATIONS = Object.freeze({
+  "介面語言": "Interface language",
+  "自動跟隨 Obsidian 介面語言，或手動選擇繁體中文、英文。": "Follow the Obsidian interface language or manually choose Traditional Chinese or English.",
+  "自動（跟隨 Obsidian）": "Auto (follow Obsidian)",
+  "繁體中文": "Traditional Chinese",
+  "英文": "English",
+  "{0}，{1} 筆，跳轉": "{0}, {1} notes; jump to date",
+});
+let reNotesLanguagePreference = "auto";
+function resolveReNotesLanguage() {
+  if (reNotesLanguagePreference === "en") return "en";
+  if (reNotesLanguagePreference === "zh-TW") return "zh-TW";
+  try {
+    if (moment && typeof moment.locale === "function") {
+      const host = String(moment.locale() || "").toLowerCase();
+      if (host === "en" || host.startsWith("en-")) return "en";
+      if (host === "zh" || host.startsWith("zh-")) return "zh-TW";
+    }
+  } catch (error) {}
+  return "zh-TW";
+}
+function setReNotesLanguagePreference(value) {
+  reNotesLanguagePreference = ["auto", "zh-TW", "en"].includes(value) ? value : "auto";
+  return resolveReNotesLanguage();
+}
+function tr(message) {
+  if (resolveReNotesLanguage() !== "en" || typeof message !== "string") return message;
+  return Object.hasOwn(EXTRA_I18N_TRANSLATIONS, message) ? EXTRA_I18N_TRANSLATIONS[message]
+    : Object.hasOwn(EN_TRANSLATIONS, message) ? EN_TRANSLATIONS[message] : message;
+}
+function trf(pattern, ...values) {
+  return tr(pattern).replace(/\{(\d+)\}/g, (_, index) => String(values[Number(index)] ?? ""));
+}
+function localizedCount(n, zhPattern, singular, plural) {
+  if (resolveReNotesLanguage() === "en") {
+    return String(n) + " " + (Number(n) === 1 ? singular : plural);
+  }
+  return trf(zhPattern, n);
+}
+
+
 
 const VIEW_TYPE_RECENT_NOTES_FEED = "recent-notes-feed-view";
 const CACHE_FORMAT_VERSION = "0.9.0";
@@ -20,6 +341,7 @@ const RENOTES_ICON = '<g transform="scale(4.1666667)" fill="none" stroke="curren
 
 const DEFAULT_SETTINGS = {
   layoutVersion: 5,
+  interfaceLanguage: "auto", // auto | zh-TW | en
   pinnedPaths: [],
   maxNotes: 50,
   snippetLines: null, // null follows layout density
@@ -41,7 +363,7 @@ const DEFAULT_SETTINGS = {
   includedFolders: "",
   excludedTags: "#archive\n#封存",
   debounceMs: 600,
-  emptySnippetText: "沒有其他文字",
+  emptySnippetText: tr("沒有其他文字"),
   viewLocation: "left", // left | right
   debugMode: false,
   listDensity: "standard", // compact | standard | card
@@ -299,15 +621,15 @@ function parseCanvasContent(content, includeThumbnail = true) {
 }
 
 function formatCanvasStatsText(info) {
-  if (!info || info.invalid) return "Canvas 白板";
+  if (!info || info.invalid) return tr("Canvas 白板");
   const parts = [];
-  if (info.nodeCount) parts.push(`${info.nodeCount} 個元素`);
-  if (info.fileNodes) parts.push(`${info.fileNodes} 筆記`);
-  if (info.textNodes) parts.push(`${info.textNodes} 文字`);
-  if (info.groupNodes) parts.push(`${info.groupNodes} 分組`);
-  if (info.linkNodes) parts.push(`${info.linkNodes} 網頁`);
-  if (info.edgeCount) parts.push(`${info.edgeCount} 連線`);
-  return parts.length > 0 ? parts.join(" · ") : "空白 Canvas";
+  if (info.nodeCount) parts.push(localizedCount(info.nodeCount, "{0} 個元素", "element", "elements"));
+  if (info.fileNodes) parts.push(localizedCount(info.fileNodes, "{0} 筆記", "note", "notes"));
+  if (info.textNodes) parts.push(localizedCount(info.textNodes, "{0} 文字", "text node", "text nodes"));
+  if (info.groupNodes) parts.push(localizedCount(info.groupNodes, "{0} 分組", "group", "groups"));
+  if (info.linkNodes) parts.push(localizedCount(info.linkNodes, "{0} 網頁", "web link", "web links"));
+  if (info.edgeCount) parts.push(localizedCount(info.edgeCount, "{0} 連線", "connection", "connections"));
+  return parts.length > 0 ? parts.join(" · ") : tr("空白 Canvas");
 }
 
 function getCanvasPreviewLimit(settings) {
@@ -317,7 +639,7 @@ function getCanvasPreviewLimit(settings) {
 }
 
 function getCanvasPreviewLinesFromInfo(info, settings) {
-  if (!info || info.invalid) return ["Canvas 白板"];
+  if (!info || info.invalid) return [tr("Canvas 白板")];
 
   const limit = getCanvasPreviewLimit(settings);
   const mode = settings && settings.canvasPreviewMode ? settings.canvasPreviewMode : "smart";
@@ -329,8 +651,8 @@ function getCanvasPreviewLinesFromInfo(info, settings) {
   }
 
   if (mode === "files") {
-    if (fileNames.length > 0) return ["連結筆記：" + fileNames.slice(0, limit).join("、")];
-    if (info.groupLabels.length > 0) return ["分組：" + info.groupLabels.slice(0, limit).join("、")];
+    if (fileNames.length > 0) return [tr("連結筆記：") + fileNames.slice(0, limit).join(resolveReNotesLanguage() === "en" ? ", " : "、")];
+    if (info.groupLabels.length > 0) return [tr("分組：") + info.groupLabels.slice(0, limit).join(resolveReNotesLanguage() === "en" ? ", " : "、")];
     return [formatCanvasStatsText(info)];
   }
 
@@ -339,9 +661,9 @@ function getCanvasPreviewLinesFromInfo(info, settings) {
   }
 
   if (info.textLines.length > 0) return info.textLines.slice(0, limit);
-  if (info.groupLabels.length > 0) return ["分組：" + info.groupLabels.slice(0, limit).join("、")];
-  if (fileNames.length > 0) return ["連結筆記：" + fileNames.slice(0, limit).join("、")];
-  if (urlNames.length > 0) return ["網頁：" + urlNames.slice(0, limit).join("、")];
+  if (info.groupLabels.length > 0) return [tr("分組：") + info.groupLabels.slice(0, limit).join("、")];
+  if (fileNames.length > 0) return [tr("連結筆記：") + fileNames.slice(0, limit).join(resolveReNotesLanguage() === "en" ? ", " : "、")];
+  if (urlNames.length > 0) return [tr("網頁：") + urlNames.slice(0, limit).join(resolveReNotesLanguage() === "en" ? ", " : "、")];
   if (info.nodeCount > 0 || info.edgeCount > 0) return [formatCanvasStatsText(info)];
   return [];
 }
@@ -351,7 +673,7 @@ function stripCanvasForSnippet(content, settings) {
 }
 
 function getCanvasSearchText(info) {
-  if (!info || info.invalid) return "Canvas 白板";
+  if (!info || info.invalid) return tr("Canvas 白板");
   const fileText = filterCanvasDocumentLinks(info.linkedFiles).map((file) => `${file.title} ${file.path}`).join(" ");
   const urlText = info.urls.map((item) => `${item.title} ${item.url}`).join(" ");
   return [
@@ -428,14 +750,18 @@ function getDateGroup(timestamp, now = Date.now()) {
   start.setDate(start.getDate() - 7);
   if (sameLocalDay(date, today) || sameLocalDay(date, yesterday)) {
     const isToday = sameLocalDay(date, today);
-    const label = isToday ? "今天" : "昨天";
+    const label = isToday ? tr("今天") : tr("昨天");
     return { key: isToday ? "today" : "yesterday", label, number: String(date.getDate()), today: isToday, showDay: true };
   }
   if (date >= start && date < yesterday) {
-    return { key: "week", label: "過去 7 天" };
+    return { key: "week", label: tr("過去 7 天") };
   }
   const month = date.getMonth() + 1;
   const crossYear = date.getFullYear() !== today.getFullYear();
+  if (resolveReNotesLanguage() === "en") {
+    return { key: date.getFullYear() + "-" + month,
+      label: new Intl.DateTimeFormat("en-US", crossYear ? { month: "long", year: "numeric" } : { month: "long" }).format(date) };
+  }
   return { key: date.getFullYear() + "-" + month, label: (crossYear ? date.getFullYear() + "年 " : "") + month + "月" };
 }
 
@@ -454,6 +780,9 @@ function formatRecentDateLabel(timestamp, now = Date.now()) {
   if (group.key === "today" || group.key === "yesterday") return group.label;
   const date = new Date(timestamp);
   const prefix = date.getFullYear() === new Date(now).getFullYear() ? "" : date.getFullYear() + "/";
+  if (resolveReNotesLanguage() === "en") {
+    return prefix + (date.getMonth() + 1) + "/" + date.getDate() + " " + new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date);
+  }
   const weekday = "日一二三四五六"[date.getDay()];
   return prefix + (date.getMonth() + 1) + "/" + date.getDate() + " 週" + weekday;
 }
@@ -479,7 +808,9 @@ function formatNoteTime(timestamp, now = Date.now()) {
   if (group.key === "today" || group.key === "yesterday") {
     return String(date.getHours()).padStart(2, "0") + ":" + String(date.getMinutes()).padStart(2, "0");
   }
-  if (group.key === "week") return "週" + "日一二三四五六"[date.getDay()];
+  if (group.key === "week") return resolveReNotesLanguage() === "en"
+    ? new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date)
+    : "週" + "日一二三四五六"[date.getDay()];
   return (date.getFullYear() === new Date(now).getFullYear() ? "" : date.getFullYear() + "/") + (date.getMonth() + 1) + "/" + date.getDate();
 }
 
@@ -519,7 +850,7 @@ function formatTime(timestamp, mode) {
   const now = new Date();
 
   if (mode === "full") {
-    return new Intl.DateTimeFormat("zh-TW", {
+    return new Intl.DateTimeFormat(resolveReNotesLanguage() === "en" ? "en-US" : "zh-TW", {
       year: "numeric",
       month: "numeric",
       day: "numeric",
@@ -529,13 +860,13 @@ function formatTime(timestamp, mode) {
   }
 
   if (sameLocalDay(date, now)) {
-    return new Intl.DateTimeFormat("zh-TW", {
+    return new Intl.DateTimeFormat(resolveReNotesLanguage() === "en" ? "en-US" : "zh-TW", {
       hour: "numeric",
       minute: "2-digit"
     }).format(date);
   }
 
-  return new Intl.DateTimeFormat("zh-TW", {
+  return new Intl.DateTimeFormat(resolveReNotesLanguage() === "en" ? "en-US" : "zh-TW", {
     month: "numeric",
     day: "numeric",
     hour: "numeric",
@@ -572,25 +903,27 @@ function mergeActivity(local, legacy) {
 
 function formatRelativeTime(timestamp, mode, now = Date.now()) {
   const elapsed = Math.max(0, now - timestamp);
-  if (elapsed < 60000) return { text: "剛剛", recent: true };
-  if (elapsed < 3600000) return { text: `${Math.floor(elapsed / 60000)} 分鐘`, recent: true };
+  if (elapsed < 60000) return { text: tr("剛剛"), recent: true };
+  if (elapsed < 3600000) return { text: trf("{0} 分鐘", Math.floor(elapsed / 60000)), recent: true };
   const date = new Date(timestamp);
   const today = new Date(now);
-  if (sameLocalDay(date, today)) return { text: `${Math.floor(elapsed / 3600000)} 小時`, recent: false };
+  if (sameLocalDay(date, today)) return { text: trf("{0} 小時", Math.floor(elapsed / 3600000)), recent: false };
   const yesterday = new Date(now);
   yesterday.setDate(yesterday.getDate() - 1);
-  if (sameLocalDay(date, yesterday)) return { text: "昨天", recent: false };
+  if (sameLocalDay(date, yesterday)) return { text: tr("昨天"), recent: false };
   const days = Math.round((new Date(today.getFullYear(), today.getMonth(), today.getDate()) - new Date(date.getFullYear(), date.getMonth(), date.getDate())) / 86400000);
-  if (days < 7) return { text: `${days} 天前`, recent: false };
-  return { text: new Intl.DateTimeFormat("zh-TW", mode === "full"
+  if (days < 7) return { text: trf("{0} 天前", days), recent: false };
+  return { text: new Intl.DateTimeFormat(resolveReNotesLanguage() === "en" ? "en-US" : "zh-TW", mode === "full"
     ? { year: "numeric", month: "numeric", day: "numeric" }
     : { month: "numeric", day: "numeric" }).format(date), recent: false };
 }
 
 function getSecondLine(item) {
-  if (item.type === "canvas") return `Canvas · ${Number(item.canvas && item.canvas.fileNodes) || 0} 筆記`;
+  if (item.type === "canvas") return resolveReNotesLanguage() === "en"
+    ? "Canvas · " + localizedCount(Number(item.canvas && item.canvas.fileNodes) || 0, "{0} 筆記", "note", "notes")
+    : trf("Canvas · {0} 筆記", Number(item.canvas && item.canvas.fileNodes) || 0);
   const tags = Array.isArray(item.tags) ? item.tags.slice(0, 2) : [];
-  return ["筆記", ...tags].join(" · ");
+  return [tr("筆記"), ...tags].join(" · ");
 }
 
 function getFileActivity(settings, path) {
@@ -770,11 +1103,11 @@ function shouldHideCanvasDetailsOnMobile(settings) {
 }
 
 function getSortDeviceHint(mode) {
-  if (mode === "mtime") return "依檔案修改時間排序；跨裝置通常較接近，但 Dropbox 等同步工具可能更動時間。";
-  if (mode === "opened") return "最近開啟時間只記錄在目前裝置；其他電腦或手機可能顯示不同順序。";
-  if (mode === "localEdit") return "本機編輯時間不會同步到其他裝置；不同裝置的排序可能不同。";
-  if (mode === "smart") return "智慧排序含本機開啟與編輯紀錄；不同裝置的順序可能不同。";
-  return "有效編輯時間採本機內容紀錄；首次觀察與同步狀態不同時，裝置間排序可能不同。";
+  if (mode === "mtime") return tr("依檔案修改時間排序；跨裝置通常較接近，但 Dropbox 等同步工具可能更動時間。");
+  if (mode === "opened") return tr("最近開啟時間只記錄在目前裝置；其他電腦或手機可能顯示不同順序。");
+  if (mode === "localEdit") return tr("本機編輯時間不會同步到其他裝置；不同裝置的排序可能不同。");
+  if (mode === "smart") return tr("智慧排序含本機開啟與編輯紀錄；不同裝置的順序可能不同。");
+  return tr("有效編輯時間採本機內容紀錄；首次觀察與同步狀態不同時，裝置間排序可能不同。");
 }
 
 function computeSortInfo(file, settings, owner) {
@@ -785,28 +1118,28 @@ function computeSortInfo(file, settings, owner) {
   const mode = settings.sortMode || "mtime";
 
   if (mode === "effective") {
-    return { timestamp: getEffectiveTime(file, owner), priority: 0, reason: "有效編輯", opened, localEdit, fileMtime: mtime };
+    return { timestamp: getEffectiveTime(file, owner), priority: 0, reason: tr("有效編輯"), opened, localEdit, fileMtime: mtime };
   }
 
   if (mode === "opened") {
-    return { timestamp: opened || mtime, priority: opened ? 1 : 0, reason: opened ? "最近開啟" : "檔案修改", opened, localEdit, fileMtime: mtime };
+    return { timestamp: opened || mtime, priority: opened ? 1 : 0, reason: opened ? tr("最近開啟") : tr("檔案修改"), opened, localEdit, fileMtime: mtime };
   }
 
   if (mode === "localEdit") {
-    return { timestamp: localEdit || mtime, priority: localEdit ? 1 : 0, reason: localEdit ? "本機編輯" : "檔案修改", opened, localEdit, fileMtime: mtime };
+    return { timestamp: localEdit || mtime, priority: localEdit ? 1 : 0, reason: localEdit ? tr("本機編輯") : tr("檔案修改"), opened, localEdit, fileMtime: mtime };
   }
 
   if (mode === "smart") {
     const activityCandidates = [
-      { timestamp: localEdit, reason: "本機編輯" },
-      { timestamp: opened, reason: "最近開啟" }
+      { timestamp: localEdit, reason: tr("本機編輯") },
+      { timestamp: opened, reason: tr("最近開啟") }
     ].filter((item) => item.timestamp > 0);
     activityCandidates.sort((a, b) => b.timestamp - a.timestamp);
-    const winner = activityCandidates[0] || { timestamp: mtime, reason: "檔案修改" };
+    const winner = activityCandidates[0] || { timestamp: mtime, reason: tr("檔案修改") };
     return { timestamp: winner.timestamp, priority: activityCandidates.length > 0 ? 1 : 0, reason: winner.reason, opened, localEdit, fileMtime: mtime };
   }
 
-  return { timestamp: mtime, priority: 0, reason: "檔案修改", opened, localEdit, fileMtime: mtime };
+  return { timestamp: mtime, priority: 0, reason: tr("檔案修改"), opened, localEdit, fileMtime: mtime };
 }
 
 function pruneActivity(settings, existingPathSet, maxEntries = 2000) {
@@ -905,7 +1238,7 @@ class RecentNotesFeedView extends ItemView {
     root.empty();
     root.addClass("recent-notes-feed-root");
     this.rootEl = root;
-    root.createDiv({ cls: "recent-notes-feed-loading", text: "載入最近修改..." });
+    root.createDiv({ cls: "recent-notes-feed-loading", text: tr("載入最近修改...") });
     await this.refresh();
   }
 
@@ -928,7 +1261,7 @@ class RecentNotesFeedView extends ItemView {
         } while (this.refreshPending);
       } catch (error) {
         console.error("ReNotes: refresh failed", error);
-        new Notice("ReNotes 載入失敗，請查看 Console");
+        new Notice(tr("ReNotes 載入失敗，請查看 Console"));
         this.renderError(error);
       } finally {
         this.loading = false;
@@ -953,8 +1286,8 @@ class RecentNotesFeedView extends ItemView {
     const root = this.rootEl;
     if (!root) return;
     root.empty();
-    root.createDiv({ cls: "recent-notes-feed-title", text: "近期" });
-    root.createDiv({ cls: "recent-notes-feed-empty", text: "載入失敗。" });
+    root.createDiv({ cls: "recent-notes-feed-title", text: tr("近期") });
+    root.createDiv({ cls: "recent-notes-feed-empty", text: tr("載入失敗。") });
     const pre = root.createEl("pre", { cls: "recent-notes-feed-debug" });
     pre.textContent = error && error.stack ? error.stack : String(error);
   }
@@ -982,7 +1315,7 @@ class RecentNotesFeedView extends ItemView {
   updateWidth(width) {
     if (!this.rootEl) return;
     this.rootEl.dataset.width = getWidthClass(width, this.rootEl.dataset.width);
-    if (this.filterButton) this.filterButton.setAttribute("aria-label", this.rootEl.dataset.width === "tiny" ? "搜尋與篩選" : "篩選");
+    if (this.filterButton) this.filterButton.setAttribute("aria-label", this.rootEl.dataset.width === "tiny" ? tr("搜尋與篩選") : tr("篩選"));
   }
 
   applyDensityClass() {
@@ -1031,7 +1364,7 @@ class RecentNotesFeedView extends ItemView {
     const top = root.createDiv({ cls: "recent-notes-feed-top" });
     const header = top.createDiv({ cls: "recent-notes-feed-header" });
     const titleWrap = header.createDiv({ cls: "recent-notes-feed-title-wrap" });
-    titleWrap.createDiv({ cls: "recent-notes-feed-title", text: "近期" });
+    titleWrap.createDiv({ cls: "recent-notes-feed-title", text: tr("近期") });
     this.countEl = titleWrap.createDiv({ cls: "recent-notes-feed-count", text: "" });
     this.debugSummaryEl = titleWrap.createDiv({ cls: "recent-notes-feed-debug-summary", text: "" });
 
@@ -1043,7 +1376,7 @@ class RecentNotesFeedView extends ItemView {
     const headerActions = panel.createDiv({ cls: "recent-notes-feed-actions" });
     const refreshButton = headerActions.createEl("button", {
       cls: "recent-notes-feed-icon-button",
-      attr: { "aria-label": "重新整理" }
+      attr: { "aria-label": tr("重新整理") }
     });
     refreshButton.textContent = "↻";
     refreshButton.addEventListener("click", () => this.refresh());
@@ -1051,7 +1384,7 @@ class RecentNotesFeedView extends ItemView {
     if (this.plugin.settings.debugMode) {
       const debugButton = headerActions.createEl("button", {
         cls: "recent-notes-feed-icon-button",
-        attr: { "aria-label": "複製 Debug 資訊" }
+        attr: { "aria-label": tr("複製 Debug 資訊") }
       });
       debugButton.textContent = "⧉";
       debugButton.addEventListener("click", () => this.plugin.copyDebugInfo());
@@ -1059,7 +1392,7 @@ class RecentNotesFeedView extends ItemView {
 
     if (this.plugin.settings.showSearch) {
       const searchButton = tools.createEl("button", {
-        cls: "recent-notes-search-button", attr: { "aria-label": "搜尋", "aria-expanded": String(this.searchExpanded) }
+        cls: "recent-notes-search-button", attr: { "aria-label": tr("搜尋"), "aria-expanded": String(this.searchExpanded) }
       });
       setIcon(searchButton, "search");
       searchButton.addEventListener("click", () => {
@@ -1074,13 +1407,13 @@ class RecentNotesFeedView extends ItemView {
       const search = searchWrap.createEl("input", {
         cls: "recent-notes-feed-search",
         type: "search",
-        placeholder: "搜尋",
-        attr: { "aria-label": "搜尋" },
+        placeholder: tr("搜尋"),
+        attr: { "aria-label": tr("搜尋") },
         value: this.searchQuery
       });
       const clearSearch = searchWrap.createEl("button", {
         cls: "recent-notes-feed-clear-search",
-        attr: { "aria-label": "清除搜尋" }
+        attr: { "aria-label": tr("清除搜尋") }
       });
       clearSearch.textContent = "×";
       clearSearch.toggleClass("is-visible", !!this.searchQuery);
@@ -1111,7 +1444,7 @@ class RecentNotesFeedView extends ItemView {
 
     this.filterButton = tools.createEl("button", {
       cls: "recent-notes-filter-button",
-      attr: { "aria-label": "篩選", "aria-expanded": "false", "aria-controls": panel.id }
+      attr: { "aria-label": tr("篩選"), "aria-expanded": "false", "aria-controls": panel.id }
     });
     setIcon(this.filterButton, "filter");
     this.filterButton.addEventListener("click", () => {
@@ -1142,15 +1475,15 @@ class RecentNotesFeedView extends ItemView {
 
   renderTypeFilter(container) {
     const options = [
-      { value: "all", label: "全部" },
-      { value: "markdown", label: "筆記" },
+      { value: "all", label: tr("全部") },
+      { value: "markdown", label: tr("筆記") },
       { value: "canvas", label: "Canvas" }
     ];
 
     for (const option of options) {
       const button = container.createEl("button", {
         cls: "recent-notes-filter-chip",
-        attr: { "data-filter": option.value, "aria-label": `只顯示${option.label}` }
+        attr: { "data-filter": option.value, "aria-label": trf("只顯示{0}", option.label) }
       });
       button.textContent = option.label;
       if (this.typeFilter === option.value) button.addClass("is-active");
@@ -1183,14 +1516,14 @@ class RecentNotesFeedView extends ItemView {
 
   renderFilterPanel(panel) {
     if (this.plugin.settings.showTypeFilter) {
-      panel.createDiv({ cls: "recent-notes-filter-label", text: "類型" });
+      panel.createDiv({ cls: "recent-notes-filter-label", text: tr("類型") });
       this.renderTypeFilter(panel.createDiv({ cls: "recent-notes-filter-bar" }));
     }
     const settings = this.getFilterSettings();
-    for (const [key, label] of [["includedFolders", "資料夾"], ["excludedFolders", "排除資料夾"], ["excludedTags", "排除標籤"]]) {
+    for (const [key, label] of [["includedFolders", tr("資料夾")], ["excludedFolders", tr("排除資料夾")], ["excludedTags", tr("排除標籤")]]) {
       const labelEl = panel.createEl("label", { cls: "recent-notes-filter-field" });
       labelEl.createSpan({ text: label });
-      const input = labelEl.createEl("input", { type: "text", value: settings[key] || "", placeholder: "多個項目以逗號分隔" });
+      const input = labelEl.createEl("input", { type: "text", value: settings[key] || "", placeholder: tr("多個項目以逗號分隔") });
       input.value = normalizeList(settings[key]).join(", ");
       input.addEventListener("change", () => {
         this.filterOverrides[key] = input.value;
@@ -1198,9 +1531,9 @@ class RecentNotesFeedView extends ItemView {
       });
     }
     const labelEl = panel.createEl("label", { cls: "recent-notes-filter-field" });
-    labelEl.createSpan({ text: "排序方式" });
+    labelEl.createSpan({ text: tr("排序方式") });
     const sort = labelEl.createEl("select");
-    for (const [value, label] of [["effective", "有效編輯時間（忽略無內容變更的重寫）"], ["opened", "最近開啟"], ["localEdit", "本機編輯"], ["smart", "智慧"], ["mtime", "修改時間"]]) {
+    for (const [value, label] of [["effective", tr("有效編輯時間（忽略無內容變更的重寫）")], ["opened", tr("最近開啟")], ["localEdit", tr("本機編輯")], ["smart", tr("智慧")], ["mtime", tr("修改時間")]]) {
       sort.createEl("option", { value, text: label });
     }
     sort.value = settings.sortMode;
@@ -1214,7 +1547,7 @@ class RecentNotesFeedView extends ItemView {
       updateSortSource();
       this.refresh();
     });
-    const clear = panel.createEl("button", { text: "清除篩選" });
+    const clear = panel.createEl("button", { text: tr("清除篩選") });
     clear.addEventListener("click", () => this.clearFilters());
   }
 
@@ -1249,17 +1582,24 @@ class RecentNotesFeedView extends ItemView {
         this.countEl.textContent = "";
       } else {
         const total = this.items.length;
-        const typeText = this.typeFilter === "canvas" ? "Canvas" : this.typeFilter === "markdown" ? "筆記" : "項目";
-        this.countEl.textContent = this.searchQuery || this.typeFilter !== "all"
-          ? `${visibleCount} / ${total} 個${typeText}`
-          : `${total} 個項目`;
+        const typeText = this.typeFilter === "canvas" ? "Canvas" : this.typeFilter === "markdown" ? tr("筆記") : tr("項目");
+        const isFiltered = this.searchQuery || this.typeFilter !== "all";
+        if (resolveReNotesLanguage() === "en" && isFiltered) {
+          const singular = this.typeFilter === "canvas" ? "Canvas board" : this.typeFilter === "markdown" ? "note" : "item";
+          const plural = this.typeFilter === "canvas" ? "Canvas boards" : this.typeFilter === "markdown" ? "notes" : "items";
+          this.countEl.textContent = String(visibleCount) + " / " + localizedCount(total, "{0} 個項目", singular, plural);
+        } else {
+          this.countEl.textContent = isFiltered
+            ? trf("{0} / {1} 個{2}", visibleCount, total, typeText)
+            : localizedCount(total, "{0} 個項目", "item", "items");
+        }
       }
     }
 
     if (this.debugSummaryEl) {
       const stats = this.plugin.lastBuildStats || {};
       if (this.plugin.settings.debugMode && this.plugin.settings.showPerformanceStats !== false && stats) {
-        this.debugSummaryEl.textContent = `讀取 ${stats.readCount || 0}｜快取 ${stats.cacheHits || 0}/${stats.cacheLookups || 0}｜解析 ${stats.parseCount || 0}｜${stats.buildDurationMs || 0}ms`;
+        this.debugSummaryEl.textContent = trf("讀取 {0}｜快取 {1}/{2}｜解析 {3}｜{4}ms", stats.readCount || 0, stats.cacheHits || 0, stats.cacheLookups || 0, stats.parseCount || 0, stats.buildDurationMs || 0);
       } else {
         this.debugSummaryEl.textContent = "";
       }
@@ -1306,12 +1646,12 @@ class RecentNotesFeedView extends ItemView {
     const holder = container.createDiv({ cls: "rnf-date-nav" });
     const toggle = holder.createEl("button", {
       cls: "rnf-date-nav-toggle",
-      attr: { type: "button", title: "跳轉日期", "aria-label": "跳轉日期", "aria-haspopup": "dialog", "aria-expanded": "false" }
+      attr: { type: "button", title: tr("跳轉日期"), "aria-label": tr("跳轉日期"), "aria-haspopup": "dialog", "aria-expanded": "false" }
     });
     toggle.textContent = "⋯";
-    const popover = holder.createDiv({ cls: "rnf-date-nav-popover", attr: { role: "dialog", "aria-label": "跳轉日期" } });
+    const popover = holder.createDiv({ cls: "rnf-date-nav-popover", attr: { role: "dialog", "aria-label": tr("跳轉日期") } });
     popover.hidden = true;
-    popover.createDiv({ cls: "rnf-date-nav-title", text: "跳轉日期" });
+    popover.createDiv({ cls: "rnf-date-nav-title", text: tr("跳轉日期") });
 
     const close = (restoreFocus = false) => {
       popover.hidden = true;
@@ -1321,10 +1661,12 @@ class RecentNotesFeedView extends ItemView {
     const addDate = (parent, entry) => {
       const button = parent.createEl("button", { cls: "rnf-date-nav-option", attr: {
         type: "button", "data-date-key": entry.key,
-        "aria-label": entry.label + "，" + entry.count + " 筆，跳轉"
+        "aria-label": resolveReNotesLanguage() === "en"
+          ? entry.label + ", " + localizedCount(entry.count, "{0} 筆", "note", "notes") + "; jump to date"
+          : trf("{0}，{1} 筆，跳轉", entry.label, entry.count)
       } });
       button.createSpan({ cls: "rnf-date-nav-option-label", text: entry.label });
-      button.createSpan({ cls: "rnf-date-nav-option-count", text: entry.count + " 筆" });
+      button.createSpan({ cls: "rnf-date-nav-option-count", text: localizedCount(entry.count, "{0} 筆", "note", "notes") });
       button.addEventListener("click", (event) => {
         event.preventDefault();
         event.stopPropagation();
@@ -1336,7 +1678,7 @@ class RecentNotesFeedView extends ItemView {
     for (const entry of dateIndex.slice(0, 7)) addDate(popover, entry);
     if (dateIndex.length > 7) {
       const details = popover.createEl("details", { cls: "rnf-date-nav-more" });
-      details.createEl("summary", { text: "更多日期（依月份）" });
+      details.createEl("summary", { text: tr("更多日期（依月份）") });
       const older = dateIndex.slice(7);
       const months = new Map();
       for (const entry of older) {
@@ -1347,8 +1689,11 @@ class RecentNotesFeedView extends ItemView {
       for (const [month, entries] of months) {
         const section = details.createDiv({ cls: "rnf-date-nav-month" });
         const [year, number] = month.split("-").map(Number);
+        const labelDate = new Date(year, number - 1, 1);
         section.createDiv({ cls: "rnf-date-nav-month-label", text:
-          (year === currentYear ? "" : year + "年 ") + number + "月"
+          resolveReNotesLanguage() === "en"
+            ? new Intl.DateTimeFormat("en-US", year === currentYear ? { month: "long" } : { month: "long", year: "numeric" }).format(labelDate)
+            : (year === currentYear ? "" : year + "年 ") + number + "月"
         });
         for (const entry of entries) addDate(section, entry);
       }
@@ -1396,15 +1741,15 @@ class RecentNotesFeedView extends ItemView {
 
     if (visibleItems.length === 0) {
       const empty = this.listEl.createDiv({ cls: "recent-notes-feed-empty" });
-      empty.createDiv({ text: "沒有符合的項目" });
-      empty.createDiv({ cls: "recent-notes-feed-empty-hint", text: this.hasActiveFilters() ? "試試其他條件，或清除篩選。" : "開啟或建立筆記後，項目會顯示在這裡。" });
+      empty.createDiv({ text: tr("沒有符合的項目") });
+      empty.createDiv({ cls: "recent-notes-feed-empty-hint", text: this.hasActiveFilters() ? tr("試試其他條件，或清除篩選。") : tr("開啟或建立筆記後，項目會顯示在這裡。") });
       if (this.hasActiveFilters()) {
-        empty.createEl("button", { text: "清除篩選" }).addEventListener("click", () => this.clearFilters());
+        empty.createEl("button", { text: tr("清除篩選") }).addEventListener("click", () => this.clearFilters());
       }
       const stats = this.plugin.lastBuildStats;
       if (stats && this.plugin.settings.debugMode) {
         const hint = this.listEl.createDiv({ cls: "recent-notes-feed-debug" });
-        hint.textContent = `偵錯：Markdown ${stats.totalMarkdown} 篇，Canvas ${stats.totalCanvas || 0} 個，通過資料夾篩選 ${stats.afterFolderFilter} 個，實際讀取 ${stats.readCount} 個，快取命中 ${stats.cacheHits || 0} 個，快取寫入 ${stats.cacheWrites || 0} 個，排除標籤 ${stats.skippedByTags} 篇，耗時 ${stats.buildDurationMs || 0}ms。`;
+        hint.textContent = trf("偵錯：Markdown {0} 篇，Canvas {1} 個，通過資料夾篩選 {2} 個，實際讀取 {3} 個，快取命中 {4} 個，快取寫入 {5} 個，排除標籤 {6} 篇，耗時 {7}ms。", stats.totalMarkdown, stats.totalCanvas || 0, stats.afterFolderFilter, stats.readCount, stats.cacheHits || 0, stats.cacheWrites || 0, stats.skippedByTags, stats.buildDurationMs || 0);
       }
       return;
     }
@@ -1424,7 +1769,7 @@ class RecentNotesFeedView extends ItemView {
       const section = this.listEl.createDiv({ cls: "recent-notes-pinned-section" });
       const header = section.createDiv({ cls: "recent-notes-pinned-header" });
       setIcon(header.createSpan({ cls: "recent-notes-pin-icon", attr: { "aria-hidden": "true" } }), "pin");
-      header.createSpan({ cls: "recent-notes-pinned-label", text: "釘選" });
+      header.createSpan({ cls: "recent-notes-pinned-label", text: tr("釘選") });
       header.createSpan({ cls: "recent-notes-pinned-line", attr: { "aria-hidden": "true" } });
       header.createSpan({ cls: "recent-notes-pinned-count", text: String(pinned.length) });
       pinnedItems = section.createDiv({ cls: "recent-notes-group-items recent-notes-pinned-items" });
@@ -1511,8 +1856,8 @@ class RecentNotesFeedView extends ItemView {
       cls: "rnf-canvas-drag-handle",
       attr: {
         draggable: "true",
-        title: "拖曳筆記到 Canvas",
-        "aria-label": "拖曳 " + item.title + " 到 Canvas",
+        title: tr("拖曳筆記到 Canvas"),
+        "aria-label": tr("拖曳 ") + item.title + tr(" 到 Canvas"),
         "aria-hidden": "true"
       }
     });
@@ -1530,7 +1875,7 @@ class RecentNotesFeedView extends ItemView {
         || typeof dragManager?.dragFile !== "function"
         || typeof dragManager?.onDragStart !== "function") {
         event.preventDefault();
-        new Notice("無法拖曳此筆記，請從 Obsidian 檔案總管拖入 Canvas。");
+        new Notice(tr("無法拖曳此筆記，請從 Obsidian 檔案總管拖入 Canvas。"));
         return;
       }
       try {
@@ -1540,7 +1885,7 @@ class RecentNotesFeedView extends ItemView {
       } catch (error) {
         event.preventDefault();
         console.warn("ReNotes: native Canvas drag unavailable", error);
-        new Notice("此 Obsidian 版本無法使用 ReNotes 拖曳，請改由檔案總管拖入。");
+        new Notice(tr("此 Obsidian 版本無法使用 ReNotes 拖曳，請改由檔案總管拖入。"));
       }
     });
     handle.addEventListener("dragend", () => card.removeClass("rnf-is-dragging"));
@@ -1554,7 +1899,7 @@ class RecentNotesFeedView extends ItemView {
     card.dataset.path = item.path;
     this.addCanvasDragHandle(card, item);
     card.setAttribute("role", "button");
-    card.setAttribute("aria-label", `開啟 ${item.title}`);
+    card.setAttribute("aria-label", trf("開啟 {0}", item.title));
     if (currentPath && item.path === currentPath) {
       card.addClass("is-active");
     }
@@ -1576,7 +1921,7 @@ class RecentNotesFeedView extends ItemView {
     // Distinguish file types in the existing time row without changing card layout.
     if (item.type === "markdown" || item.type === "canvas") {
       const isCanvas = item.type === "canvas";
-      const typeLabel = isCanvas ? "Canvas 白板" : "Markdown 筆記";
+      const typeLabel = isCanvas ? tr("Canvas 白板") : tr("Markdown 筆記");
       const iconEl = footer.createSpan({ cls: "rnf-filetype-icon", attr: { role: "img", "aria-label": typeLabel, title: typeLabel } });
       // In this Obsidian release, Lucide grid-2x2 is named layout-grid; both render the same 2x2 rectangles.
       setIcon(iconEl, isCanvas ? "layout-grid" : "file-text");
@@ -1584,7 +1929,7 @@ class RecentNotesFeedView extends ItemView {
     const time = footer.createSpan({ cls: "recent-note-time", text: formatNoteTime(item.mtime) });
     time.title = formatTime(item.mtime, this.plugin.settings.dateFormat);
     const folder = item.folder && item.folder !== "/" ? item.folder.split("/").pop()
-      : (this.plugin.app.vault.getName ? this.plugin.app.vault.getName() : "筆記");
+      : (this.plugin.app.vault.getName ? this.plugin.app.vault.getName() : tr("筆記"));
     const extras = bottomLeft.createSpan({ cls: "rnf-card-meta-extras" });
     if (this.plugin.settings.showFolder) {
       extras.createSpan({ text: " · " });
@@ -1635,7 +1980,7 @@ class RecentNotesFeedView extends ItemView {
       card.addClass("has-menu");
       const menuButton = card.createEl("button", {
         cls: "recent-note-menu-button",
-        attr: { "aria-label": "開啟 " + item.title + " 的選單" }
+        attr: { "aria-label": tr("開啟 ") + item.title + tr(" 的選單") }
       });
       menuButton.textContent = "⋯";
       menuButton.addEventListener("click", (event) => {
@@ -1749,7 +2094,7 @@ class RecentNotesFeedView extends ItemView {
     const canvas = item.canvas || {};
 
     if (this.plugin.settings.showCanvasStats) {
-      card.createDiv({ cls: "recent-note-canvas-stats recent-note-extra", text: canvas.statsText || "Canvas 白板" });
+      card.createDiv({ cls: "recent-note-canvas-stats recent-note-extra", text: canvas.statsText || tr("Canvas 白板") });
     }
 
     const linkedFiles = filterCanvasDocumentLinks(canvas.linkedFiles);
@@ -1764,7 +2109,7 @@ class RecentNotesFeedView extends ItemView {
         const fullTitle = link.title || basenameFromPath(link.path);
         button.textContent = truncateRecentCanvasLink(fullTitle);
         button.setAttribute("title", fullTitle);
-        button.setAttribute("aria-label", "開啟 " + fullTitle);
+        button.setAttribute("aria-label", tr("開啟 ") + fullTitle);
         button.addEventListener("click", (event) => {
           event.preventDefault();
           event.stopPropagation();
@@ -1800,11 +2145,25 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "ReNotes 設定" });
-    containerEl.createEl("p", { text: "活動紀錄只存本裝置，手機與電腦各自獨立；釘選會隨 vault 同步。" });
-    containerEl.createEl("h3", { text: "版面" });
+    containerEl.createEl("h2", { text: tr("ReNotes 設定") });
+    containerEl.createEl("p", { text: tr("活動紀錄只存本裝置，手機與電腦各自獨立；釘選會隨 vault 同步。") });
     new Setting(containerEl)
-      .setName("顯示摘要")
+      .setName(tr("介面語言"))
+      .setDesc(tr("自動跟隨 Obsidian 介面語言，或手動選擇繁體中文、英文。"))
+      .addDropdown((dropdown) => dropdown
+        .addOption("auto", tr("自動（跟隨 Obsidian）"))
+        .addOption("zh-TW", tr("繁體中文"))
+        .addOption("en", tr("英文"))
+        .setValue(this.plugin.settings.interfaceLanguage || "auto")
+        .onChange(async (value) => {
+          this.plugin.settings.interfaceLanguage = value;
+          setReNotesLanguagePreference(value);
+          await this.plugin.saveSettingsAndRefresh();
+          this.display();
+        }));
+    containerEl.createEl("h3", { text: tr("版面") });
+    new Setting(containerEl)
+      .setName(tr("顯示摘要"))
       .addToggle((toggle) => toggle
         .setValue(!!this.plugin.settings.showSnippet)
         .onChange(async (value) => {
@@ -1813,13 +2172,13 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     for (const [key, name, desc] of [
-      ["showCanvasLinkedFiles", "顯示連結筆記晶片", "在 Canvas 卡片底部以 A1 極細圓框顯示連結筆記，每個名稱最多五字；點擊可開啟。"],
-      ["showCanvasStats", "顯示 Canvas 詳細統計", "在寬版底部列下方顯示灰色統計文字，預設關閉。"],
-      ["groupByDate", "依日期分組", "所有寬度均使用日期膠囊；更早項目依月份分組，跨年保留年份。"],
-      ["showImageThumbnail", "顯示圖片縮圖", "右側顯示筆記第一張 vault 內圖片，預設開啟；忽略外部網址與超過 6 MB 的圖片。窄版隱藏。"],
-      ["showCanvasThumbnail", "顯示 Canvas 縮圖", "右側顯示快取的 Canvas 節點縮圖，預設開啟；窄版隱藏。"],
-      ["showFolder", "顯示資料夾", "在卡片下方左側顯示資料夾名稱，保留右側的時間對齊；預設關閉。"],
-      ["showTags", "顯示標籤", "在卡片下方左側附上最多兩個標籤，預設關閉。"]
+      ["showCanvasLinkedFiles", tr("顯示連結筆記晶片"), tr("在 Canvas 卡片底部以 A1 極細圓框顯示連結筆記，每個名稱最多五字；點擊可開啟。")],
+      ["showCanvasStats", tr("顯示 Canvas 詳細統計"), tr("在寬版底部列下方顯示灰色統計文字，預設關閉。")],
+      ["groupByDate", tr("依日期分組"), tr("所有寬度均使用日期膠囊；更早項目依月份分組，跨年保留年份。")],
+      ["showImageThumbnail", tr("顯示圖片縮圖"), tr("右側顯示筆記第一張 vault 內圖片，預設開啟；忽略外部網址與超過 6 MB 的圖片。窄版隱藏。")],
+      ["showCanvasThumbnail", tr("顯示 Canvas 縮圖"), tr("右側顯示快取的 Canvas 節點縮圖，預設開啟；窄版隱藏。")],
+      ["showFolder", tr("顯示資料夾"), tr("在卡片下方左側顯示資料夾名稱，保留右側的時間對齊；預設關閉。")],
+      ["showTags", tr("顯示標籤"), tr("在卡片下方左側附上最多兩個標籤，預設關閉。")]
     ]) {
       new Setting(containerEl)
         .setName(name)
@@ -1833,13 +2192,13 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
     }
 
     new Setting(containerEl)
-      .setName("預覽行數（進階）")
-      .setDesc("預設跟隨版面密度（1／2／3 行）；明確選擇後覆蓋密度。窄版最多 2 行，tiny 隱藏預覽。")
+      .setName(tr("預覽行數（進階）"))
+      .setDesc(tr("預設跟隨版面密度（1／2／3 行）；明確選擇後覆蓋密度。窄版最多 2 行，tiny 隱藏預覽。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("auto", "跟隨密度")
-        .addOption("1", "1 行")
-        .addOption("2", "2 行")
-        .addOption("3", "3 行")
+        .addOption("auto", tr("跟隨密度"))
+        .addOption("1", tr("1 行"))
+        .addOption("2", tr("2 行"))
+        .addOption("3", tr("3 行"))
         .setValue(this.plugin.settings.snippetLines == null ? "auto" : String(this.plugin.settings.snippetLines))
         .onChange(async (value) => {
           this.plugin.settings.snippetLines = value === "auto" ? null : Number.parseInt(value, 10);
@@ -1847,22 +2206,22 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("版面密度")
-      .setDesc("緊湊／標準／寬鬆控制卡片內距、標題、預覽行數與縮圖尺寸；寬度改變時仍有效。")
+      .setName(tr("版面密度"))
+      .setDesc(tr("緊湊／標準／寬鬆控制卡片內距、標題、預覽行數與縮圖尺寸；寬度改變時仍有效。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("compact", "緊湊")
-        .addOption("standard", "標準")
-        .addOption("card", "寬鬆")
+        .addOption("compact", tr("緊湊"))
+        .addOption("standard", tr("標準"))
+        .addOption("card", tr("寬鬆"))
         .setValue(this.plugin.settings.listDensity || "standard")
         .onChange(async (value) => {
           this.plugin.settings.listDensity = value;
           await this.plugin.saveSettingsAndRefresh();
         }));
 
-    containerEl.createEl("h3", { text: "一般設定" });
+    containerEl.createEl("h3", { text: tr("一般設定") });
     new Setting(containerEl)
-      .setName("顯示最近幾篇")
-      .setDesc("建議 20–100。數字越大，讀取摘要越多。")
+      .setName(tr("顯示最近幾篇"))
+      .setDesc(tr("建議 20–100。數字越大，讀取摘要越多。"))
       .addText((text) => text
         .setPlaceholder("50")
         .setValue(String(this.plugin.settings.maxNotes))
@@ -1874,11 +2233,11 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
           }
         }));
 
-    containerEl.createEl("h3", { text: "手機版優化" });
+    containerEl.createEl("h3", { text: tr("手機版優化") });
 
     new Setting(containerEl)
-      .setName("啟用手機版優化")
-      .setDesc("手機版會加大觸控區、調整搜尋與篩選列、支援長按開啟選單。")
+      .setName(tr("啟用手機版優化"))
+      .setDesc(tr("手機版會加大觸控區、調整搜尋與篩選列、支援長按開啟選單。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.mobileOptimized !== false)
         .onChange(async (value) => {
@@ -1887,12 +2246,12 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("手機列表樣式")
-      .setDesc("保留手機偏好：標準版面密度時使用此樣式；明確選擇緊湊或寬鬆版面密度時優先使用版面密度。")
+      .setName(tr("手機列表樣式"))
+      .setDesc(tr("保留手機偏好：標準版面密度時使用此樣式；明確選擇緊湊或寬鬆版面密度時優先使用版面密度。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("compact", "緊湊")
-        .addOption("comfortable", "舒適")
-        .addOption("reading", "閱讀")
+        .addOption("compact", tr("緊湊"))
+        .addOption("comfortable", tr("舒適"))
+        .addOption("reading", tr("閱讀"))
         .setValue(this.plugin.settings.mobileLayout || "comfortable")
         .onChange(async (value) => {
           this.plugin.settings.mobileLayout = value;
@@ -1900,13 +2259,13 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("手機預覽行數（進階）")
-      .setDesc("預設沿用桌機的密度或預覽覆蓋，最多 3 行；窄版最多 2 行，tiny 隱藏。")
+      .setName(tr("手機預覽行數（進階）"))
+      .setDesc(tr("預設沿用桌機的密度或預覽覆蓋，最多 3 行；窄版最多 2 行，tiny 隱藏。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("0", "沿用桌機設定")
-        .addOption("1", "1 行")
-        .addOption("2", "2 行")
-        .addOption("3", "3 行")
+        .addOption("0", tr("沿用桌機設定"))
+        .addOption("1", tr("1 行"))
+        .addOption("2", tr("2 行"))
+        .addOption("3", tr("3 行"))
         .setValue(String(this.plugin.settings.mobileSnippetLines || 0))
         .onChange(async (value) => {
           this.plugin.settings.mobileSnippetLines = value === "0" ? null : Number.parseInt(value, 10);
@@ -1914,8 +2273,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("手機顯示選單按鈕")
-      .setDesc("在每筆項目右側顯示 ⋯，方便開新分頁、重新命名、刪除或在資料夾中顯示。")
+      .setName(tr("手機顯示選單按鈕"))
+      .setDesc(tr("在每筆項目右側顯示 ⋯，方便開新分頁、重新命名、刪除或在資料夾中顯示。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.mobileShowMenuButton !== false)
         .onChange(async (value) => {
@@ -1924,8 +2283,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("手機長按開啟右鍵選單")
-      .setDesc("在手機上長按筆記項目約半秒，會開啟和右鍵相同的選單。")
+      .setName(tr("手機長按開啟右鍵選單"))
+      .setDesc(tr("在手機上長按筆記項目約半秒，會開啟和右鍵相同的選單。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.mobileLongPressMenu !== false)
         .onChange(async (value) => {
@@ -1934,8 +2293,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("手機壓縮頂部工具列")
-      .setDesc("減少標題、搜尋與篩選列佔用高度，避免列表被鍵盤與工具列擠壓。")
+      .setName(tr("手機壓縮頂部工具列"))
+      .setDesc(tr("減少標題、搜尋與篩選列佔用高度，避免列表被鍵盤與工具列擠壓。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.mobileCompactHeader !== false)
         .onChange(async (value) => {
@@ -1944,8 +2303,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("手機隱藏 Canvas 詳細資訊")
-      .setDesc("只保留 Canvas 標題與摘要，不顯示統計晶片與連結筆記晶片；適合小螢幕。")
+      .setName(tr("手機隱藏 Canvas 詳細資訊"))
+      .setDesc(tr("只保留 Canvas 標題與摘要，不顯示統計晶片與連結筆記晶片；適合小螢幕。"))
       .addToggle((toggle) => toggle
         .setValue(!!this.plugin.settings.mobileHideCanvasDetails)
         .onChange(async (value) => {
@@ -1954,8 +2313,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("拖曳筆記到 Canvas（桌面版）")
-      .setDesc("在 Markdown 卡片右上方提供拖曳把手，放進 Canvas 時使用 Obsidian 原生檔案引用；不複製筆記或修改筆記內容。")
+      .setName(tr("拖曳筆記到 Canvas（桌面版）"))
+      .setDesc(tr("在 Markdown 卡片右上方提供拖曳把手，放進 Canvas 時使用 Obsidian 原生檔案引用；不複製筆記或修改筆記內容。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.enableCanvasDrag !== false)
         .onChange(async (value) => {
@@ -1964,14 +2323,14 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("排序模式")
-      .setDesc("有效編輯時間只在內容指紋改變時更新，排序、卡片時間與日期分組都使用它。紀錄只存本機，不會同步。首次觀察以當時 mtime 為基準；已被重寫的舊時間無法回推，不會自我修正。未讀取、超大或讀取失敗的檔案以 mtime 暫代。其他排序沿用原本時間。")
+      .setName(tr("排序模式"))
+      .setDesc(tr("有效編輯時間只在內容指紋改變時更新，排序、卡片時間與日期分組都使用它。紀錄只存本機，不會同步。首次觀察以當時 mtime 為基準；已被重寫的舊時間無法回推，不會自我修正。未讀取、超大或讀取失敗的檔案以 mtime 暫代。其他排序沿用原本時間。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("effective", "有效編輯時間（忽略無內容變更的重寫）")
-        .addOption("mtime", "檔案修改時間")
-        .addOption("opened", "最近開啟時間")
-        .addOption("localEdit", "本機編輯時間")
-        .addOption("smart", "智慧排序：本機編輯 / 開啟 / 檔案修改")
+        .addOption("effective", tr("有效編輯時間（忽略無內容變更的重寫）"))
+        .addOption("mtime", tr("檔案修改時間"))
+        .addOption("opened", tr("最近開啟時間"))
+        .addOption("localEdit", tr("本機編輯時間"))
+        .addOption("smart", tr("智慧排序：本機編輯 / 開啟 / 檔案修改"))
         .setValue(this.plugin.settings.sortMode || DEFAULT_SETTINGS.sortMode)
         .onChange(async (value) => {
           this.plugin.settings.sortMode = value;
@@ -1979,19 +2338,19 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("重設有效編輯時間基準")
-      .setDesc("清空本機內容指紋與有效時間；下次摘要讀取以目前 mtime 為基準。無法恢復被重寫前的時間，不會修改筆記或同步設定。")
+      .setName(tr("重設有效編輯時間基準"))
+      .setDesc(tr("清空本機內容指紋與有效時間；下次摘要讀取以目前 mtime 為基準。無法恢復被重寫前的時間，不會修改筆記或同步設定。"))
       .addButton((button) => button
-        .setButtonText("重設基準")
+        .setButtonText(tr("重設基準"))
         .setWarning()
         .onClick(async () => {
           await this.plugin.resetEffectiveRecords();
-          new Notice("已重設有效編輯時間基準");
+          new Notice(tr("已重設有效編輯時間基準"));
         }));
 
     new Setting(containerEl)
-      .setName("記錄最近開啟")
-      .setDesc("只寫入本裝置儲存，不會同步。用於最近開啟與智慧排序。")
+      .setName(tr("記錄最近開啟"))
+      .setDesc(tr("只寫入本裝置儲存，不會同步。用於最近開啟與智慧排序。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.trackRecentOpened !== false)
         .onChange(async (value) => {
@@ -2000,8 +2359,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("記錄本機編輯")
-      .setDesc("偵測 Obsidian 編輯器變更，記錄本機編輯時間；同步工具改 mtime 時不會被當成本機編輯。")
+      .setName(tr("記錄本機編輯"))
+      .setDesc(tr("偵測 Obsidian 編輯器變更，記錄本機編輯時間；同步工具改 mtime 時不會被當成本機編輯。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.trackLocalEdits !== false)
         .onChange(async (value) => {
@@ -2010,8 +2369,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("內容變更確認")
-      .setDesc("v0.3.1 新增。只有內容 hash 真的改變時，才記為本機編輯；可避免手機只是點出鍵盤就排序更新。")
+      .setName(tr("內容變更確認"))
+      .setDesc(tr("v0.3.1 新增。只有內容 hash 真的改變時，才記為本機編輯；可避免手機只是點出鍵盤就排序更新。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.confirmContentChange !== false)
         .onChange(async (value) => {
@@ -2020,8 +2379,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("手機防誤判模式")
-      .setDesc("手機版開啟筆記後短時間內，若內容沒有變化，會被視為焦點 / 鍵盤事件，不記為本機編輯。")
+      .setName(tr("手機防誤判模式"))
+      .setDesc(tr("手機版開啟筆記後短時間內，若內容沒有變化，會被視為焦點 / 鍵盤事件，不記為本機編輯。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.mobileFalseEditGuard !== false)
         .onChange(async (value) => {
@@ -2030,10 +2389,10 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("內容確認延遲")
-      .setDesc("桌機 / 手機的 hash debounce。數字越大越省電，也越不容易受連續事件干擾。")
+      .setName(tr("內容確認延遲"))
+      .setDesc(tr("桌機 / 手機的 hash debounce。數字越大越省電，也越不容易受連續事件干擾。"))
       .addText((text) => text
-        .setPlaceholder("桌機 ms，例如 900")
+        .setPlaceholder(tr("桌機 ms，例如 900"))
         .setValue(String(this.plugin.settings.hashDebounceMs || 900))
         .onChange(async (value) => {
           const parsed = Number.parseInt(value, 10);
@@ -2043,7 +2402,7 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
           }
         }))
       .addText((text) => text
-        .setPlaceholder("手機 ms，例如 1800")
+        .setPlaceholder(tr("手機 ms，例如 1800"))
         .setValue(String(this.plugin.settings.mobileHashDebounceMs || 1800))
         .onChange(async (value) => {
           const parsed = Number.parseInt(value, 10);
@@ -2054,8 +2413,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("大檔案略過門檻")
-      .setDesc("超過此大小就不做內容 hash，避免大型筆記或 Canvas 影響手機效能。單位：KB。")
+      .setName(tr("大檔案略過門檻"))
+      .setDesc(tr("超過此大小就不做內容 hash，避免大型筆記或 Canvas 影響手機效能。單位：KB。"))
       .addText((text) => text
         .setPlaceholder("1024")
         .setValue(String(Math.round((this.plugin.settings.maxHashFileSizeBytes || 1048576) / 1024)))
@@ -2069,8 +2428,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("顯示排序來源")
-      .setDesc("在每個項目時間旁顯示：有效編輯、檔案修改、最近開啟或本機編輯。")
+      .setName(tr("顯示排序來源"))
+      .setDesc(tr("在每個項目時間旁顯示：有效編輯、檔案修改、最近開啟或本機編輯。"))
       .addToggle((toggle) => toggle
         .setValue(!!this.plugin.settings.showSortReason)
         .onChange(async (value) => {
@@ -2079,29 +2438,29 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("清除本機排序紀錄")
-      .setDesc("清除外掛記錄的最近開啟與本機編輯時間；不會刪除任何筆記。")
+      .setName(tr("清除本機排序紀錄"))
+      .setDesc(tr("清除外掛記錄的最近開啟與本機編輯時間；不會刪除任何筆記。"))
       .addButton((button) => button
-        .setButtonText("清除")
+        .setButtonText(tr("清除"))
         .setWarning()
         .onClick(async () => {
-          const ok = window.confirm("確定要清除 ReNotes 的本機排序紀錄嗎？\n\n這不會刪除任何筆記，只會清除最近開啟 / 本機編輯時間。");
+          const ok = window.confirm(tr("確定要清除 ReNotes 的本機排序紀錄嗎？\n\n這不會刪除任何筆記，只會清除最近開啟 / 本機編輯時間。"));
           if (!ok) return;
           for (const path of this.plugin.pendingLocalEditTimers.keys()) this.plugin.clearPendingLocalEditTimer(path);
           this.plugin.fileActivity = Object.create(null);
           this.plugin.saveActivityDebounced.cancel();
           await this.plugin.saveActivity();
           await this.plugin.refreshViews();
-          new Notice("已清除本機排序紀錄");
+          new Notice(tr("已清除本機排序紀錄"));
         }));
 
     new Setting(containerEl)
-      .setName("標題來源")
-      .setDesc("自動：優先使用第一個 H1，沒有 H1 時使用檔名。")
+      .setName(tr("標題來源"))
+      .setDesc(tr("自動：優先使用第一個 H1，沒有 H1 時使用檔名。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("auto", "自動")
-        .addOption("filename", "檔名")
-        .addOption("h1", "第一個 H1")
+        .addOption("auto", tr("自動"))
+        .addOption("filename", tr("檔名"))
+        .addOption("h1", tr("第一個 H1"))
         .setValue(this.plugin.settings.titleSource)
         .onChange(async (value) => {
           this.plugin.settings.titleSource = value;
@@ -2109,12 +2468,12 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("點擊筆記開啟方式")
-      .setDesc("固定行為：左鍵取代目前主要分頁；滑鼠中鍵或 Ctrl/Cmd 點擊另開新分頁。右鍵選單包含開新分頁、新視窗開啟與刪除，並保留 Obsidian 原本的檔案選單項目。");
+      .setName(tr("點擊筆記開啟方式"))
+      .setDesc(tr("固定行為：左鍵取代目前主要分頁；滑鼠中鍵或 Ctrl/Cmd 點擊另開新分頁。右鍵選單包含開新分頁、新視窗開啟與刪除，並保留 Obsidian 原本的檔案選單項目。"));
 
     new Setting(containerEl)
-      .setName("包含 Canvas")
-      .setDesc("開啟後，.canvas 檔會和 Markdown 筆記一起依最近修改時間排序顯示；不會建立新的 Canvas。")
+      .setName(tr("包含 Canvas"))
+      .setDesc(tr("開啟後，.canvas 檔會和 Markdown 筆記一起依最近修改時間排序顯示；不會建立新的 Canvas。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.includeCanvas !== false)
         .onChange(async (value) => {
@@ -2122,16 +2481,16 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
           await this.plugin.saveSettingsAndRefresh();
         }));
 
-    containerEl.createEl("h3", { text: "Canvas 深度支援" });
+    containerEl.createEl("h3", { text: tr("Canvas 深度支援") });
 
     new Setting(containerEl)
-      .setName("Canvas 摘要模式")
-      .setDesc("智慧模式會依序使用白板文字、分組名稱、連結筆記與結構統計。")
+      .setName(tr("Canvas 摘要模式"))
+      .setDesc(tr("智慧模式會依序使用白板文字、分組名稱、連結筆記與結構統計。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("smart", "智慧摘要")
-        .addOption("text", "優先顯示文字節點")
-        .addOption("files", "優先顯示連結筆記")
-        .addOption("stats", "只顯示結構統計")
+        .addOption("smart", tr("智慧摘要"))
+        .addOption("text", tr("優先顯示文字節點"))
+        .addOption("files", tr("優先顯示連結筆記"))
+        .addOption("stats", tr("只顯示結構統計"))
         .setValue(this.plugin.settings.canvasPreviewMode || "smart")
         .onChange(async (value) => {
           this.plugin.settings.canvasPreviewMode = value;
@@ -2139,8 +2498,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("Canvas 預覽項目數")
-      .setDesc("控制 Canvas 摘要與連結筆記晶片最多顯示幾個項目。")
+      .setName(tr("Canvas 預覽項目數"))
+      .setDesc(tr("控制 Canvas 摘要與連結筆記晶片最多顯示幾個項目。"))
       .addText((text) => text
         .setPlaceholder("5")
         .setValue(String(this.plugin.settings.canvasPreviewItemLimit || 5))
@@ -2153,7 +2512,7 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("顯示搜尋框")
+      .setName(tr("顯示搜尋框"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.showSearch)
         .onChange(async (value) => {
@@ -2162,8 +2521,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("顯示類型篩選")
-      .setDesc("在篩選面板內顯示：全部 / 筆記 / Canvas。")
+      .setName(tr("顯示類型篩選"))
+      .setDesc(tr("在篩選面板內顯示：全部 / 筆記 / Canvas。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.showTypeFilter !== false)
         .onChange(async (value) => {
@@ -2172,11 +2531,11 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("預設類型篩選")
-      .setDesc("最近修改面板開啟時預設顯示的檔案類型。")
+      .setName(tr("預設類型篩選"))
+      .setDesc(tr("最近修改面板開啟時預設顯示的檔案類型。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("all", "全部")
-        .addOption("markdown", "筆記")
+        .addOption("all", tr("全部"))
+        .addOption("markdown", tr("筆記"))
         .addOption("canvas", "Canvas")
         .setValue(this.plugin.settings.defaultTypeFilter || "all")
         .onChange(async (value) => {
@@ -2185,8 +2544,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("顯示結果數量")
-      .setDesc("在標題下方顯示目前列表項目數。")
+      .setName(tr("顯示結果數量"))
+      .setDesc(tr("在標題下方顯示目前列表項目數。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.showResultCount !== false)
         .onChange(async (value) => {
@@ -2195,8 +2554,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("固定頂部工具列")
-      .setDesc("捲動列表時，標題、搜尋與篩選區會固定在面板上方。")
+      .setName(tr("固定頂部工具列"))
+      .setDesc(tr("捲動列表時，標題、搜尋與篩選區會固定在面板上方。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.stickyHeader !== false)
         .onChange(async (value) => {
@@ -2205,11 +2564,11 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("時間格式")
-      .setDesc("控制游標停留時的時間提示；清單固定今天／昨天 HH:mm、七天內星期、更早日期。")
+      .setName(tr("時間格式"))
+      .setDesc(tr("控制游標停留時的時間提示；清單固定今天／昨天 HH:mm、七天內星期、更早日期。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("short", "簡短")
-        .addOption("full", "完整日期時間")
+        .addOption("short", tr("簡短"))
+        .addOption("full", tr("完整日期時間"))
         .setValue(this.plugin.settings.dateFormat)
         .onChange(async (value) => {
           this.plugin.settings.dateFormat = value;
@@ -2217,10 +2576,10 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("只包含這些資料夾")
-      .setDesc("每行一個資料夾。留空代表全 Vault。")
+      .setName(tr("只包含這些資料夾"))
+      .setDesc(tr("每行一個資料夾。留空代表全 Vault。"))
       .addTextArea((text) => text
-        .setPlaceholder("日記\n專案")
+        .setPlaceholder(tr("日記\n專案"))
         .setValue(this.plugin.settings.includedFolders)
         .onChange(async (value) => {
           this.plugin.settings.includedFolders = value;
@@ -2228,8 +2587,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("排除資料夾")
-      .setDesc("每行一個資料夾，例如 Templates、Archive。")
+      .setName(tr("排除資料夾"))
+      .setDesc(tr("每行一個資料夾，例如 Templates、Archive。"))
       .addTextArea((text) => text
         .setPlaceholder("Templates\nArchive")
         .setValue(this.plugin.settings.excludedFolders)
@@ -2239,8 +2598,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("排除標籤")
-      .setDesc("每行一個標籤，例如 #archive、#封存。")
+      .setName(tr("排除標籤"))
+      .setDesc(tr("每行一個標籤，例如 #archive、#封存。"))
       .addTextArea((text) => text
         .setPlaceholder("#archive\n#封存")
         .setValue(this.plugin.settings.excludedTags)
@@ -2250,23 +2609,23 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("最近修改面板位置")
-      .setDesc("建議選左側，會比較接近 UpNote 的筆記列表。")
+      .setName(tr("最近修改面板位置"))
+      .setDesc(tr("建議選左側，會比較接近 UpNote 的筆記列表。"))
       .addDropdown((dropdown) => dropdown
-        .addOption("left", "左側")
-        .addOption("right", "右側")
+        .addOption("left", tr("左側"))
+        .addOption("right", tr("右側"))
         .setValue(this.plugin.settings.viewLocation || "left")
         .onChange(async (value) => {
           this.plugin.settings.viewLocation = value;
           await this.plugin.saveSettings();
-          new Notice("面板位置設定已儲存，請關閉舊的最近修改面板後重新開啟。");
+          new Notice(tr("面板位置設定已儲存，請關閉舊的最近修改面板後重新開啟。"));
         }));
 
-    containerEl.createEl("h3", { text: "效能與快取" });
+    containerEl.createEl("h3", { text: tr("效能與快取") });
 
     new Setting(containerEl)
-      .setName("啟用摘要快取")
-      .setDesc("檔案修改時間與大小沒有改變時，重用已解析的標題、摘要、標籤與 Canvas 結構，減少重複讀取檔案。")
+      .setName(tr("啟用摘要快取"))
+      .setDesc(tr("檔案修改時間與大小沒有改變時，重用已解析的標題、摘要、標籤與 Canvas 結構，減少重複讀取檔案。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.enableCache !== false)
         .onChange(async (value) => {
@@ -2276,8 +2635,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("快取上限")
-      .setDesc("最多保留幾個檔案的解析結果。大量筆記建議 800–2000。")
+      .setName(tr("快取上限"))
+      .setDesc(tr("最多保留幾個檔案的解析結果。大量筆記建議 800–2000。"))
       .addText((text) => text
         .setPlaceholder("1200")
         .setValue(String(this.plugin.settings.cacheMaxEntries || 1200))
@@ -2291,8 +2650,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("可快取檔案大小上限")
-      .setDesc("超過此大小仍可顯示，但不會放入摘要快取，避免快取占用過多記憶體。單位：KB。")
+      .setName(tr("可快取檔案大小上限"))
+      .setDesc(tr("超過此大小仍可顯示，但不會放入摘要快取，避免快取占用過多記憶體。單位：KB。"))
       .addText((text) => text
         .setPlaceholder("2048")
         .setValue(String(Math.round((this.plugin.settings.cacheMaxFileSizeBytes || 2097152) / 1024)))
@@ -2307,8 +2666,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("分批渲染列表")
-      .setDesc("大量項目時分批畫出列表，減少手機版或大型 Vault 開啟面板時的卡頓。")
+      .setName(tr("分批渲染列表"))
+      .setDesc(tr("大量項目時分批畫出列表，減少手機版或大型 Vault 開啟面板時的卡頓。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.progressiveRender !== false)
         .onChange(async (value) => {
@@ -2317,8 +2676,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("每批渲染數量")
-      .setDesc("分批渲染開啟時，每次畫出幾筆。手機建議 15–30；桌機可 30–60。")
+      .setName(tr("每批渲染數量"))
+      .setDesc(tr("分批渲染開啟時，每次畫出幾筆。手機建議 15–30；桌機可 30–60。"))
       .addText((text) => text
         .setPlaceholder("30")
         .setValue(String(this.plugin.settings.renderBatchSize || 30))
@@ -2331,8 +2690,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("顯示效能統計")
-      .setDesc("Debug 模式開啟時，在標題下方顯示讀取數、快取命中數、解析數與耗時。")
+      .setName(tr("顯示效能統計"))
+      .setDesc(tr("Debug 模式開啟時，在標題下方顯示讀取數、快取命中數、解析數與耗時。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.showPerformanceStats !== false)
         .onChange(async (value) => {
@@ -2341,19 +2700,19 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("清除摘要快取")
-      .setDesc("清除記憶體中的摘要快取。下一次重新整理會重新讀取並建立快取；不會影響任何筆記內容。")
+      .setName(tr("清除摘要快取"))
+      .setDesc(tr("清除記憶體中的摘要快取。下一次重新整理會重新讀取並建立快取；不會影響任何筆記內容。"))
       .addButton((button) => button
-        .setButtonText("清除快取")
+        .setButtonText(tr("清除快取"))
         .onClick(async () => {
           const count = this.plugin.clearItemCache(false);
           await this.plugin.refreshViews();
-          new Notice(`已清除 ${count} 筆摘要快取`);
+          new Notice(trf("已清除 {0} 筆摘要快取", count));
         }));
 
     new Setting(containerEl)
-      .setName("Debug 模式")
-      .setDesc("列表為空時顯示讀取統計，方便排查資料夾或標籤篩選。")
+      .setName(tr("Debug 模式"))
+      .setDesc(tr("列表為空時顯示讀取統計，方便排查資料夾或標籤篩選。"))
       .addToggle((toggle) => toggle
         .setValue(!!this.plugin.settings.debugMode)
         .onChange(async (value) => {
@@ -2362,17 +2721,17 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         }));
 
     new Setting(containerEl)
-      .setName("空摘要文字")
-      .setDesc("筆記沒有可顯示內容時出現的文字。")
+      .setName(tr("空摘要文字"))
+      .setDesc(tr("筆記沒有可顯示內容時出現的文字。"))
       .addText((text) => text
         .setValue(this.plugin.settings.emptySnippetText)
         .onChange(async (value) => {
-          this.plugin.settings.emptySnippetText = value || "沒有其他文字";
+          this.plugin.settings.emptySnippetText = value || tr("沒有其他文字");
           await this.plugin.saveSettingsAndRefresh();
         }));
-    containerEl.createEl("h3", { text: "說明" });
+    containerEl.createEl("h3", { text: tr("說明") });
     containerEl.createEl("p", {
-      text: "若使用 Lazy Loader，建議把 ReNotes 設為『instant』，可避免側欄分頁短暫顯示幽靈圖示"
+      text: tr("若使用 Lazy Loader，建議把 ReNotes 設為『instant』，可避免側欄分頁短暫顯示幽靈圖示")
     });
   }
 }
@@ -2408,12 +2767,12 @@ class ReNotesDeleteModal extends Modal {
     const headingBody = heading.createDiv({ cls: "rnf-delete-heading-body" });
     const title = headingBody.createEl("h2", {
       cls: "rnf-delete-title",
-      text: isCanvas ? "要刪除這張 Canvas 嗎？" : "要刪除這份筆記嗎？"
+      text: isCanvas ? tr("要刪除這張 Canvas 嗎？") : tr("要刪除這份筆記嗎？")
     });
     title.setAttribute("id", this.dialogId + "-title");
     const subtitle = headingBody.createEl("p", {
       cls: "rnf-delete-subtitle",
-      text: "請先確認下方檔案，只有按下確認才會執行刪除。"
+      text: tr("請先確認下方檔案，只有按下確認才會執行刪除。")
     });
     subtitle.setAttribute("id", this.dialogId + "-details");
 
@@ -2422,27 +2781,27 @@ class ReNotesDeleteModal extends Modal {
     setIcon(fileIcon, isCanvas ? "layout-dashboard" : "file-text");
     const fileDetails = fileRow.createDiv({ cls: "rnf-delete-file-details" });
     fileDetails.createDiv({ cls: "rnf-delete-filename", text: this.file.name });
-    const folder = this.file.parent?.path && this.file.parent.path !== "/" ? this.file.parent.path : "Vault 根目錄";
+    const folder = this.file.parent?.path && this.file.parent.path !== "/" ? this.file.parent.path : tr("Vault 根目錄");
     fileDetails.createDiv({ cls: "rnf-delete-filepath", text: folder });
 
     const info = contentEl.createDiv({ cls: "rnf-delete-info" });
     const infoIcon = info.createDiv({ cls: "rnf-delete-info-icon" });
     setIcon(infoIcon, "info");
     const message = mode === "system"
-      ? "檔案會移至系統垃圾桶，可依系統設定嘗試還原。"
+      ? tr("檔案會移至系統垃圾桶，可依系統設定嘗試還原。")
       : mode === "local"
-        ? "檔案會移至這個 Vault 的 .trash 資料夾。"
+        ? tr("檔案會移至這個 Vault 的 .trash 資料夾。")
         : isPermanent
-          ? "目前 Obsidian 設定為永久刪除，這項操作可能無法復原。"
-          : "實際刪除方式依 Obsidian 的垃圾桶設定而定；部分方式可能無法復原。";
+          ? tr("目前 Obsidian 設定為永久刪除，這項操作可能無法復原。")
+          : tr("實際刪除方式依 Obsidian 的垃圾桶設定而定；部分方式可能無法復原。");
     info.createDiv({ cls: "rnf-delete-info-text", text: message });
     this.errorEl = contentEl.createDiv({ cls: "rnf-delete-error" });
     this.errorEl.setAttribute("role", "status");
     this.errorEl.setAttribute("aria-live", "polite");
 
     const actions = contentEl.createDiv({ cls: "rnf-delete-actions" });
-    const cancelButton = actions.createEl("button", { cls: "rnf-delete-cancel", text: "取消" });
-    const actionLabel = isPermanent ? "永久刪除" : (mode === "local" || mode === "system") ? "移至垃圾桶" : "確認刪除";
+    const cancelButton = actions.createEl("button", { cls: "rnf-delete-cancel", text: tr("取消") });
+    const actionLabel = isPermanent ? tr("永久刪除") : (mode === "local" || mode === "system") ? tr("移至垃圾桶") : tr("確認刪除");
     const submitButton = actions.createEl("button", { cls: "rnf-delete-confirm mod-warning", text: actionLabel });
     cancelButton.addEventListener("click", () => {
       if (!this.isSubmitting) this.close();
@@ -2452,7 +2811,7 @@ class ReNotesDeleteModal extends Modal {
       this.isSubmitting = true;
       cancelButton.disabled = true;
       submitButton.disabled = true;
-      submitButton.textContent = "處理中…";
+      submitButton.textContent = tr("處理中…");
       this.errorEl.textContent = "";
       try {
         const outcome = await this.onConfirm();
@@ -2460,10 +2819,10 @@ class ReNotesDeleteModal extends Modal {
           this.close();
           return;
         }
-        this.errorEl.textContent = outcome?.error || "操作未完成，請稍後再試。";
+        this.errorEl.textContent = outcome?.error || tr("操作未完成，請稍後再試。");
       } catch (error) {
         console.error("ReNotes: unexpected delete modal error", error);
-        this.errorEl.textContent = "發生非預期錯誤，檔案尚未確認刪除成功。";
+        this.errorEl.textContent = tr("發生非預期錯誤，檔案尚未確認刪除成功。");
       } finally {
         this.isSubmitting = false;
         cancelButton.disabled = false;
@@ -2493,9 +2852,9 @@ class RenameFileModal extends Modal {
     contentEl.empty();
     contentEl.addClass("recent-notes-feed-root", "rnf-rename-modal");
 
-    contentEl.createEl("h2", { text: "重新命名" });
+    contentEl.createEl("h2", { text: tr("重新命名") });
     contentEl.createEl("p", {
-      text: "輸入新的檔名。若沒有輸入副檔名，會自動保留原本的副檔名。",
+      text: tr("輸入新的檔名。若沒有輸入副檔名，會自動保留原本的副檔名。"),
       cls: "rnf-rename-desc"
     });
 
@@ -2504,11 +2863,11 @@ class RenameFileModal extends Modal {
       value: this.file.name,
       cls: "rnf-rename-input"
     });
-    this.inputEl.setAttr("aria-label", "新的檔名");
+    this.inputEl.setAttr("aria-label", tr("新的檔名"));
 
     const buttonsEl = contentEl.createDiv({ cls: "rnf-rename-buttons" });
-    const cancelButton = buttonsEl.createEl("button", { text: "取消" });
-    const submitButton = buttonsEl.createEl("button", { text: "重新命名", cls: "mod-cta" });
+    const cancelButton = buttonsEl.createEl("button", { text: tr("取消") });
+    const submitButton = buttonsEl.createEl("button", { text: tr("重新命名"), cls: "mod-cta" });
 
     const submit = async () => {
       if (!this.inputEl) return;
@@ -2572,24 +2931,24 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       (leaf) => new RecentNotesFeedView(leaf, this)
     );
 
-    this.addRibbonIcon("renotes", "開啟 ReNotes", () => this.activateView());
+    this.addRibbonIcon("renotes", tr("開啟 ReNotes"), () => this.activateView());
 
     this.addCommand({
       id: "open-recent-notes-feed",
-      name: "開啟 ReNotes",
+      name: tr("開啟 ReNotes"),
       callback: () => this.activateView()
     });
 
     this.addCommand({
       id: "refresh-recent-notes-feed",
-      name: "重新整理 ReNotes",
+      name: tr("重新整理 ReNotes"),
       callback: () => this.refreshViews()
     });
 
     for (const pinned of [true, false]) {
       this.addCommand({
         id: pinned ? "pin-current-file" : "unpin-current-file",
-        name: pinned ? "釘選目前檔案" : "取消釘選目前檔案",
+        name: pinned ? tr("釘選目前檔案") : tr("取消釘選目前檔案"),
         checkCallback: (checking) => {
           const file = this.app.workspace.getActiveFile();
           if (!(file instanceof TFile) || !["md", "canvas"].includes(file.extension)) return false;
@@ -2688,6 +3047,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const data = await this.loadData();
     this.pendingActivityMigration = false;
     this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
+    setReNotesLanguagePreference(this.settings.interfaceLanguage);
     delete this.settings.fileActivity;
     const storedLayoutVersion = Number(data && data.layoutVersion);
     const upgradeLayout = data && Object.keys(data).length > 0
@@ -2772,7 +3132,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     } catch (error) {
       this.pendingPinSave = true;
       console.warn("ReNotes: failed to save pins", error);
-      new Notice("釘選儲存失敗，下一次操作會重試");
+      new Notice(tr("釘選儲存失敗，下一次操作會重試"));
     }
   }
 
@@ -3627,10 +3987,10 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
         document.execCommand("copy");
         textarea.remove();
       }
-      new Notice("已複製 Debug 資訊");
+      new Notice(tr("已複製 Debug 資訊"));
     } catch (error) {
       console.error("ReNotes: copy debug info failed", error);
-      new Notice("複製 Debug 資訊失敗，請查看 Console");
+      new Notice(tr("複製 Debug 資訊失敗，請查看 Console"));
     }
   }
 
@@ -3638,7 +3998,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const path = typeof fileOrPath === "string" ? fileOrPath : fileOrPath.path;
     const freshFile = this.app.vault.getAbstractFileByPath(path);
     if (!(freshFile instanceof TFile)) {
-      new Notice(`找不到檔案：${path}`);
+      new Notice(trf("找不到檔案：{0}", path));
       await this.refreshViews();
       return;
     }
@@ -3653,10 +4013,10 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const link = `[[${linkText}]]`;
     try {
       await navigator.clipboard.writeText(link);
-      new Notice("已複製 Obsidian 連結");
+      new Notice(tr("已複製 Obsidian 連結"));
     } catch (error) {
       console.error("ReNotes: copy link failed", error);
-      new Notice("複製連結失敗");
+      new Notice(tr("複製連結失敗"));
     }
   }
 
@@ -3664,7 +4024,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const path = typeof fileOrPath === "string" ? fileOrPath : fileOrPath.path;
     const freshFile = this.app.vault.getAbstractFileByPath(path);
     if (!(freshFile instanceof TFile)) {
-      new Notice(`找不到檔案：${path}`);
+      new Notice(trf("找不到檔案：{0}", path));
       this.refreshViews();
       return;
     }
@@ -3677,10 +4037,10 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
       // Fallback for environments without showInFolder, mostly mobile or older Obsidian.
       this.app.workspace.trigger("reveal-in-navigation", freshFile);
-      new Notice("已嘗試在 Obsidian 檔案列表中顯示");
+      new Notice(tr("已嘗試在 Obsidian 檔案列表中顯示"));
     } catch (error) {
       console.error("ReNotes: show in folder failed", error);
-      new Notice("無法在資料夾中顯示");
+      new Notice(tr("無法在資料夾中顯示"));
     }
   }
 
@@ -3695,13 +4055,13 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       "新窗口打开",
       "open in new window",
       "open in new pane window",
-      "重新命名",
+      tr("重新命名"),
       "重命名",
       "rename",
       "刪除",
       "删除",
       "delete",
-      "移至垃圾桶",
+      tr("移至垃圾桶"),
       "移动到废纸篓",
       "move to trash",
       "在資料夾中顯示",
@@ -3809,7 +4169,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
   async openCanvasLinkedFile(linkPath, sourcePath, newTab = false) {
     const resolved = this.resolveCanvasLinkedFile(linkPath, sourcePath);
     if (!(resolved instanceof TFile)) {
-      new Notice(`找不到 Canvas 連結筆記：${basenameFromPath(linkPath)}`);
+      new Notice(trf("找不到 Canvas 連結筆記：{0}", basenameFromPath(linkPath)));
       return;
     }
     // Replacing an active Canvas leaf with Markdown may make Obsidian (or another
@@ -3832,7 +4192,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const path = typeof fileOrPath === "string" ? fileOrPath : fileOrPath.path;
     const freshFile = this.app.vault.getAbstractFileByPath(path);
     if (!(freshFile instanceof TFile) || freshFile.extension !== "canvas") {
-      new Notice("這不是 Canvas 檔案");
+      new Notice(tr("這不是 Canvas 檔案"));
       return;
     }
 
@@ -3841,7 +4201,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       const info = parseCanvasContent(content);
       const links = filterCanvasDocumentLinks(info.linkedFiles);
       if (links.length === 0) {
-        new Notice("這個 Canvas 沒有連結筆記");
+        new Notice(tr("這個 Canvas 沒有連結筆記"));
         return;
       }
 
@@ -3856,10 +4216,10 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       });
 
       await navigator.clipboard.writeText(lines.join("\n"));
-      new Notice(`已複製 ${lines.length} 個 Canvas 連結筆記`);
+      new Notice(trf("已複製 {0} 個 Canvas 連結筆記", lines.length));
     } catch (error) {
       console.error("ReNotes: copy canvas links failed", error);
-      new Notice("複製 Canvas 連結筆記失敗");
+      new Notice(tr("複製 Canvas 連結筆記失敗"));
     }
   }
 
@@ -3868,7 +4228,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const freshFile = this.app.vault.getAbstractFileByPath(path);
 
     if (!(freshFile instanceof TFile)) {
-      new Notice(`找不到檔案：${path}`);
+      new Notice(trf("找不到檔案：{0}", path));
       this.refreshViews();
       return;
     }
@@ -3877,18 +4237,18 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     if (["md", "canvas"].includes(freshFile.extension)) {
       const pinned = this.isPinned(freshFile.path);
       menu.addItem((item) => item
-        .setTitle(pinned ? "取消釘選" : "釘選")
+        .setTitle(pinned ? tr("取消釘選") : tr("釘選"))
         .setIcon(pinned ? "pin-off" : "pin")
         .onClick(() => this.setPinned(freshFile.path, !pinned)));
     }
 
     menu.addItem((item) => item
-      .setTitle("開啟")
+      .setTitle(tr("開啟"))
       .setIcon("file")
       .onClick(() => this.openFile(freshFile.path, false)));
 
     menu.addItem((item) => item
-      .setTitle("開新分頁")
+      .setTitle(tr("開新分頁"))
       .setIcon("lucide-plus-square")
       .onClick(() => this.openFile(freshFile.path, true)));
 
@@ -3898,7 +4258,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       .onClick(() => this.openFileInNewWindow(freshFile.path)));
 
     menu.addItem((item) => item
-      .setTitle("重新命名")
+      .setTitle(tr("重新命名"))
       .setIcon("pencil")
       .onClick(() => this.renameFileWithPrompt(freshFile.path)));
 
@@ -3910,13 +4270,13 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       .onClick(() => this.showInFolder(freshFile.path)));
 
     menu.addItem((item) => item
-      .setTitle("複製 Obsidian 連結")
+      .setTitle(tr("複製 Obsidian 連結"))
       .setIcon("link")
       .onClick(() => this.copyObsidianLink(freshFile.path)));
 
     if (freshFile.extension === "canvas") {
       menu.addItem((item) => item
-        .setTitle("複製 Canvas 連結筆記清單")
+        .setTitle(tr("複製 Canvas 連結筆記清單"))
         .setIcon("list")
         .onClick(() => this.copyCanvasLinkedFiles(freshFile.path)));
     }
@@ -3940,7 +4300,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     } else if (typeof menu.showAtPosition === "function") {
       menu.showAtPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
     } else {
-      new Notice("無法顯示選單");
+      new Notice(tr("無法顯示選單"));
     }
   }
 
@@ -3979,7 +4339,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const freshFile = this.app.vault.getAbstractFileByPath(path);
 
     if (!(freshFile instanceof TFile)) {
-      new Notice(`找不到筆記：${path}`);
+      new Notice(trf("找不到筆記：{0}", path));
       await this.refreshViews();
       return;
     }
@@ -3993,7 +4353,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       this.refreshActiveItemMarks();
     } catch (error) {
       console.error("ReNotes: open file failed", error);
-      new Notice(`開啟失敗：${freshFile.basename}`);
+      new Notice(trf("開啟失敗：{0}", freshFile.basename));
     }
   }
 
@@ -4006,7 +4366,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const freshFile = this.app.vault.getAbstractFileByPath(path);
 
     if (!(freshFile instanceof TFile)) {
-      new Notice(`找不到筆記：${path}`);
+      new Notice(trf("找不到筆記：{0}", path));
       await this.refreshViews();
       return;
     }
@@ -4021,7 +4381,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       this.markFileOpened(freshFile);
     } catch (error) {
       console.error("ReNotes: open in new window failed", error);
-      new Notice("無法開啟新視窗，已改用新分頁開啟");
+      new Notice(tr("無法開啟新視窗，已改用新分頁開啟"));
       // Already inside the shared queue; do not enqueue behind this request itself.
       await this.openFileNow(freshFile.path, true);
     }
@@ -4032,7 +4392,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const freshFile = this.app.vault.getAbstractFileByPath(path);
 
     if (!(freshFile instanceof TFile)) {
-      new Notice(`找不到檔案：${path}`);
+      new Notice(trf("找不到檔案：{0}", path));
       await this.refreshViews();
       return;
     }
@@ -4040,12 +4400,12 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const modal = new RenameFileModal(this.app, freshFile, async (newFileName) => {
       let targetName = String(newFileName || "").trim();
       if (!targetName) {
-        new Notice("檔名不可空白");
+        new Notice(tr("檔名不可空白"));
         return false;
       }
 
       if (/[\\/]/.test(targetName)) {
-        new Notice("重新命名只支援改檔名，不支援移動資料夾");
+        new Notice(tr("重新命名只支援改檔名，不支援移動資料夾"));
         return false;
       }
 
@@ -4062,7 +4422,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       const newPath = parentPath ? `${parentPath}/${targetName}` : targetName;
 
       if (this.app.vault.getAbstractFileByPath(newPath)) {
-        new Notice(`已存在同名檔案：${targetName}`);
+        new Notice(trf("已存在同名檔案：{0}", targetName));
         return false;
       }
 
@@ -4075,12 +4435,12 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
         this.migrateActivityPath(freshFile, path);
 
-        new Notice(`已重新命名為：${basenameFromPath(newPath)}`);
+        new Notice(trf("已重新命名為：{0}", basenameFromPath(newPath)));
         await this.refreshViews();
         return true;
       } catch (error) {
         console.error("ReNotes: rename failed", error);
-        new Notice(`重新命名失敗：${freshFile.basename}`);
+        new Notice(trf("重新命名失敗：{0}", freshFile.basename));
         return false;
       }
     });
@@ -4092,7 +4452,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const path = typeof fileOrPath === "string" ? fileOrPath : fileOrPath.path;
     const freshFile = this.app.vault.getAbstractFileByPath(path);
     if (!(freshFile instanceof TFile)) {
-      new Notice("找不到檔案：" + path);
+      new Notice(tr("找不到檔案：") + path);
       await this.refreshViews();
       return;
     }
@@ -4101,7 +4461,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       // Guard against deleting another note if this path changed while the dialog was open.
       const currentFile = this.app.vault.getAbstractFileByPath(path);
       if (!(currentFile instanceof TFile) || currentFile !== freshFile || currentFile.path !== path) {
-        return { ok: false, error: "檔案已移動或不存在，請關閉視窗後重新整理列表。" };
+        return { ok: false, error: tr("檔案已移動或不存在，請關閉視窗後重新整理列表。") };
       }
       try {
         if (this.app.fileManager && typeof this.app.fileManager.trashFile === "function") {
@@ -4113,10 +4473,10 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
         }
       } catch (error) {
         console.error("ReNotes: delete failed", error);
-        new Notice("刪除失敗：" + freshFile.basename);
-        return { ok: false, error: "無法刪除這個檔案，請確認權限或檢查 Obsidian 記錄。" };
+        new Notice(tr("刪除失敗：") + freshFile.basename);
+        return { ok: false, error: tr("無法刪除這個檔案，請確認權限或檢查 Obsidian 記錄。") };
       }
-      new Notice("已刪除：" + freshFile.basename);
+      new Notice(tr("已刪除：") + freshFile.basename);
       try {
         await this.refreshViews();
       } catch (error) {
@@ -4254,7 +4614,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
         : (Array.isArray(entry.markdownLines) ? entry.markdownLines : []);
       const snippet = snippetLinesArray.length > 0
         ? truncate(snippetLinesArray.slice(0, snippetLines).join(" "), isCanvas ? 220 : 160)
-        : (isCanvas ? "Canvas 白板" : this.settings.emptySnippetText);
+        : (isCanvas ? tr("Canvas 白板") : tr(this.settings.emptySnippetText));
 
       if (!pinned) regularCount += 1;
       items.push({
@@ -4270,7 +4630,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
         fileMtime: sortInfo.fileMtime || file.stat.mtime,
         lastOpened: sortInfo.opened || 0,
         lastLocalEdit: sortInfo.localEdit || 0,
-        sortReason: sortInfo.reason || "檔案修改",
+        sortReason: sortInfo.reason || tr("檔案修改"),
         type: isCanvas ? "canvas" : "markdown",
         canvas: canvasInfo ? {
           nodeCount: canvasInfo.nodeCount,
@@ -4305,7 +4665,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
 module.exports.__test = {
   EFFECTIVE_STORAGE_KEY, RENOTES_ICON, contentFingerprint, stableSerialize, normalizeEffectiveRecords, pruneEffectiveRecords, getEffectiveTime,
-  DEFAULT_SETTINGS, ACTIVITY_STORAGE_KEY, RecentNotesFeedView, RecentNotesFeedSettingTab, ReNotesDeleteModal, getSortDeviceHint,
+  DEFAULT_SETTINGS, tr, trf, resolveReNotesLanguage, setReNotesLanguagePreference, EN_TRANSLATIONS, ACTIVITY_STORAGE_KEY, RecentNotesFeedView, RecentNotesFeedSettingTab, ReNotesDeleteModal, getSortDeviceHint,
   mergeActivity, formatRelativeTime, getSecondLine, simpleContentHash, pruneActivity, computeSortInfo,
    getDateGroup, formatDateGroup, formatNoteTime, getRecentLocalDayKey, formatRecentDateLabel, getRecentDateIndex, truncateRecentCanvasLink, getWidthClass, scaleCanvasNodes, parseCanvasContent, normalizePinnedPaths,
    getLayoutDensity, getEffectiveSnippetLines, normalizeImageLink, findNoteImagePath, getImageFile

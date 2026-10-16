@@ -1,17 +1,11 @@
-# Vault settings, sync-conflict copies, and private data
-**/data.json
-**/data-*.json
-**/*.local.json
-**/.obsidian/
-**/.env
-**/.env.*
-**/*.key
-**/*.pem
-**/*.p12
-**/*.secret
-**/secrets.*
-
-# Local builds and development files
+# Local editor files and generated artifacts
+data.json
+data-*.json
+*.local.json
+.env
+.env.*
+*.key
+*.pem
 node_modules/
 .vscode/
 .idea/
