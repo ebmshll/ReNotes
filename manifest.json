@@ -1,0 +1,10 @@
+{
+  "id": "recent-notes-feed",
+  "name": "ReNotes",
+  "version": "1.2.1",
+  "minAppVersion": "1.4.0",
+  "description": "ReNotes：以卡片呈現最近修改與釘選的筆記與 Canvas，含縮圖、三檔密度、依側欄寬度自動收合、桌面多欄。",
+  "author": "ReNotes",
+  "authorUrl": "",
+  "isDesktopOnly": false
+}
