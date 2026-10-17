@@ -6,9 +6,9 @@ ReNotes is a visual **Obsidian recent notes plugin** that brings Markdown notes 
 
 [**Install from Obsidian**](https://community.obsidian.md/plugins/recent-notes-feed) · [GitHub Releases](https://github.com/ebmshll/ReNotes/releases/latest) · [Features](#feature-showcase) · [Installation](#installation) · [FAQ](#frequently-asked-questions) · [繁體中文](#繁體中文)
 
-![ReNotes recent Markdown notes and Canvas boards in a visual Obsidian sidebar](docs/images/marketing/01-renotes-hero-en.png)
+![ReNotes mobile-first English interface showing Markdown and Canvas notes on a phone](docs/images/marketing/01-renotes-hero-en.png)
 
-*Find the note. Keep the flow. — Code-rendered ReNotes interface with illustrative sample notes.*
+*Mobile-first ReNotes interface showcase, rendered from plugin UI components with illustrative notes.*
 
 ## English — Obsidian Recent Notes & Canvas Sidebar
 
@@ -33,34 +33,34 @@ It is a useful companion for **daily notes, Bullet Journaling, project notes, kn
 
 ### 01 — Recent notes, one focused sidebar
 
-![ReNotes recent-notes sidebar for Obsidian with Markdown and Canvas cards, pinned previews and search](docs/images/marketing/02-renotes-overview-en.png)
+![ReNotes mobile sidebar showing recent Markdown and Canvas notes, card previews and pinned items](docs/images/marketing/02-renotes-overview-en.png)
 
 *ONE SIDEBAR. EVERY RECENT IDEA. — Visual previews, pinned notes and quick search.*
 
 ### 02 — Jump directly to a date
 
-![ReNotes date navigation popover with seven recent active days, daily counts and monthly browsing](docs/images/marketing/03-renotes-date-navigation-en.png)
+![ReNotes mobile date navigator showing up to seven recent active days and older dates by month](docs/images/marketing/03-renotes-date-navigation-en.png)
 
 *YOUR NOTES. ANY DAY. — Jump to the selected day without filtering the list.*
 
 ### 03 — Follow Canvas connections
 
-![ReNotes linked Markdown and Canvas documents with rounded outline chips and thumbnail-aligned times](docs/images/marketing/04-renotes-canvas-links-en.png)
+![ReNotes mobile interface displaying linked Markdown and Canvas document chips below Canvas cards](docs/images/marketing/04-renotes-canvas-links-en.png)
 
 *FOLLOW THE CONNECTIONS. — Compact links to Markdown notes and Canvas boards.*
 
 ### 04 — English and Traditional Chinese
 
-![English and Traditional Chinese sidebar interface options for the ReNotes Obsidian plugin](docs/images/marketing/05-renotes-languages-en.png)
+![ReNotes English and Traditional Chinese mobile sidebar interfaces displayed on two phones](docs/images/marketing/05-renotes-languages-en.png)
 
 *YOUR WORKFLOW. YOUR LANGUAGE. — Choose English, Traditional Chinese or automatic selection.*
 
 
-## Illustrated interface previews
+## Mobile interface previews
 
-Explore the new full-resolution marketing visuals: [hero](docs/images/marketing/01-renotes-hero-en.png), [recent notes](docs/images/marketing/02-renotes-overview-en.png), [date navigation](docs/images/marketing/03-renotes-date-navigation-en.png), [Canvas links](docs/images/marketing/04-renotes-canvas-links-en.png), and [bilingual interface](docs/images/marketing/05-renotes-languages-en.png). A [1280 × 640 social preview](docs/images/marketing/renotes-social-preview-en.png) is also available.
+Explore the redesigned English-first mobile-layout visuals (rendered at full desktop-banner resolution): [hero](docs/images/marketing/01-renotes-hero-en.png), [recent notes](docs/images/marketing/02-renotes-overview-en.png), [date navigation](docs/images/marketing/03-renotes-date-navigation-en.png), [Canvas links](docs/images/marketing/04-renotes-canvas-links-en.png), and [bilingual interface](docs/images/marketing/05-renotes-languages-en.png). A [1280 × 640 social preview](docs/images/marketing/renotes-social-preview-en.png) is also available.
 
-*All visuals use ReNotes interface components and illustrative sample content, rendered with HTML, CSS and SVG.*
+*The phone displays are illustrative mobile UI renderings using ReNotes components and sample notes, created with HTML, CSS and SVG (not AI-generated screenshots).*
 
 **Release 1.2.3:** Improves CSS compatibility with Obsidian 1.4.5, removes an unnecessary `!important`, and introduces signed artifact provenance via GitHub Actions. User-facing features and note data remain unchanged.
 
