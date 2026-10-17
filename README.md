@@ -4,7 +4,7 @@
 
 ReNotes is a visual **Obsidian recent notes plugin** that brings Markdown notes and Canvas boards into one focused sidebar. Browse recent work using preview cards, pinned notes, date navigation, search, and flexible sorting, with English and Traditional Chinese interface support.
 
-[**Download ReNotes**](https://github.com/ebmshll/ReNotes/releases/latest) · [Features](#feature-showcase) · [Installation](#installation) · [FAQ](#frequently-asked-questions) · [繁體中文](#繁體中文)
+[**Install from Obsidian**](https://community.obsidian.md/plugins/recent-notes-feed) · [GitHub Releases](https://github.com/ebmshll/ReNotes/releases/latest) · [Features](#feature-showcase) · [Installation](#installation) · [FAQ](#frequently-asked-questions) · [繁體中文](#繁體中文)
 
 ![ReNotes recent Markdown notes and Canvas boards in a visual Obsidian sidebar](docs/images/marketing/01-renotes-hero-en.png)
 
@@ -22,11 +22,11 @@ It is a useful companion for **daily notes, Bullet Journaling, project notes, kn
 
 - **Recent Markdown notes and Canvas boards:** Browse titles, snippets, file-type icons, timestamps and optional preview thumbnails in the same sidebar.
 - **Multiple sorting options:** Use file modification time, effective edit time, recently opened time, local edit time and other available sorting modes.
-- **Jump to a date:** Select from seven recent active dates, see note counts, or expand earlier dates by month. Choosing a date scrolls to that section without filtering out other notes.
+- **Jump to a date:** Choose from up to seven recent dates with notes and see per-day counts; older dates can be expanded by month. Selecting a date scrolls to it without hiding other notes.
 - **Linked Canvas documents:** Fine-outline chips below Canvas cards open linked `.md` and `.canvas` files, with short five-character labels and full-name tooltips.
-- **Pinned notes, search and filters:** Find relevant work by note type, folders and tags.
+- **Pinned notes, search and filters:** Filter by note type, include or exclude folders, exclude selected tags, and search note text, file paths, or tags.
 - **Flexible card layouts:** Choose compact, standard or spacious density, with responsive layouts for narrow sidebars and mobile devices.
-- **Traditional Chinese and English:** Follow the Obsidian interface language automatically or choose a language manually.
+- **Traditional Chinese and English:** Choose a language manually or follow Obsidian automatically. The main sidebar, dates, and settings are localized; a few secondary file-menu labels remain in Chinese in this release.
 - **Desktop drag-to-Canvas:** Use a drag handle to add a Markdown file reference to an Obsidian Canvas board; compatibility may vary by Obsidian version.
 
 ## Feature showcase
@@ -56,7 +56,7 @@ It is a useful companion for **daily notes, Bullet Journaling, project notes, kn
 *YOUR WORKFLOW. YOUR LANGUAGE. — Choose English, Traditional Chinese or automatic selection.*
 
 
-## Screenshots
+## Illustrated interface previews
 
 Explore the new full-resolution marketing visuals: [hero](docs/images/marketing/01-renotes-hero-en.png), [recent notes](docs/images/marketing/02-renotes-overview-en.png), [date navigation](docs/images/marketing/03-renotes-date-navigation-en.png), [Canvas links](docs/images/marketing/04-renotes-canvas-links-en.png), and [bilingual interface](docs/images/marketing/05-renotes-languages-en.png). A [1280 × 640 social preview](docs/images/marketing/renotes-social-preview-en.png) is also available.
 
@@ -66,20 +66,28 @@ Explore the new full-resolution marketing visuals: [hero](docs/images/marketing/
 
 ## Installation
 
-1. Open the [latest GitHub Release](https://github.com/ebmshll/ReNotes/releases/latest) and download the three individual assets: `main.js`, `manifest.json`, and `styles.css`.
-2. Place all three files inside `.obsidian/plugins/recent-notes-feed/` in your Obsidian vault.
+### Install from Obsidian (recommended)
+
+1. In Obsidian, open **Settings → Community plugins → Browse**.
+2. Search for **ReNotes**, or open its [official community plugin listing](https://community.obsidian.md/plugins/recent-notes-feed).
+3. Select **Install**, then **Enable**.
+4. To change languages, open **Settings → Community plugins → ReNotes → Interface language**.
+
+### Manual installation from GitHub
+
+1. Open the [latest GitHub Release](https://github.com/ebmshll/ReNotes/releases/latest) and download `main.js`, `manifest.json`, and `styles.css` individually.
+2. Place the three files in `YOUR_VAULT/.obsidian/plugins/recent-notes-feed/`.
 3. Restart Obsidian, then enable **ReNotes** in **Settings → Community plugins**.
-4. To change the interface language, open **Settings → Community plugins → ReNotes → Interface language**.
 
 ## Frequently asked questions
 
-**Does the date menu filter notes?** No. It scrolls to the selected day and keeps the rest of the list available.
+**Does the date menu filter notes?** No. It scrolls to the selected day and keeps the rest of the list available. Date counts reflect non-pinned items in the current filtered list; if only pinned items remain, those are counted instead.
 
 **Can linked Canvas cards open images?** The linked-document chips are intentionally for Markdown notes and Canvas boards; Canvas thumbnail previews still work.
 
 **Can I use it on mobile?** ReNotes includes mobile-friendly layouts. Dragging Markdown into Canvas is a desktop-oriented feature.
 
-**Is the plugin listed in Obsidian's Community Plugins directory?** Installation is currently available through the individual GitHub Release assets.
+**Is the plugin listed in Obsidian's Community Plugins directory?** Yes. [ReNotes is available in the official directory](https://community.obsidian.md/plugins/recent-notes-feed). You can also install it manually from GitHub Releases.
 
 ## License
 
@@ -107,13 +115,13 @@ ReNotes 是一款 **Obsidian 近期筆記外掛**。無論你使用 Markdown 寫
 
 ### 01｜近期筆記一目了然：Markdown + Canvas 同一個側欄
 
-以時間排序的卡片整合 **Markdown 筆記與 Canvas 白板**，保留標題、摘要、檔案類型、時間，以及可選的圖片或白板縮圖。重要內容可釘選於上方；也能依類型、資料夾或標籤縮小查找範圍。
+以時間排序的卡片整合 **Markdown 筆記與 Canvas 白板**，保留標題、摘要、檔案類型、時間，以及可選的圖片或白板縮圖。重要內容可釘選於上方；可依筆記類型篩選、指定納入或排除的資料夾、排除特定標籤，也能搜尋筆記內容與標籤。
 
 支援多種排序依據，包括**檔案修改時間、有效編輯時間、最近開啟時間及本機編輯時間**；可依使用情境選擇。
 
 ### 02｜日期快速跳轉：回到某一天，不必篩掉其他筆記
 
-點擊日期標題旁的 **`⋯`**，即可查看最近 **7 個有筆記的日期**與各日期筆數；更早的日期可以按月份展開。選擇日期後會**捲動到該天**，原本的近期筆記清單仍完整保留。
+點擊日期標題旁的 **`⋯`**，即可查看最近 **最多 7 個有筆記的日期**與各日期筆數；更早的日期可以按月份展開。選擇日期後會**捲動到該天**，原本的近期筆記清單仍完整保留。
 
 ### 03｜Canvas 連結筆記：用極細圓框快速開啟關聯文件
 
@@ -123,23 +131,30 @@ ReNotes 是一款 **Obsidian 近期筆記外掛**。無論你使用 Markdown 寫
 
 ### 04｜釘選、搜尋與自適應卡片版面
 
-ReNotes 提供**釘選筆記、關鍵字搜尋、檔案類型篩選、資料夾／標籤條件**，以及精簡、標準、寬鬆等不同卡片密度。側欄變窄時也會自動調整布局；行動裝置提供適合觸控的操作方式。
+ReNotes 提供**釘選筆記、關鍵字搜尋、檔案類型篩選、資料夾納入／排除條件，以及排除指定標籤**，以及精簡、標準、寬鬆等不同卡片密度。側欄變窄時也會自動調整布局；行動裝置提供適合觸控的操作方式。
 
 在桌面版 Obsidian，Markdown 卡片另有拖曳把手，可將筆記引用拖入 Canvas。實際拖曳行為取決於所使用的 Obsidian 版本。
 
 ### 05｜繁體中文與 English：跟隨 Obsidian 自動切換
 
-支援 **繁體中文（Traditional Chinese）與英文（English）**，可自動跟隨 Obsidian 語言，或在 ReNotes 設定中手動選擇。側欄、日期名稱、設定選項與操作提示都有對應翻譯。
+支援 **繁體中文（Traditional Chinese）與英文（English）**，可自動跟隨 Obsidian 語言，或在 ReNotes 設定中手動選擇。主要側欄、日期名稱、設定選項與常用操作提示都有對應翻譯；目前少數檔案右鍵選單文字在英文模式下仍顯示繁體中文。
 
 ## 安裝 ReNotes
 
-目前透過 **GitHub Releases** 提供手動安裝：
+### 從 Obsidian 社群外掛目錄安裝（推薦）
+
+1. 開啟 Obsidian 的「**設定 → 社群外掛 → 瀏覽**」。
+2. 搜尋 **ReNotes**，或開啟 [ReNotes 官方社群外掛頁面](https://community.obsidian.md/plugins/recent-notes-feed)。
+3. 按下「**安裝**」，完成後啟用 **ReNotes**。
+4. 如需切換語言，進入「**設定 → 社群外掛 → ReNotes → 介面語言**」。
+
+### 從 GitHub Releases 手動安裝
 
 1. 前往 [ReNotes 最新 GitHub Release](https://github.com/ebmshll/ReNotes/releases/latest)，在 Assets 分別下載 `main.js`、`manifest.json` 與 `styles.css`。
-2. 將這三個檔案放入 Obsidian Vault 的 `.obsidian/plugins/recent-notes-feed/` 資料夾。
-3. 重新啟動 Obsidian，進入「**設定 → 社群外掛**」，啟用 **ReNotes**。
+2. 將三個檔案放入 Vault 內的 `.obsidian/plugins/recent-notes-feed/` 資料夾。
+3. 重新啟動 Obsidian，進入「**設定 → 社群外掛**」啟用 **ReNotes**。
 
-在「**設定 → 社群外掛 → ReNotes → 介面語言**」可選擇「自動（跟隨 Obsidian）」、「繁體中文」或「英文」。
+介面語言可選「自動（跟隨 Obsidian）」、「繁體中文」或「英文」。
 
 **目前版本：** 1.2.3 · **外掛 ID：** `recent-notes-feed` · **Manifest 最低版本：** Obsidian 1.4.0
 
@@ -152,20 +167,20 @@ ReNotes 提供**釘選筆記、關鍵字搜尋、檔案類型篩選、資料夾�
 可以。下方圓框可開啟 `.md` 或 `.canvas` 文件，圖片與其他附件不會列入這組快捷連結。
 
 ### 選擇日期會把其他筆記隱藏嗎？
-不會。日期選單只會捲動到對應日期，完整清單仍可往上、往下瀏覽。選單筆數依目前載入及顯示的近期卡片計算。
+不會。日期選單只會捲動到對應日期，完整清單仍可往上、往下瀏覽。日期筆數以目前篩選結果中**未釘選的近期卡片**計算；若清單只剩釘選項目，則改計算釘選項目。
 
 ### 可以在手機使用嗎？
 外掛包含行動裝置版面與觸控操作；Markdown 拖曳進 Canvas 的功能則主要針對桌面版 Obsidian。
 
-### 需要從 Obsidian 社群外掛目錄安裝嗎？
-目前請從 GitHub Release 的 Assets 下載三個必要外掛檔案，依上述步驟手動安裝。
+### 可以直接從 Obsidian 社群外掛目錄安裝嗎？
+可以。ReNotes 已上架 [Obsidian 官方社群外掛目錄](https://community.obsidian.md/plugins/recent-notes-feed)，可直接搜尋、安裝及啟用；GitHub Release 的三檔手動安裝方式仍可使用。
 
-### 授權條款
+## 授權條款
 
 ReNotes 採用 [MIT License](LICENSE) 開源授權，允許使用、修改、散布及商業使用。重新散布軟體副本或其主要部分時，請保留著作權與授權聲明。
 
-### 宣傳圖片與下載
+## 宣傳圖片與下載
 
 完整功能縮圖請參閱上方英文介紹，或瀏覽 [英文宣傳圖](docs/images/marketing)。
 
-**[下載 ReNotes](https://github.com/ebmshll/ReNotes/releases/latest)** · **[更新紀錄](CHANGELOG.md)** · **[返回英文介紹](#renotes--recent-notes--canvas-sidebar-for-obsidian)**
+**[Obsidian 社群外掛安裝](https://community.obsidian.md/plugins/recent-notes-feed)** · **[GitHub 下載](https://github.com/ebmshll/ReNotes/releases/latest)** · **[更新紀錄](CHANGELOG.md)** · **[返回英文介紹](#renotes--recent-notes--canvas-sidebar-for-obsidian)**
