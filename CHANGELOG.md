@@ -11,7 +11,7 @@
 ## v1.2.2 — English and Traditional Chinese / 雙語介面
 
 - Automatically follows the Obsidian language or allows manual Traditional Chinese and English selection.
-- Localizes sidebar controls, card metadata, date navigation, filtering, settings, context menus, dialogs, notices, and accessibility labels.
+- Localizes sidebar controls, card metadata, date navigation, filtering, settings, most context-menu actions, dialogs, notices, and accessibility labels. A few secondary file-menu labels remain in Chinese.
 - Formats English weekdays, month headings, note counts, and singular/plural labels.
 - Adds four feature illustrations: Traditional Chinese and English sidebars, date navigation, and Canvas linked-document chips.
 - **繁體中文：**新增介面語言設定與英文翻譯，補齊日期、選單、通知和設定介面；加入功能示範縮圖。
