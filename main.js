@@ -15,6 +15,27 @@ const {
 
 // ReNotes interface localization (bundled so the plugin has no additional runtime files).
 const EN_TRANSLATIONS = Object.freeze({
+  "清單版面": "List layout",
+  "桌機版面": "Desktop layout",
+  "手機版面": "Mobile layout",
+  "跟隨桌機": "Follow desktop",
+  "使用桌機選擇的版面。": "Use the layout selected for desktop.",
+  "經典卡片": "Classic cards",
+  "緊湊清單": "Compact list",
+  "瘦身卡片": "Slim cards",
+  "雙欄牆": "Two-column wall",
+  "完整卡片，隨側欄寬度收合。": "Full cards that adapt to sidebar width.",
+  "兩行清單，快速瀏覽更多筆記。": "Two-line rows for browsing more notes.",
+  "精簡卡片，保留摘要與一顆標籤。": "Smaller cards with a preview and one tag.",
+  "由左至右排列，適合看圖找筆記。": "Rows ordered left to right for visual browsing.",
+  "手機預設瘦身卡片；桌機預設經典卡片。版面偏好會隨設定同步。": "Mobile defaults to Slim cards; desktop defaults to Classic cards. Layout preferences sync with settings.",
+  "經典卡片沿用原有密度；緊湊清單與瘦身卡片只調整上下內距（緊湊 −4px、寬鬆 +4px）；雙欄牆忽略密度。": "Classic cards use the original density. Compact list and Slim cards adjust vertical padding only (Compact -4px, Spacious +4px). Two-column wall ignores density.",
+  "只作用於經典卡片；標準密度時使用此樣式，緊湊或寬鬆密度優先。": "Applies to Classic cards only. Used at Standard density; Compact or Spacious density takes priority.",
+  "新版面固定單列工具列；此開關調整手機工具列內距。": "New layouts always use one toolbar row; this option adjusts its padding on mobile.",
+  "新版面長按停用時仍保留選單按鈕，確保選單可達。緊湊清單啟用長按時隱藏按鈕。": "New layouts retain a menu button when long press is off. Compact list hides it when long press is available.",
+  "關閉搜尋": "Close search",
+  "無標題": "Untitled",
+  "{0} 個標籤": "{0} tags",
   "沒有其他文字": "No additional text",
   "Canvas 白板": "Canvas board",
   "{0} 個元素": "{0} elements",
@@ -148,6 +169,8 @@ const EN_TRANSLATIONS = Object.freeze({
   "本機編輯時間": "Local edit time",
   "智慧排序：本機編輯 / 開啟 / 檔案修改": "Smart sorting: local edit / open / file modification",
   "重設有效編輯時間基準": "Reset effective edit-time baseline",
+  "屬性（Frontmatter）變更也算編輯": "Count frontmatter changes as edits",
+  "預設關閉：只有屬性被改（例如其他外掛自動加入的 canvas 連結、標籤）不會讓筆記跳到最前面，內文有改才算。": "Off by default: changes to properties alone, such as canvas links or tags added by other plugins, keep notes in place. Only body changes count as edits.",
   "清空本機內容指紋與有效時間；下次摘要讀取以目前 mtime 為基準。無法恢復被重寫前的時間，不會修改筆記或同步設定。": "Clear local content fingerprints and effective times. On the next preview read, current mtime becomes the baseline. Earlier timestamps cannot be restored; notes and synced settings are unchanged.",
   "重設基準": "Reset baseline",
   "已重設有效編輯時間基準": "Effective edit-time baseline reset",
@@ -292,6 +315,68 @@ const EN_TRANSLATIONS = Object.freeze({
   "已刪除：": "Deleted: "
 });
 const EXTRA_I18N_TRANSLATIONS = Object.freeze({
+  "更多排列方法（一般不需要調整）": "More ways to sort (usually unnecessary)",
+  "以下是特殊需求才會用到的方式，平常選上方兩個就好。": "These are for special cases. The two choices above are enough for most people.",
+  "更多排列方法": "More sorting options",
+  "先顯示有編輯紀錄的": "Prioritize recorded edits",
+  "例如：這台電腦有記錄改過 A，A 會優先；沒記錄的仍依檔案時間。": "Example: If editing note A was recorded on this computer, A comes first. Other notes use their file dates.",
+  "看過或改過都算": "Opened or edited",
+  "例如：剛打開 B 或修改 A，兩個都可能往前；檔案更新也會算。": "Example: Opening B or editing A can move either note forward. File updates count too.",
+  "按檔案更新日期": "File update date",
+  "例如：同步工具更新了 C，即使你沒打開，也可能跑到前面。": "Example: If a sync app updates file C, C may move forward even without you opening it.",
+  "有編輯紀錄的筆記會優先。": "Notes with recorded edits come first.",
+  "打開、修改、檔案更新都可能影響順序。": "Opening, editing or updating files can change the order.",
+  "依檔案本身的更新日期排列。": "Sort by the file's modification date.",
+  "筆記排列順序": "Note order",
+  "你想先看到最近寫過的，還是最近看過的筆記？": "Would you rather see notes you edited or notes you opened?",
+  "最近編輯": "Recently edited",
+  "最近開啟": "Recently opened",
+  "內容有修改才會更新順序，單純打開不算。": "Only real content edits change the order. Simply opening a note doesn't count.",
+  "最近打開來看過的筆記優先，不一定要修改。": "Notes you've opened most recently appear first, even if you didn't edit them.",
+  "其他排序方式（進階）": "Other sorting methods (advanced)",
+  "這台裝置編輯過的": "Edited on this device",
+  "綜合近期活動": "Recent activity (combined)",
+  "依檔案更新日期": "File modification date",
+  "目前使用：": "Currently using: ",
+  "記住上次類型篩選": "Remember selected types",
+  "再次開啟 ReNotes 時，保留上次勾選的檔案類型。": "Remember the file types you selected when reopening ReNotes.",
+  "顯示哪些檔案": "Files to include",
+  "可同時勾選多種檔案。只有啟用的類型才會出現在近期清單與篩選按鈕。": "Select multiple file types. Only enabled types appear in the recent list and filter chips.",
+  "外觀": "Appearance",
+  "跨裝置排序紀錄": "Cross-device sorting history",
+  "同步狀態與更多選項": "Sync status and more options",
+  "進階設定": "Advanced settings",
+  "顯示所有已啟用類型": "Show all enabled file types",
+  "切換{0}篩選": "Toggle {0} filter",
+  "內容修改才調整順序，單純打開不算。": "Edited content comes first; opening a note alone doesn't count.",
+  "打開來看過就優先，不必修改內容。": "Recently opened notes come first, no edits needed.",
+  "跨裝置排序已啟用，詳情請到設定頁查看。": "Cross-device sorting is enabled. See settings for details.",
+  "其他檔案類型（可複選）": "Additional file types (select multiple)",
+  "預設只顯示 Markdown 與 Canvas；勾選的類型會加入近期清單，選擇會儲存在外掛設定。二進位檔案只讀取基本資訊，不讀取檔案內容。": "Only Markdown and Canvas are shown by default. Select any additional types; your choices are saved in plugin settings. Binary files are listed using metadata only, without reading their contents.",
+  "圖片": "Images",
+  "音訊": "Audio",
+  "影片": "Videos",
+  "其他檔案": "Other files",
+  "檔案": "File",
+  "自行指定副檔名": "Specify file extensions",
+  "其他副檔名": "Custom file extensions",
+  "先啟用「其他檔案」，再輸入副檔名（例如 txt, csv, docx）；用逗號分隔，最多 32 種。": "Enable Other files, then enter extensions such as txt, csv, docx, separated by commas (up to 32).",
+  "近期紀錄預設保存在本機；可在下方設定是否跨裝置同步。同步狀態只顯示在此設定頁。": "Recent activity remains device-local by default. Cross-device sorting history is optional, and its status appears only in these settings.",
+  "排序紀錄跨裝置同步": "Cross-device sorting history",
+  "此功能預設關閉。啟用後在 Vault 的 ReNotes Sync/devices 資料夾保存每台裝置自己的 Markdown 紀錄，透過既有的 Vault 同步工具交換。只包含路徑、時間與指紋，不包含筆記全文。主側欄不顯示同步狀態。": "Off by default. When enabled, each device writes its own Markdown record in your Vault's ReNotes Sync/devices folder for your existing sync service to transfer. Files contain paths, timestamps and fingerprints, not note contents. The main sidebar shows no sync status.",
+  "啟用跨裝置排序紀錄": "Enable cross-device sorting history",
+  "啟用後合併各裝置的有效編輯及本機編輯紀錄；若只想保留本機習慣，請維持關閉。": "Merge effective-edit and local-edit histories received from other devices. Leave off to keep the original device-local behavior.",
+  "包含最近開啟紀錄": "Also sync recent-open history",
+  "預設只同步編輯時間。勾選後，才將最近開啟時間納入跨裝置排序與同步資料。": "Only edit times are shared by default. Enable this option to include recently opened times in the shared sorting data.",
+  "重新讀取／發布紀錄": "Reload / publish history",
+  "手動重新讀取已到達 Vault 的其他裝置紀錄，並儲存本機紀錄；無法得知外部同步服務是否已完成上傳。": "Reload history from other devices already present in the Vault and save this device's record. This does not indicate that your external sync provider has finished uploading.",
+  "更新紀錄": "Update history",
+  "同步排序紀錄目前關閉；原有本機紀錄仍保留。": "Sorting sync is off. Your original local history is retained.",
+  "同步紀錄處理失敗：": "Could not process sync history: ",
+  "尚未讀取": "Not read yet",
+  "已讀取 {0} 台其他裝置的紀錄；本機最後檢查：{1}": "Received records from {0} other devices; last checked locally: {1}",
+  "依所選時間記錄排序。": "Sorts using the selected time record.",
+  "略過 {0} 份損壞紀錄": "Ignored {0} invalid sync records",
   "介面語言": "Interface language",
   "自動跟隨 Obsidian 介面語言，或手動選擇繁體中文、英文。": "Follow the Obsidian interface language or manually choose Traditional Chinese or English.",
   "自動（跟隨 Obsidian）": "Auto (follow Obsidian)",
@@ -334,19 +419,97 @@ function localizedCount(n, zhPattern, singular, plural) {
 
 
 const VIEW_TYPE_RECENT_NOTES_FEED = "recent-notes-feed-view";
-const CACHE_FORMAT_VERSION = "0.9.0";
+const CACHE_FORMAT_VERSION = "1.2.4-beta.5";
+const EFFECTIVE_FINGERPRINT_VERSION = 2;
 const ACTIVITY_STORAGE_KEY = "recent-notes-feed:activity";
 const EFFECTIVE_STORAGE_KEY = "renotes:effective";
+const DEVICE_SYNC_ID_KEY = "renotes:sync-device-v1";
+const SYNC_FOLDER = "ReNotes Sync";
+const SYNC_DEVICE_FOLDER = SYNC_FOLDER + "/devices";
+const SUPPORTED_EXTRA_TYPES = Object.freeze({
+  pdf: ["pdf"], image: ["png", "jpg", "jpeg", "webp", "gif", "avif", "svg", "bmp", "heic"],
+  base: ["base"], audio: ["mp3", "m4a", "wav", "ogg", "oga", "flac", "opus", "aac"],
+  video: ["mp4", "mov", "webm", "mkv", "avi", "m4v"], other: []
+});
+const FILE_TYPE_LABELS = Object.freeze({
+  pdf: "PDF", image: "圖片", base: "Bases", audio: "音訊", video: "影片", other: "其他檔案"
+});
+function isSyncRecordPath(path) {
+  return typeof path === "string" && (path === SYNC_FOLDER || path.startsWith(SYNC_FOLDER + "/"));
+}
+function getSelectedFileTypes(settings) {
+  const value = settings && settings.additionalFileTypes;
+  return Array.isArray(value) ? [...new Set(value.filter(key => Object.hasOwn(SUPPORTED_EXTRA_TYPES, key)))].slice(0, 6) : [];
+}
+const CORE_RECENT_TYPES = Object.freeze(["markdown", "canvas"]);
+function getEnabledRecentTypes(settings) {
+  return ["markdown", ...(settings && settings.includeCanvas === false ? [] : ["canvas"]), ...getSelectedFileTypes(settings)];
+}
+function normalizeTypeSelection(value, settings) {
+  const allowed = getEnabledRecentTypes(settings);
+  const source = Array.isArray(value) ? value : typeof value === "string" && value !== "all" ? [value] : [];
+  const unique = [...new Set(source.filter(type => allowed.includes(type)))];
+  return unique.length === allowed.length ? [] : unique;
+}
+function getRememberedTypeSelection(settings) {
+  const saved = settings && settings.rememberTypeFilter !== false && Array.isArray(settings.typeFilterSelection)
+    ? settings.typeFilterSelection : settings && settings.defaultTypeFilter;
+  return normalizeTypeSelection(saved, settings);
+}
+function legacyTypeFilter(selected) {
+  return selected.length === 0 ? "all" : selected.length === 1 ? selected[0] : "multiple";
+}
+function typeFilterLabel(selected) {
+  return selected.length === 1 ? selected[0] === "canvas" ? "Canvas"
+    : selected[0] === "markdown" ? tr("筆記") : tr(FILE_TYPE_LABELS[selected[0]] || "檔案") : tr("項目");
+}
+function sortModeFriendlyName(mode) {
+  return tr(({ effective: "最近編輯", opened: "最近開啟", mtime: "依檔案更新日期",
+    localEdit: "這台裝置編輯過的", smart: "綜合近期活動" })[mode] || "最近編輯");
+}
+function getCustomExtensions(settings) {
+  return normalizeList(settings && settings.customFileExtensions).map(value => value.toLowerCase().replace(/^\./, ""))
+    .filter(value => /^[a-z0-9]{1,12}$/.test(value) && !["md", "canvas"].includes(value)).slice(0, 32);
+}
+function getRecentFileType(file, settings) {
+  if (!(file instanceof TFile) || isSyncRecordPath(file.path)) return null;
+  const ext = String(file.extension || "").toLowerCase();
+  if (ext === "md") return "markdown";
+  if (ext === "canvas") return settings && settings.includeCanvas === false ? null : "canvas";
+  const chosen = getSelectedFileTypes(settings);
+  for (const key of chosen) {
+    if (key === "other" ? getCustomExtensions(settings).includes(ext) : SUPPORTED_EXTRA_TYPES[key].includes(ext)) return key;
+  }
+  return null;
+}
+function isMetadataOnlyFile(file, settings) {
+  const kind = getRecentFileType(file, settings);
+  return !!kind && kind !== "markdown" && kind !== "canvas";
+}
+function formatExtraFileSize(size) {
+  const bytes = Number(size);
+  if (!Number.isFinite(bytes) || bytes < 0) return "";
+  if (bytes < 1024) return Math.round(bytes) + " B";
+  const unit = bytes < 1048576 ? "KB" : bytes < 1073741824 ? "MB" : "GB";
+  const divisor = unit === "KB" ? 1024 : unit === "MB" ? 1048576 : 1073741824;
+  return (bytes / divisor >= 10 ? Math.round(bytes / divisor) : (bytes / divisor).toFixed(1)) + " " + unit;
+}
 const RENOTES_ICON = '<g transform="scale(4.1666667)" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4.5"/><path d="M9.5 16.5V7.5h3.4a2.6 2.6 0 0 1 0 5.2H9.5M12.6 12.7l2.6 3.8"/></g>';
 
 const DEFAULT_SETTINGS = {
-  layoutVersion: 5,
+  layoutVersion: 6,
+  listLayout: "classic", // classic | list | slim | wall
+  mobileListLayout: "slim", // follow | classic | list | slim | wall
   interfaceLanguage: "auto", // auto | zh-TW | en
   pinnedPaths: [],
   maxNotes: 50,
   snippetLines: null, // null follows layout density
   openInNewTab: false,
   includeCanvas: true,
+  additionalFileTypes: [], // optional multi-selection, persisted per Vault
+  customFileExtensions: "",
+  syncSortHistory: false, // optional; no sync files unless enabled
+  syncRecentOpens: false,
   canvasPreviewMode: "smart", // smart | text | files | stats
   canvasPreviewItemLimit: 5,
   showCanvasStats: false,
@@ -382,11 +545,14 @@ const DEFAULT_SETTINGS = {
   renderBatchSize: 30,
   showPerformanceStats: true,
   showTypeFilter: true,
-  defaultTypeFilter: "all", // all | markdown | canvas
+  defaultTypeFilter: "all", // legacy single type preference
+  rememberTypeFilter: true,
+  typeFilterSelection: null, // null legacy default; [] all types
   showResultCount: true,
   showTags: false,
   stickyHeader: true,
   sortMode: "effective", // effective | mtime | opened | localEdit | smart
+  countFrontmatterEdits: false,
   trackRecentOpened: true,
   trackLocalEdits: true,
   showSortReason: false,
@@ -429,10 +595,7 @@ function fileIsInFolder(file, folder) {
 }
 
 function isSupportedRecentFile(file, settings) {
-  if (!(file instanceof TFile)) return false;
-  if (file.extension === "md") return true;
-  if (settings && settings.includeCanvas !== false && file.extension === "canvas") return true;
-  return false;
+  return getRecentFileType(file, settings) !== null;
 }
 
 function basenameFromPath(path) {
@@ -954,7 +1117,8 @@ function stableSerialize(value, inDfgMeta = false) {
   }).join(",") + "}";
 }
 
-function contentFingerprint(content, extension) {
+// 舊全檔演算法留作無版本紀錄的升級比對；Canvas 演算法保持原樣。
+function legacyContentFingerprint(content, extension) {
   const text = String(content || "").replace(/\r\n/g, "\n");
   if (extension !== "canvas") return simpleContentHash(text.trimEnd());
   try {
@@ -979,6 +1143,37 @@ function contentFingerprint(content, extension) {
   }
 }
 
+function splitMarkdownFrontmatter(content) {
+  const text = String(content || "").replace(/\r\n/g, "\n");
+  const start = text.charCodeAt(0) === 0xfeff ? 1 : 0;
+  if (!text.startsWith("---\n", start)) return { body: text, frontmatter: "" };
+  // 逐行掃描是線性時間；未閉合區塊必須完整保留為正文。
+  let lineStart = start + 4;
+  while (lineStart < text.length) {
+    const newline = text.indexOf("\n", lineStart);
+    const lineEnd = newline === -1 ? text.length : newline;
+    const line = text.slice(lineStart, lineEnd);
+    if (line === "---" || line === "...") {
+      return { body: text.slice(newline === -1 ? lineEnd : newline + 1), frontmatter: text.slice(start, lineEnd) };
+    }
+    if (newline === -1) break;
+    lineStart = newline + 1;
+  }
+  return { body: text, frontmatter: "" };
+}
+
+function contentFingerprint(content, extension) {
+  if (extension !== "md") return legacyContentFingerprint(content, extension);
+  return simpleContentHash(splitMarkdownFrontmatter(content).body.trimEnd());
+}
+
+function effectiveFingerprints(content, extension) {
+  if (extension !== "md") return { fp: contentFingerprint(content, extension) };
+  const parts = splitMarkdownFrontmatter(content);
+  return { fp: simpleContentHash(parts.body.trimEnd()), fh: simpleContentHash(parts.frontmatter),
+    legacyFp: legacyContentFingerprint(content, extension) };
+}
+
 function normalizeEffectiveRecords(value) {
   const result = Object.create(null);
   if (!value || typeof value !== "object" || Array.isArray(value)) return result;
@@ -989,6 +1184,11 @@ function normalizeEffectiveRecords(value) {
       return Object.create(null);
     }
     result[path] = { fp: entry.fp, t: entry.t, m: entry.m, s: entry.s };
+    // 選填或未來欄位不能使整張合法表被清空；只信任可辨識的版本。
+    if (entry.v === EFFECTIVE_FINGERPRINT_VERSION && typeof entry.fh === "string") {
+      result[path].v = entry.v;
+      result[path].fh = entry.fh;
+    }
   }
   pruneEffectiveRecords(result);
   return result;
@@ -1003,9 +1203,14 @@ function pruneEffectiveRecords(map, maxEntries = 5000) {
 }
 
 function getEffectiveTime(file, owner) {
+  const type = getRecentFileType(file, owner.settings);
+  if (type !== "markdown" && type !== "canvas") return getFileStatNumber(file, "mtime");
   const entry = owner.effectiveRecords && owner.effectiveRecords[file.path];
   const maxSize = typeof owner.getMaxHashFileSizeBytes === "function" ? owner.getMaxHashFileSizeBytes() : DEFAULT_SETTINGS.maxHashFileSizeBytes;
-  return entry && getFileStatNumber(file, "size") <= maxSize ? entry.t : getFileStatNumber(file, "mtime");
+  if (getFileStatNumber(file, "size") > maxSize) return getFileStatNumber(file, "mtime");
+  const matched = owner.settings.syncSortHistory && owner.mergedSyncEffective instanceof Map && entry && entry.fp
+    ? owner.mergedSyncEffective.get(file.path)?.get(entry.fp) : 0;
+  return entry ? Math.max(entry.t || 0, matched || 0) : getFileStatNumber(file, "mtime");
 }
 
 function isMobilePlatform() {
@@ -1025,10 +1230,18 @@ function getMobileLayout(settings) {
   return ["compact", "comfortable", "reading"].includes(value) ? value : "comfortable";
 }
 
+function getListLayout(settings, width = Infinity) {
+  const layouts = ["classic", "list", "slim", "wall"];
+  const desktop = layouts.includes(settings && settings.listLayout) ? settings.listLayout : "classic";
+  const mobile = settings && settings.mobileListLayout;
+  const requested = isMobilePlatform() ? (mobile === "follow" ? desktop : layouts.includes(mobile) ? mobile : "slim") : desktop;
+  return requested === "wall" && width < 300 ? "slim" : requested;
+}
+
 function getLayoutDensity(settings) {
   const density = settings && settings.listDensity;
   if (density === "compact" || density === "card") return density;
-  if (isMobileOptimized(settings)) {
+  if (getListLayout(settings) === "classic" && isMobileOptimized(settings)) {
     const mobile = getMobileLayout(settings);
     if (mobile === "compact") return "compact";
     if (mobile === "reading") return "card";
@@ -1112,9 +1325,14 @@ function getSortDeviceHint(mode) {
 
 function computeSortInfo(file, settings, owner) {
   const activity = getFileActivity(owner, file.path);
+  const sharedActivity = settings.syncSortHistory && owner.mergedSyncActivity && owner.mergedSyncActivity[file.path] || {};
+  const effectiveActivity = settings.syncSortHistory ? {
+    lastOpened: settings.syncRecentOpens ? Math.max(activity.lastOpened || 0, sharedActivity.lastOpened || 0) : activity.lastOpened || 0,
+    lastLocalEdit: Math.max(activity.lastLocalEdit || 0, sharedActivity.lastLocalEdit || 0)
+  } : activity;
   const mtime = Number(file.stat && file.stat.mtime) || 0;
-  const opened = Number(activity.lastOpened) || 0;
-  const localEdit = Number(activity.lastLocalEdit) || 0;
+  const opened = Number(effectiveActivity.lastOpened) || 0;
+  const localEdit = Number(effectiveActivity.lastLocalEdit) || 0;
   const mode = settings.sortMode || "mtime";
 
   if (mode === "effective") {
@@ -1176,9 +1394,10 @@ class RecentNotesFeedView extends ItemView {
     super(leaf);
     this.plugin = plugin;
     this.searchQuery = "";
-    this.typeFilter = plugin.settings.defaultTypeFilter || "all";
+    this.selectedTypeFilters = getRememberedTypeSelection(plugin.settings);
+    this.typeFilter = legacyTypeFilter(this.selectedTypeFilters);
     this.filterOverrides = {};
-    this.configuredTypeFilter = this.typeFilter;
+    this.configuredTypeFilter = JSON.stringify(this.selectedTypeFilters);
     this.items = [];
     this.loading = false;
     this.longPressTriggered = false;
@@ -1186,6 +1405,7 @@ class RecentNotesFeedView extends ItemView {
     this.dateNavigatorCleanup = null;
     this.pendingDateJump = null;
     this.dateAnchors = new Map();
+    this.itemInteractionCleanups = [];
   }
 
   getViewType() {
@@ -1271,6 +1491,7 @@ class RecentNotesFeedView extends ItemView {
   }
 
   async onClose() {
+    this.clearItemInteractions();
     if (this.dateNavigatorCleanup) this.dateNavigatorCleanup();
     this.dateNavigatorCleanup = null;
     this.pendingDateJump = null;
@@ -1314,8 +1535,23 @@ class RecentNotesFeedView extends ItemView {
 
   updateWidth(width) {
     if (!this.rootEl) return;
+    if (Number.isFinite(width) && width > 0) this.layoutWidth = width;
     this.rootEl.dataset.width = getWidthClass(width, this.rootEl.dataset.width);
+    const layout = getListLayout(this.plugin.settings, this.layoutWidth || 280);
+    const changed = this.listLayout && this.listLayout !== layout;
+    this.listLayout = layout;
+    // Classic deliberately adds no layout class: preserve beta.5 DOM and CSS output.
+    for (const name of ["list", "slim", "wall"]) this.rootEl.toggleClass(`recent-notes-layout-${name}`, layout === name);
+    this.rootEl.toggleClass("recent-notes-wall-auto", layout === "wall" && !isMobilePlatform() && this.layoutWidth > 520);
+    if (changed && !this.renderingLayout && this.listEl) this.render();
     if (this.filterButton) this.filterButton.setAttribute("aria-label", this.rootEl.dataset.width === "tiny" ? tr("搜尋與篩選") : tr("篩選"));
+  }
+
+  clearItemInteractions() {
+    for (const cleanup of this.itemInteractionCleanups || []) cleanup();
+    this.itemInteractionCleanups = [];
+    this.longPressTriggered = false;
+    if (this.listEl) this.listEl.querySelectorAll(".rnf-is-dragging").forEach(card => card.removeClass("rnf-is-dragging"));
   }
 
   applyDensityClass() {
@@ -1323,6 +1559,7 @@ class RecentNotesFeedView extends ItemView {
     if (!root) return;
     root.addClass("recent-notes-feed-root");
     this.observeWidth();
+    this.updateWidth(this.layoutWidth || (root.getBoundingClientRect ? root.getBoundingClientRect().width : 280));
     root.dataset.previewLines = String(getEffectiveSnippetLines(this.plugin.settings));
     root.toggleClass("recent-notes-preview-override", Number(this.plugin.settings.snippetLines) > 0
       || (isMobileOptimized(this.plugin.settings) && Number(this.plugin.settings.mobileSnippetLines) > 0));
@@ -1344,7 +1581,7 @@ class RecentNotesFeedView extends ItemView {
     root.addClass(this.plugin.settings.stickyHeader ? "recent-notes-sticky-header" : "recent-notes-nonsticky-header");
     if (isMobileOptimized(this.plugin.settings)) {
       root.addClass("recent-notes-mobile-optimized");
-      root.addClass(`recent-notes-mobile-layout-${getMobileLayout(this.plugin.settings)}`);
+      if (this.listLayout === "classic") root.addClass(`recent-notes-mobile-layout-${getMobileLayout(this.plugin.settings)}`);
       root.addClass(this.plugin.settings.mobileCompactHeader !== false ? "recent-notes-mobile-compact-header" : "recent-notes-mobile-regular-header");
     } else {
       root.addClass("recent-notes-desktop-optimized");
@@ -1353,13 +1590,20 @@ class RecentNotesFeedView extends ItemView {
 
   render() {
     const root = this.rootEl;
+    if (!root) return;
+    this.renderingLayout = true;
+    this.clearItemInteractions();
     root.empty();
-    const configuredTypeFilter = this.plugin.settings.defaultTypeFilter || "all";
-    if (this.configuredTypeFilter !== configuredTypeFilter) {
-      this.configuredTypeFilter = configuredTypeFilter;
-      this.typeFilter = ["all", "markdown", "canvas"].includes(configuredTypeFilter) ? configuredTypeFilter : "all";
+    const configuredTypeFilters = getRememberedTypeSelection(this.plugin.settings);
+    const configuredSignature = JSON.stringify(configuredTypeFilters);
+    if (this.plugin.settings.rememberTypeFilter !== false && this.configuredTypeFilter !== configuredSignature) {
+      this.configuredTypeFilter = configuredSignature;
+      this.selectedTypeFilters = configuredTypeFilters;
+      this.typeFilter = legacyTypeFilter(configuredTypeFilters);
     }
     this.applyDensityClass();
+    this.renderingLayout = false;
+    if (this.listLayout !== "classic" && !this.plugin.settings.showSearch) this.searchExpanded = false;
 
     const top = root.createDiv({ cls: "recent-notes-feed-top" });
     const header = top.createDiv({ cls: "recent-notes-feed-header" });
@@ -1368,12 +1612,16 @@ class RecentNotesFeedView extends ItemView {
     this.countEl = titleWrap.createDiv({ cls: "recent-notes-feed-count", text: "" });
     this.debugSummaryEl = titleWrap.createDiv({ cls: "recent-notes-feed-debug-summary", text: "" });
 
-    const tools = top.createDiv({ cls: "recent-notes-feed-tools" });
+    const tools = (this.listLayout === "classic" ? top : header).createDiv({ cls: "recent-notes-feed-tools" });
     root.toggleClass("recent-notes-search-expanded", this.searchExpanded);
     const panel = top.createDiv({ cls: "recent-notes-filter-panel" });
     panel.id = `rnf-filters-${++RecentNotesFeedView.panelId}`;
     panel.hidden = true;
     const headerActions = panel.createDiv({ cls: "recent-notes-feed-actions" });
+    if (this.listLayout !== "classic") {
+      this.countEl.remove(); panel.appendChild(this.countEl);
+      this.debugSummaryEl.remove(); panel.appendChild(this.debugSummaryEl);
+    }
     const refreshButton = headerActions.createEl("button", {
       cls: "recent-notes-feed-icon-button",
       attr: { "aria-label": tr("重新整理") }
@@ -1402,6 +1650,10 @@ class RecentNotesFeedView extends ItemView {
         if (this.searchExpanded) search.focus();
       });
       const searchWrap = tools.createDiv({ cls: "recent-notes-feed-search-wrap" });
+      if (this.listLayout !== "classic") {
+        searchWrap.id = `rnf-search-${RecentNotesFeedView.panelId}`;
+        searchButton.setAttribute("aria-controls", searchWrap.id);
+      }
       const searchIcon = searchWrap.createSpan({ cls: "recent-notes-feed-search-icon", attr: { "aria-hidden": "true" } });
       setIcon(searchIcon, "search");
       const search = searchWrap.createEl("input", {
@@ -1427,7 +1679,7 @@ class RecentNotesFeedView extends ItemView {
           this.searchExpanded = false;
           root.removeClass("recent-notes-search-expanded");
           searchButton.setAttribute("aria-expanded", "false");
-          searchButton.focus();
+          if (this.listLayout === "classic" || this.listLayout === "list") searchButton.focus();
         }
         if (event.key === "Enter" && isMobileOptimized(this.plugin.settings)) {
           search.blur();
@@ -1440,6 +1692,16 @@ class RecentNotesFeedView extends ItemView {
         search.focus();
         this.renderList();
       });
+      if (this.listLayout === "list") {
+        const closeSearch = searchWrap.createEl("button", { cls: "rnf-close-search", attr: { "aria-label": tr("關閉搜尋") } });
+        setIcon(closeSearch, "x");
+        closeSearch.addEventListener("click", () => {
+          this.searchExpanded = false;
+          root.removeClass("recent-notes-search-expanded");
+          searchButton.setAttribute("aria-expanded", "false");
+          searchButton.focus();
+        });
+      }
     }
 
     this.filterButton = tools.createEl("button", {
@@ -1449,7 +1711,7 @@ class RecentNotesFeedView extends ItemView {
     setIcon(this.filterButton, "filter");
     this.filterButton.addEventListener("click", () => {
       panel.hidden = !panel.hidden;
-      if (root.dataset.width === "tiny") {
+      if (this.listLayout === "classic" && root.dataset.width === "tiny") {
         this.searchExpanded = !panel.hidden;
         root.toggleClass("recent-notes-search-expanded", this.searchExpanded);
       }
@@ -1458,7 +1720,7 @@ class RecentNotesFeedView extends ItemView {
     panel.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         panel.hidden = true;
-        if (root.dataset.width === "tiny") {
+        if (this.listLayout === "classic" && root.dataset.width === "tiny") {
           this.searchExpanded = false;
           root.removeClass("recent-notes-search-expanded");
         }
@@ -1473,27 +1735,61 @@ class RecentNotesFeedView extends ItemView {
     this.renderList(root);
   }
 
+  getCurrentTypeFilters() {
+    const selected = normalizeTypeSelection(this.selectedTypeFilters, this.plugin.settings);
+    // Backwards compatibility with extensions and existing code that set .typeFilter directly.
+    if (this.typeFilter !== legacyTypeFilter(selected) &&
+      (this.typeFilter === "all" || getEnabledRecentTypes(this.plugin.settings).includes(this.typeFilter))) {
+      return normalizeTypeSelection(this.typeFilter, this.plugin.settings);
+    }
+    return selected;
+  }
+
   renderTypeFilter(container) {
     const options = [
       { value: "all", label: tr("全部") },
       { value: "markdown", label: tr("筆記") },
-      { value: "canvas", label: "Canvas" }
+      ...(this.plugin.settings.includeCanvas !== false ? [{ value: "canvas", label: "Canvas" }] : []),
+      ...getSelectedFileTypes(this.plugin.settings).map(value => ({ value, label: tr(FILE_TYPE_LABELS[value]) }))
     ];
-
+    const updateChips = () => {
+      const selected = this.getCurrentTypeFilters();
+      for (const chip of container.querySelectorAll(".recent-notes-filter-chip")) {
+        const key = chip.dataset.filter;
+        const active = key === "all" ? selected.length === 0 : selected.includes(key);
+        chip.toggleClass("is-active", active);
+        chip.setAttribute("aria-pressed", String(active));
+      }
+    };
     for (const option of options) {
       const button = container.createEl("button", {
         cls: "recent-notes-filter-chip",
-        attr: { "data-filter": option.value, "aria-label": trf("只顯示{0}", option.label) }
+        attr: {
+          "data-filter": option.value,
+          "aria-label": option.value === "all" ? tr("顯示所有已啟用類型") : trf("切換{0}篩選", option.label)
+        }
       });
       button.textContent = option.label;
-      if (this.typeFilter === option.value) button.addClass("is-active");
       button.addEventListener("click", () => {
-        this.typeFilter = option.value;
-        container.querySelectorAll(".recent-notes-filter-chip").forEach((chip) => chip.removeClass("is-active"));
-        button.addClass("is-active");
+        const selected = this.getCurrentTypeFilters();
+        const next = option.value === "all" ? [] : normalizeTypeSelection(
+          selected.includes(option.value) ? selected.filter(key => key !== option.value)
+            : [...selected, option.value], this.plugin.settings
+        );
+        this.selectedTypeFilters = next;
+        this.typeFilter = legacyTypeFilter(next);
+        this.configuredTypeFilter = JSON.stringify(next);
+        updateChips();
         this.renderList();
+        if (this.plugin.settings.rememberTypeFilter !== false) {
+          this.plugin.settings.typeFilterSelection = [...next];
+          void this.plugin.saveSettings().catch(error => {
+            console.warn("ReNotes: could not save recent file-type preferences", error);
+          });
+        }
       });
     }
+    updateChips();
   }
 
   getFilterSettings() {
@@ -1502,14 +1798,22 @@ class RecentNotesFeedView extends ItemView {
 
   hasActiveFilters() {
     const settings = this.getFilterSettings();
-    return !!this.searchQuery || this.typeFilter !== "all"
+    return !!this.searchQuery || this.getCurrentTypeFilters().length > 0
       || ["includedFolders", "excludedFolders", "excludedTags"].some((key) => normalizeList(settings[key]).length > 0)
       || settings.sortMode !== DEFAULT_SETTINGS.sortMode;
   }
 
   async clearFilters() {
     this.searchQuery = "";
+    const hadTypeSelection = this.getCurrentTypeFilters().length > 0
+      || Array.isArray(this.plugin.settings.typeFilterSelection) && this.plugin.settings.typeFilterSelection.length > 0;
+    this.selectedTypeFilters = [];
     this.typeFilter = "all";
+    this.configuredTypeFilter = JSON.stringify([]);
+    if (hadTypeSelection && this.plugin.settings.rememberTypeFilter !== false) {
+      this.plugin.settings.typeFilterSelection = [];
+      await this.plugin.saveSettings();
+    }
     this.filterOverrides = { includedFolders: "", excludedFolders: "", excludedTags: "", sortMode: DEFAULT_SETTINGS.sortMode };
     await this.refresh();
   }
@@ -1533,13 +1837,23 @@ class RecentNotesFeedView extends ItemView {
     const labelEl = panel.createEl("label", { cls: "recent-notes-filter-field" });
     labelEl.createSpan({ text: tr("排序方式") });
     const sort = labelEl.createEl("select");
-    for (const [value, label] of [["effective", tr("有效編輯時間（忽略無內容變更的重寫）")], ["opened", tr("最近開啟")], ["localEdit", tr("本機編輯")], ["smart", tr("智慧")], ["mtime", tr("修改時間")]]) {
+    for (const [value, label] of [["effective", tr("最近編輯")], ["opened", tr("最近開啟")]]) {
       sort.createEl("option", { value, text: label });
+    }
+    // Previously selected special modes remain selectable until changed in settings.
+    if (!["effective", "opened"].includes(settings.sortMode)) {
+      sort.createEl("option", { value: settings.sortMode, text: sortModeFriendlyName(settings.sortMode) });
     }
     sort.value = settings.sortMode;
     const sortSource = panel.createDiv({ cls: "recent-notes-sort-source" });
     const updateSortSource = () => {
-      sortSource.textContent = getSortDeviceHint(sort.value);
+      const message = sort.value === "effective" ? tr("內容修改才調整順序，單純打開不算。")
+        : sort.value === "opened" ? tr("打開來看過就優先，不必修改內容。")
+        : sort.value === "localEdit" ? tr("有編輯紀錄的筆記會優先。")
+        : sort.value === "smart" ? tr("打開、修改、檔案更新都可能影響順序。")
+        : tr("依檔案本身的更新日期排列。");
+      sortSource.textContent = this.plugin.settings.syncSortHistory
+        ? tr("跨裝置排序已啟用，詳情請到設定頁查看。") : message;
     };
     updateSortSource();
     sort.addEventListener("change", () => {
@@ -1554,8 +1868,10 @@ class RecentNotesFeedView extends ItemView {
   getFilteredItems() {
     let visibleItems = this.items;
 
-    if (this.typeFilter && this.typeFilter !== "all") {
-      visibleItems = visibleItems.filter((item) => item.type === this.typeFilter);
+    const selected = this.getCurrentTypeFilters();
+    if (selected.length) {
+      const eligible = new Set(selected);
+      visibleItems = visibleItems.filter(item => eligible.has(item.type));
     }
 
     if (this.searchQuery) {
@@ -1582,11 +1898,14 @@ class RecentNotesFeedView extends ItemView {
         this.countEl.textContent = "";
       } else {
         const total = this.items.length;
-        const typeText = this.typeFilter === "canvas" ? "Canvas" : this.typeFilter === "markdown" ? tr("筆記") : tr("項目");
-        const isFiltered = this.searchQuery || this.typeFilter !== "all";
+        const selected = this.getCurrentTypeFilters();
+        const typeText = typeFilterLabel(selected);
+        const isFiltered = this.searchQuery || selected.length > 0;
         if (resolveReNotesLanguage() === "en" && isFiltered) {
-          const singular = this.typeFilter === "canvas" ? "Canvas board" : this.typeFilter === "markdown" ? "note" : "item";
-          const plural = this.typeFilter === "canvas" ? "Canvas boards" : this.typeFilter === "markdown" ? "notes" : "items";
+          const singular = selected.length === 1 && selected[0] === "canvas" ? "Canvas board"
+            : selected.length === 1 && selected[0] === "markdown" ? "note" : "item";
+          const plural = selected.length === 1 && selected[0] === "canvas" ? "Canvas boards"
+            : selected.length === 1 && selected[0] === "markdown" ? "notes" : "items";
           this.countEl.textContent = String(visibleCount) + " / " + localizedCount(total, "{0} 個項目", singular, plural);
         } else {
           this.countEl.textContent = isFiltered
@@ -1727,6 +2046,7 @@ class RecentNotesFeedView extends ItemView {
 
   renderList() {
     if (!this.listEl) return;
+    this.clearItemInteractions();
     this.renderGeneration = (this.renderGeneration || 0) + 1;
     const generation = this.renderGeneration;
     if (this.dateNavigatorCleanup) this.dateNavigatorCleanup();
@@ -1791,9 +2111,9 @@ class RecentNotesFeedView extends ItemView {
           const heading = section.createDiv({ cls: "rnf-date-header" });
           if (group.label) {
             section.setAttribute("aria-label", group.label);
-            const pill = heading.createEl("h3", { cls: "recent-notes-date-pill" });
+            const pill = heading.createEl("h3", { cls: this.listLayout === "classic" ? "recent-notes-date-pill" : "rnf-date-label" });
             pill.createSpan({ text: group.label });
-            if (group.showDay) pill.createSpan({ cls: "recent-notes-date-pill-day", text: " " + group.number });
+            if (group.showDay && this.listLayout === "classic") pill.createSpan({ cls: "recent-notes-date-pill-day", text: " " + group.number });
           } else section.addClass("is-flat");
           if (!dateNavigatorRendered) {
             this.renderRecentDateNavigator(heading, dateIndex, generation);
@@ -1851,6 +2171,7 @@ class RecentNotesFeedView extends ItemView {
   }
 
   addCanvasDragHandle(card, item) {
+    if ((this.listLayout || getListLayout(this.plugin.settings, this.layoutWidth)) === "wall") return;
     if (isMobilePlatform() || this.plugin.settings.enableCanvasDrag === false || item.type !== "markdown") return;
     const handle = card.createSpan({
       cls: "rnf-canvas-drag-handle",
@@ -1892,14 +2213,17 @@ class RecentNotesFeedView extends ItemView {
   }
 
   renderItemCard(item, currentPath, container = this.listEl, pinned = this.plugin.isPinned(item.path)) {
+    const layout = this.listLayout || getListLayout(this.plugin.settings, this.layoutWidth);
+    const classic = layout === "classic";
     const card = container.createDiv({ cls: `recent-note-item recent-note-type-${item.type}` });
-    card.addClass("rnf-a1-card");
+    card.addClass(classic ? "rnf-a1-card" : "rnf-layout-card");
     card.toggleClass("recent-notes-pinned-card", pinned);
     card.tabIndex = 0;
     card.dataset.path = item.path;
     this.addCanvasDragHandle(card, item);
     card.setAttribute("role", "button");
-    card.setAttribute("aria-label", trf("開啟 {0}", item.title));
+    const displayTitle = classic ? item.title : String(item.title || "").trim() || basenameFromPath(item.path) || tr("無標題");
+    card.setAttribute("aria-label", trf("開啟 {0}", displayTitle));
     if (currentPath && item.path === currentPath) {
       card.addClass("is-active");
     }
@@ -1909,7 +2233,7 @@ class RecentNotesFeedView extends ItemView {
     if (pinned) {
       setIcon(heading.createSpan({ cls: "recent-note-pin", attr: { "aria-hidden": "true" } }), "pin");
     }
-    const title = heading.createDiv({ cls: "recent-note-title", text: item.title });
+    const title = heading.createDiv({ cls: "recent-note-title", text: displayTitle });
     title.title = item.path;
     if (this.plugin.settings.showSnippet && item.hasSnippetContent !== false && String(item.snippet || "").trim()) {
       body.createDiv({ cls: "recent-note-snippet", text: item.snippet });
@@ -1925,25 +2249,34 @@ class RecentNotesFeedView extends ItemView {
       const iconEl = footer.createSpan({ cls: "rnf-filetype-icon", attr: { role: "img", "aria-label": typeLabel, title: typeLabel } });
       // In this Obsidian release, Lucide grid-2x2 is named layout-grid; both render the same 2x2 rectangles.
       setIcon(iconEl, isCanvas ? "layout-grid" : "file-text");
+    } else {
+      const name = tr(FILE_TYPE_LABELS[item.type] || "檔案");
+      const iconEl = footer.createSpan({ cls: "rnf-filetype-icon", attr: { role: "img", "aria-label": name, title: name } });
+      setIcon(iconEl, { pdf: "file-text", image: "image", base: "database", audio: "music", video: "film", other: "file" }[item.type] || "file");
     }
     const time = footer.createSpan({ cls: "recent-note-time", text: formatNoteTime(item.mtime) });
     time.title = formatTime(item.mtime, this.plugin.settings.dateFormat);
     const folder = item.folder && item.folder !== "/" ? item.folder.split("/").pop()
       : (this.plugin.app.vault.getName ? this.plugin.app.vault.getName() : tr("筆記"));
     const extras = bottomLeft.createSpan({ cls: "rnf-card-meta-extras" });
-    if (this.plugin.settings.showFolder) {
+    if (this.plugin.settings.showFolder && (classic || layout === "slim")) {
       extras.createSpan({ text: " · " });
       const label = extras.createSpan({ cls: "recent-note-folder", text: folder });
       label.title = item.folder || folder;
     }
-    if (this.plugin.settings.showTags && Array.isArray(item.tags) && item.tags.length) {
-      extras.createSpan({ cls: "recent-note-tags", text: " · " + item.tags.slice(0, 2).map((tag) => tag.startsWith("#") ? tag : "#" + tag).join(" · ") });
+    if (this.plugin.settings.showTags && Array.isArray(item.tags) && item.tags.length && layout !== "list") {
+      if (classic) extras.createSpan({ cls: "recent-note-tags", text: " · " + item.tags.slice(0, 2).map((tag) => tag.startsWith("#") ? tag : "#" + tag).join(" · ") });
+      else if (layout === "slim") {
+        const tag = String(item.tags[0]);
+        extras.createSpan({ cls: "recent-note-tag-pill", text: tag.startsWith("#") ? tag : "#" + tag });
+        if (item.tags.length > 1) extras.createSpan({ cls: "recent-note-tags-more", text: `+${item.tags.length - 1}` });
+      } else if (item.type === "canvas") extras.createSpan({ cls: "recent-note-tags-count", text: localizedCount(item.tags.length, "{0} 個標籤", "tag", "tags") });
     }
     if (!extras.textContent) extras.remove();
-    if (this.plugin.settings.showSortReason && item.sortReason) {
+    if (classic && this.plugin.settings.showSortReason && item.sortReason) {
       body.createDiv({ cls: "recent-note-sort-reason recent-note-extra", text: item.sortReason });
     }
-    if (item.type === "canvas" && item.canvas && !shouldHideCanvasDetailsOnMobile(this.plugin.settings)) {
+    if (classic && item.type === "canvas" && item.canvas && !shouldHideCanvasDetailsOnMobile(this.plugin.settings)) {
       this.renderCanvasDetails(body, item, bottomLeft);
     }
     if (this.plugin.settings.showCanvasThumbnail !== false && item.type === "canvas" && item.canvas
@@ -1960,15 +2293,17 @@ class RecentNotesFeedView extends ItemView {
         rect.setAttribute("class", "recent-note-thumbnail-" + node.type);
         svg.appendChild(rect);
       }
-    } else if (this.plugin.settings.showImageThumbnail !== false && item.type === "markdown" && item.imagePath
-      && !this.plugin.failedImageThumbnails.has(item.imagePath)) {
-      const file = getImageFile(this.plugin.app, item.imagePath);
+    } else if (this.plugin.settings.showImageThumbnail !== false && (item.type === "markdown" || item.type === "image")
+      && (item.type === "image" ? item.path : item.imagePath)
+      && !this.plugin.failedImageThumbnails.has(item.type === "image" ? item.path : item.imagePath)) {
+      const imagePath = item.type === "image" ? item.path : item.imagePath;
+      const file = getImageFile(this.plugin.app, imagePath);
       if (file && typeof this.plugin.app.vault.getResourcePath === "function") {
         card.addClass("has-thumbnail");
         const thumbnail = card.createDiv({ cls: "recent-note-thumbnail recent-note-image-thumbnail", attr: { "aria-hidden": "true" } });
         const img = thumbnail.createEl("img", { attr: { alt: "", loading: "lazy", decoding: "async" } });
         const discard = () => {
-          this.plugin.failedImageThumbnails.add(item.imagePath);
+          this.plugin.failedImageThumbnails.add(imagePath);
           thumbnail.remove();
           card.removeClass("has-thumbnail");
         };
@@ -1976,11 +2311,32 @@ class RecentNotesFeedView extends ItemView {
         try { img.setAttribute("src", this.plugin.app.vault.getResourcePath(file)); } catch (error) { discard(); }
       }
     }
-    if (isMobilePlatform() && this.plugin.settings.mobileShowMenuButton !== false) {
+    if (!classic) {
+      bottom.addClass("rnf-layout-meta");
+      // Reuse the same content and time nodes; new layouts only change their placement.
+      if (layout === "list") {
+        bottomLeft.remove();
+        const snippet = body.querySelector(".recent-note-snippet");
+        if (snippet) {
+          footer.createSpan({ cls: "rnf-list-separator", text: " · " });
+          snippet.remove();
+          footer.appendChild(snippet);
+        }
+        bottom.remove(); body.appendChild(bottom);
+      } else {
+        bottomLeft.remove(); bottom.appendChild(bottomLeft);
+        if (layout === "slim") { bottom.remove(); body.appendChild(bottom); }
+      }
+    }
+    const longPressAvailable = isMobileOptimized(this.plugin.settings) && this.plugin.settings.mobileLongPressMenu !== false;
+    const showMenu = classic ? isMobilePlatform() && this.plugin.settings.mobileShowMenuButton !== false
+      : layout === "list" ? (isMobilePlatform() ? !longPressAvailable : this.plugin.settings.mobileLongPressMenu === false)
+      : !isMobilePlatform() || this.plugin.settings.mobileShowMenuButton !== false || !longPressAvailable;
+    if (showMenu) {
       card.addClass("has-menu");
-      const menuButton = card.createEl("button", {
+      const menuButton = (classic || layout === "list" ? card : bottom).createEl("button", {
         cls: "recent-note-menu-button",
-        attr: { "aria-label": tr("開啟 ") + item.title + tr(" 的選單") }
+        attr: { "aria-label": tr("開啟 ") + displayTitle + tr(" 的選單") }
       });
       menuButton.textContent = "⋯";
       menuButton.addEventListener("click", (event) => {
@@ -2025,6 +2381,11 @@ class RecentNotesFeedView extends ItemView {
     card.addEventListener("auxclick", openFromMiddleClick, { capture: true });
     card.addEventListener("keydown", (event) => {
       if (event.target !== card) return;
+      if (!classic && (event.key === "ContextMenu" || (event.key === "F10" && event.shiftKey))) {
+        event.preventDefault();
+        this.plugin.showFileMenu(item.path, event);
+        return;
+      }
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         this.openItem(item, event, false);
@@ -2043,6 +2404,7 @@ class RecentNotesFeedView extends ItemView {
     if (this.plugin.settings.mobileLongPressMenu === false) return;
 
     let timer = null;
+    let releaseTimer = null;
     let startX = 0;
     let startY = 0;
     let latestX = 0;
@@ -2051,6 +2413,11 @@ class RecentNotesFeedView extends ItemView {
       if (timer) window.clearTimeout(timer);
       timer = null;
     };
+    this.itemInteractionCleanups.push(() => {
+      cancel();
+      if (releaseTimer) window.clearTimeout(releaseTimer);
+      releaseTimer = null;
+    });
 
     card.addEventListener("touchstart", (event) => {
       if (!event.touches || event.touches.length !== 1) return;
@@ -2067,7 +2434,8 @@ class RecentNotesFeedView extends ItemView {
           try { navigator.vibrate(8); } catch (error) {}
         }
         this.plugin.showFileMenu(item.path, { x: latestX, y: latestY });
-        window.setTimeout(() => {
+        releaseTimer = window.setTimeout(() => {
+          releaseTimer = null;
           this.longPressTriggered = false;
         }, 450);
       }, 560);
@@ -2142,11 +2510,205 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
     this.plugin = plugin;
   }
 
+  organizeSettings() {
+    const root = this.containerEl;
+    const existing = Array.from(root.children);
+    const moved = new Set();
+    // Obsidian's real Setting rows have .setting-item-name but no el.setting property.
+    // Accept the test adapter's metadata too, without depending on it in production.
+    const settingRow = name => {
+      const expected = tr(name);
+      return existing.find(el => el.setting?.name === expected
+        || el.querySelector?.(".setting-item-name")?.textContent?.trim() === expected);
+    };
+    const sectionHeading = name => existing.find(el => el.tagName === "H3" && el.textContent === tr(name));
+    const move = (element, target) => {
+      if (!element || moved.has(element)) return;
+      moved.add(element);
+      element.remove();
+      target.appendChild(element);
+    };
+    const discard = element => {
+      if (!element || moved.has(element)) return;
+      moved.add(element);
+      element.remove();
+    };
+    const intro = root.createDiv({ cls: "rnf-settings-overview" });
+    move(existing.find(el => el.tagName === "H2"), intro);
+    move(existing.find(el => el.tagName === "P"), intro);
+    move(settingRow("介面語言"), intro);
+
+    const sorting = intro.createDiv({ cls: "rnf-settings-section rnf-settings-sorting" });
+    sorting.createEl("h3", { text: tr("筆記排列順序") });
+    sorting.createEl("p", { cls: "rnf-settings-description",
+      text: tr("你想先看到最近寫過的，還是最近看過的筆記？") });
+    const choices = sorting.createDiv({
+      cls: "rnf-simple-sort-options",
+      attr: { role: "radiogroup", "aria-label": tr("筆記排列順序") }
+    });
+    const selectedMode = this.plugin.settings.sortMode || "effective";
+    for (const [mode, title, desc] of [
+      ["effective", tr("最近編輯"), tr("內容有修改才會更新順序，單純打開不算。")],
+      ["opened", tr("最近開啟"), tr("最近打開來看過的筆記優先，不一定要修改。")]
+    ]) {
+      const label = choices.createEl("label", { cls: "rnf-simple-sort-option" });
+      const input = label.createEl("input", { type: "radio",
+        attr: { name: "rnf-simple-sort-mode", value: mode } });
+      input.value = mode;
+      input.checked = selectedMode === mode;
+      label.toggleClass("is-selected", input.checked);
+      const text = label.createDiv({ cls: "rnf-simple-sort-option-text" });
+      text.createDiv({ cls: "rnf-simple-sort-option-title", text: title });
+      text.createDiv({ cls: "rnf-simple-sort-option-desc", text: desc });
+      input.addEventListener("change", async () => {
+        if (!input.checked || this.plugin.settings.sortMode === mode) return;
+        this.plugin.settings.sortMode = mode;
+        await this.plugin.saveSettingsAndRefresh();
+        this.display();
+      });
+    }
+    const sortingAdvanced = sorting.createEl("details", { cls: "rnf-sort-advanced" });
+    sortingAdvanced.createEl("summary", { text: tr("更多排列方法（一般不需要調整）") });
+    const advancedMode = !["effective", "opened"].includes(selectedMode);
+    sortingAdvanced.open = advancedMode;
+    sortingAdvanced.createDiv({ cls: "rnf-settings-description",
+      text: tr("以下是特殊需求才會用到的方式，平常選上方兩個就好。") });
+    const extraChoices = sortingAdvanced.createDiv({
+      cls: "rnf-simple-sort-options rnf-other-sort-options",
+      attr: { role: "radiogroup", "aria-label": tr("更多排列方法") }
+    });
+    for (const [mode, title, desc] of [
+      ["localEdit", tr("先顯示有編輯紀錄的"), tr("例如：這台電腦有記錄改過 A，A 會優先；沒記錄的仍依檔案時間。")],
+      ["smart", tr("看過或改過都算"), tr("例如：剛打開 B 或修改 A，兩個都可能往前；檔案更新也會算。")],
+      ["mtime", tr("按檔案更新日期"), tr("例如：同步工具更新了 C，即使你沒打開，也可能跑到前面。")]
+    ]) {
+      const label = extraChoices.createEl("label", { cls: "rnf-simple-sort-option" });
+      const input = label.createEl("input", { type: "radio",
+        attr: { name: "rnf-simple-sort-mode", value: mode } });
+      input.value = mode;
+      input.checked = selectedMode === mode;
+      label.toggleClass("is-selected", input.checked);
+      const info = label.createDiv({ cls: "rnf-simple-sort-option-text" });
+      info.createDiv({ cls: "rnf-simple-sort-option-title", text: title });
+      info.createDiv({ cls: "rnf-simple-sort-option-desc", text: desc });
+      input.addEventListener("change", async () => {
+        if (!input.checked || this.plugin.settings.sortMode === mode) return;
+        this.plugin.settings.sortMode = mode;
+        await this.plugin.saveSettingsAndRefresh();
+        this.display();
+      });
+    }
+    // The old five-option dropdown duplicated controls and included technical terms.
+    // Keep every sorting implementation and persisted mode, but retire this redundant UI.
+    discard(settingRow("排序模式"));
+    new Setting(intro)
+      .setName(tr("記住上次類型篩選"))
+      .setDesc(tr("再次開啟 ReNotes 時，保留上次勾選的檔案類型。"))
+      .addToggle(toggle => toggle
+        .setValue(this.plugin.settings.rememberTypeFilter !== false)
+        .onChange(async value => {
+          this.plugin.settings.rememberTypeFilter = value;
+          if (!value) this.plugin.settings.typeFilterSelection = null;
+          await this.plugin.saveSettingsAndRefresh();
+        }));
+
+    const types = intro.createDiv({ cls: "rnf-settings-section rnf-settings-types" });
+    types.createEl("h3", { text: tr("顯示哪些檔案") });
+    types.createEl("p", { cls: "rnf-settings-description",
+      text: tr("可同時勾選多種檔案。只有啟用的類型才會出現在近期清單與篩選按鈕。") });
+    move(settingRow("包含 Canvas"), types);
+    const grid = types.createDiv({ cls: "rnf-settings-type-grid" });
+    for (const name of ["PDF", "圖片", "Bases", "音訊", "影片", "其他檔案"]) {
+      move(settingRow(name), grid);
+    }
+    move(settingRow("其他副檔名"), types);
+    const oldTypesHeading = sectionHeading("其他檔案類型（可複選）");
+    const oldTypesIntro = existing[existing.indexOf(oldTypesHeading) + 1];
+    if (oldTypesIntro && oldTypesIntro.tagName === "P") discard(oldTypesIntro);
+    discard(oldTypesHeading);
+
+    const appearance = intro.createDiv({ cls: "rnf-settings-section rnf-settings-appearance" });
+    appearance.createEl("h3", { text: tr("外觀") });
+    this.renderLayoutSelectors(appearance);
+    for (const name of ["版面密度", "顯示摘要", "依日期分組", "顯示圖片縮圖"]) {
+      move(settingRow(name), appearance);
+    }
+
+    const sync = intro.createDiv({ cls: "rnf-settings-section rnf-settings-sync" });
+    sync.createEl("h3", { text: tr("跨裝置排序紀錄") });
+    move(settingRow("啟用跨裝置排序紀錄"), sync);
+    const syncMore = sync.createEl("details", { cls: "rnf-sync-advanced" });
+    syncMore.createEl("summary", { text: tr("同步狀態與更多選項") });
+    move(settingRow("包含最近開啟紀錄"), syncMore);
+    if (this.plugin.syncStatusElement) move(this.plugin.syncStatusElement, syncMore);
+    move(settingRow("重新讀取／發布紀錄"), syncMore);
+    const oldSyncHeading = sectionHeading("排序紀錄跨裝置同步");
+    const oldSyncIntro = existing[existing.indexOf(oldSyncHeading) + 1];
+    if (oldSyncIntro && oldSyncIntro.tagName === "P") discard(oldSyncIntro);
+    discard(oldSyncHeading);
+
+    const advanced = root.createEl("details", { cls: "rnf-settings-advanced" });
+    advanced.createEl("summary", { text: tr("進階設定") });
+    const content = advanced.createDiv({ cls: "rnf-settings-advanced-content" });
+    for (const node of existing) {
+      if (!moved.has(node)) move(node, content);
+    }
+  }
+
+  renderLayoutSelectors(container) {
+    const section = container.createDiv({ cls: "rnf-layout-settings" });
+    section.createEl("h3", { text: tr("清單版面") });
+    section.createEl("p", { cls: "rnf-settings-description", text: tr("手機預設瘦身卡片；桌機預設經典卡片。版面偏好會隨設定同步。") });
+    for (const [key, name] of [["listLayout", "桌機版面"], ["mobileListLayout", "手機版面"]]) {
+      const group = section.createDiv({ cls: "rnf-layout-selector", attr: { role: "radiogroup", "aria-label": tr(name) } });
+      group.createDiv({ cls: "rnf-layout-selector-title", text: tr(name) });
+      const entries = [
+        ["classic", "經典卡片", "完整卡片，隨側欄寬度收合。"],
+        ["list", "緊湊清單", "兩行清單，快速瀏覽更多筆記。"],
+        ["slim", "瘦身卡片", "精簡卡片，保留摘要與一顆標籤。"],
+        ["wall", "雙欄牆", "由左至右排列，適合看圖找筆記。"]
+      ];
+      if (key === "mobileListLayout") entries.unshift(["follow", "跟隨桌機", "使用桌機選擇的版面。"]);
+      const radios = [];
+      for (const [value, title, desc] of entries) {
+        const label = group.createEl("label", { cls: `rnf-layout-choice rnf-layout-choice-${value}` });
+        const input = label.createEl("input", { type: "radio", attr: { name: `rnf-${key}`, value } });
+        input.value = value;
+        input.checked = this.plugin.settings[key] === value;
+        label.toggleClass("is-selected", input.checked);
+        radios.push({ input, label });
+        if (value !== "follow") {
+          const preview = label.createDiv({ cls: `rnf-layout-mini rnf-layout-mini-${value}`, attr: { "aria-hidden": "true" } });
+          for (let i = 0; i < (value === "list" ? 5 : value === "wall" ? 4 : value === "classic" ? 2 : 3); i += 1) {
+            const row = preview.createSpan({ cls: "rnf-layout-mini-row" });
+            row.createSpan(); row.createSpan();
+          }
+        }
+        label.createSpan({ cls: "rnf-layout-check", text: "✓", attr: { "aria-hidden": "true" } });
+        label.createDiv({ cls: "rnf-layout-choice-title", text: tr(title) });
+        label.createDiv({ cls: "rnf-layout-choice-desc", text: tr(desc) });
+        input.addEventListener("change", async () => {
+          if (!input.checked || this.plugin.settings[key] === value) return;
+          this.plugin.settings[key] = value;
+          for (const radio of radios) {
+            radio.input.checked = radio.input === input;
+            radio.label.toggleClass("is-selected", radio.input.checked);
+          }
+          // Layout switches reuse current items immediately, without rebuilding or reading files.
+          for (const leaf of this.plugin.app.workspace.getLeavesOfType(VIEW_TYPE_RECENT_NOTES_FEED)) {
+            if (leaf.view instanceof RecentNotesFeedView && leaf.view.rootEl) leaf.view.render();
+          }
+          await this.plugin.saveSettings();
+        });
+      }
+    }
+  }
+
   display() {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.createEl("h2", { text: tr("ReNotes 設定") });
-    containerEl.createEl("p", { text: tr("活動紀錄只存本裝置，手機與電腦各自獨立；釘選會隨 vault 同步。") });
+    containerEl.createEl("p", { text: tr("近期紀錄預設保存在本機；可在下方設定是否跨裝置同步。同步狀態只顯示在此設定頁。") });
     new Setting(containerEl)
       .setName(tr("介面語言"))
       .setDesc(tr("自動跟隨 Obsidian 介面語言，或手動選擇繁體中文、英文。"))
@@ -2207,7 +2769,7 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName(tr("版面密度"))
-      .setDesc(tr("緊湊／標準／寬鬆控制卡片內距、標題、預覽行數與縮圖尺寸；寬度改變時仍有效。"))
+      .setDesc(tr("經典卡片沿用原有密度；緊湊清單與瘦身卡片只調整上下內距（緊湊 −4px、寬鬆 +4px）；雙欄牆忽略密度。"))
       .addDropdown((dropdown) => dropdown
         .addOption("compact", tr("緊湊"))
         .addOption("standard", tr("標準"))
@@ -2247,7 +2809,7 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName(tr("手機列表樣式"))
-      .setDesc(tr("保留手機偏好：標準版面密度時使用此樣式；明確選擇緊湊或寬鬆版面密度時優先使用版面密度。"))
+      .setDesc(tr("只作用於經典卡片；標準密度時使用此樣式，緊湊或寬鬆密度優先。"))
       .addDropdown((dropdown) => dropdown
         .addOption("compact", tr("緊湊"))
         .addOption("comfortable", tr("舒適"))
@@ -2274,7 +2836,7 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName(tr("手機顯示選單按鈕"))
-      .setDesc(tr("在每筆項目右側顯示 ⋯，方便開新分頁、重新命名、刪除或在資料夾中顯示。"))
+      .setDesc(tr("新版面長按停用時仍保留選單按鈕，確保選單可達。緊湊清單啟用長按時隱藏按鈕。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.mobileShowMenuButton !== false)
         .onChange(async (value) => {
@@ -2294,7 +2856,7 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName(tr("手機壓縮頂部工具列"))
-      .setDesc(tr("減少標題、搜尋與篩選列佔用高度，避免列表被鍵盤與工具列擠壓。"))
+      .setDesc(tr("新版面固定單列工具列；此開關調整手機工具列內距。"))
       .addToggle((toggle) => toggle
         .setValue(this.plugin.settings.mobileCompactHeader !== false)
         .onChange(async (value) => {
@@ -2335,6 +2897,18 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           this.plugin.settings.sortMode = value;
           await this.plugin.saveSettingsAndRefresh();
+          this.display();
+        }));
+
+    new Setting(containerEl)
+      .setName(tr("屬性（Frontmatter）變更也算編輯"))
+      .setDesc(tr("預設關閉：只有屬性被改（例如其他外掛自動加入的 canvas 連結、標籤）不會讓筆記跳到最前面，內文有改才算。"))
+      .addToggle((toggle) => toggle
+        .setValue(this.plugin.settings.countFrontmatterEdits === true)
+        .onChange(async (value) => {
+          this.plugin.settings.countFrontmatterEdits = value;
+          // 兩種指紋一直各自記錄，切換只保存設定，不重新建立基準。
+          await this.plugin.saveSettings();
         }));
 
     new Setting(containerEl)
@@ -2437,6 +3011,53 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
           await this.plugin.saveSettingsAndRefresh();
         }));
 
+    containerEl.createEl("h3", { text: tr("排序紀錄跨裝置同步") });
+    containerEl.createEl("p", { text: tr("此功能預設關閉。啟用後在 Vault 的 ReNotes Sync/devices 資料夾保存每台裝置自己的 Markdown 紀錄，透過既有的 Vault 同步工具交換。只包含路徑、時間與指紋，不包含筆記全文。主側欄不顯示同步狀態。") });
+    new Setting(containerEl)
+      .setName(tr("啟用跨裝置排序紀錄"))
+      .setDesc(tr("啟用後合併各裝置的有效編輯及本機編輯紀錄；若只想保留本機習慣，請維持關閉。"))
+      .addToggle(toggle => toggle
+        .setValue(this.plugin.settings.syncSortHistory === true)
+        .onChange(async enabled => {
+          this.plugin.settings.syncSortHistory = enabled;
+          await this.plugin.saveSettings();
+          try { await this.plugin.applySyncSettings(enabled); }
+          catch (error) {
+            this.plugin.syncLastError = String(error && error.message || error);
+            console.warn("ReNotes: could not toggle sorting sync", error);
+            this.plugin.settings.syncSortHistory = false;
+            await this.plugin.saveSettings();
+          }
+          this.display();
+        }));
+    new Setting(containerEl)
+      .setName(tr("包含最近開啟紀錄"))
+      .setDesc(tr("預設只同步編輯時間。勾選後，才將最近開啟時間納入跨裝置排序與同步資料。"))
+      .addToggle(toggle => toggle
+        .setValue(this.plugin.settings.syncRecentOpens === true)
+        .onChange(async enabled => {
+          this.plugin.settings.syncRecentOpens = enabled;
+          await this.plugin.saveSettings();
+          if (this.plugin.settings.syncSortHistory) {
+            this.plugin.syncWriteDebounced();
+            await this.plugin.loadSharedRecords();
+          }
+        }));
+    const status = containerEl.createDiv({ cls: "rnf-sync-settings-status",
+      text: this.plugin.getSyncSettingsStatus() });
+    this.plugin.syncStatusElement = status;
+    new Setting(containerEl)
+      .setName(tr("重新讀取／發布紀錄"))
+      .setDesc(tr("手動重新讀取已到達 Vault 的其他裝置紀錄，並儲存本機紀錄；無法得知外部同步服務是否已完成上傳。"))
+      .addButton(button => button
+        .setButtonText(tr("更新紀錄"))
+        .onClick(async () => {
+          if (!this.plugin.settings.syncSortHistory) return;
+          await this.plugin.loadSharedRecords();
+          await this.plugin.publishSharedRecords();
+          this.display();
+        }));
+
     new Setting(containerEl)
       .setName(tr("清除本機排序紀錄"))
       .setDesc(tr("清除外掛記錄的最近開啟與本機編輯時間；不會刪除任何筆記。"))
@@ -2478,6 +3099,36 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
         .setValue(this.plugin.settings.includeCanvas !== false)
         .onChange(async (value) => {
           this.plugin.settings.includeCanvas = value;
+          await this.plugin.saveSettingsAndRefresh();
+        }));
+
+    containerEl.createEl("h3", { text: tr("其他檔案類型（可複選）") });
+    containerEl.createEl("p", { text: tr("預設只顯示 Markdown 與 Canvas；勾選的類型會加入近期清單，選擇會儲存在外掛設定。二進位檔案只讀取基本資訊，不讀取檔案內容。") });
+    for (const key of ["pdf", "image", "base", "audio", "video", "other"]) {
+      const examples = {
+        pdf: ".pdf", image: ".png / .jpg / .webp", base: ".base",
+        audio: ".mp3 / .wav / .flac", video: ".mp4 / .mov / .webm", other: tr("自行指定副檔名")
+      };
+      new Setting(containerEl)
+        .setName(tr(FILE_TYPE_LABELS[key]))
+        .setDesc(examples[key])
+        .addToggle(toggle => toggle
+          .setValue(getSelectedFileTypes(this.plugin.settings).includes(key))
+          .onChange(async value => {
+            const current = new Set(getSelectedFileTypes(this.plugin.settings));
+            if (value) current.add(key); else current.delete(key);
+            this.plugin.settings.additionalFileTypes = [...current];
+            await this.plugin.saveSettingsAndRefresh();
+          }));
+    }
+    new Setting(containerEl)
+      .setName(tr("其他副檔名"))
+      .setDesc(tr("先啟用「其他檔案」，再輸入副檔名（例如 txt, csv, docx）；用逗號分隔，最多 32 種。"))
+      .addText(text => text
+        .setPlaceholder("txt, csv, docx")
+        .setValue(this.plugin.settings.customFileExtensions || "")
+        .onChange(async value => {
+          this.plugin.settings.customFileExtensions = String(value).slice(0, 512);
           await this.plugin.saveSettingsAndRefresh();
         }));
 
@@ -2530,18 +3181,8 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
           await this.plugin.saveSettingsAndRefresh();
         }));
 
-    new Setting(containerEl)
-      .setName(tr("預設類型篩選"))
-      .setDesc(tr("最近修改面板開啟時預設顯示的檔案類型。"))
-      .addDropdown((dropdown) => dropdown
-        .addOption("all", tr("全部"))
-        .addOption("markdown", tr("筆記"))
-        .addOption("canvas", "Canvas")
-        .setValue(this.plugin.settings.defaultTypeFilter || "all")
-        .onChange(async (value) => {
-          this.plugin.settings.defaultTypeFilter = value;
-          await this.plugin.saveSettingsAndRefresh();
-        }));
+    // Legacy single-type preference is read as an initial fallback; the new multi-type
+    // chips and "remember last filter" preference replace this ambiguous dropdown.
 
     new Setting(containerEl)
       .setName(tr("顯示結果數量"))
@@ -2733,6 +3374,7 @@ class RecentNotesFeedSettingTab extends PluginSettingTab {
     containerEl.createEl("p", {
       text: tr("若使用 Lazy Loader，建議把 ReNotes 設為『instant』，可避免側欄分頁短暫顯示幽靈圖示")
     });
+    this.organizeSettings();
   }
 }
 
@@ -2916,6 +3558,21 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     this.itemCache = new Map();
     this.failedImageThumbnails = new Set();
     this.cacheInvalidationCount = 0;
+    this.syncDeviceId = null;
+    this.syncLastRead = 0;
+    this.syncLastPublished = 0;
+    this.syncReceivedDevices = 0;
+    this.syncIgnoredRecords = 0;
+    this.syncLastError = "";
+    this.syncMergedFingerprint = "";
+    this.mergedSyncActivity = Object.create(null);
+    this.mergedSyncEffective = new Map();
+    this.syncReading = null;
+    this.syncPublishing = null;
+    this.syncReadPending = false;
+    this.syncPublishPending = false;
+    this.syncReadDebounced = debounce(() => { this.loadSharedRecords().catch(error => console.warn("ReNotes: remote sync read failed", error)); }, 1200);
+    this.syncWriteDebounced = debounce(() => { this.publishSharedRecords().catch(error => console.warn("ReNotes: local sync publication failed", error)); }, 6000);
     this.savePinsDebounced = debounce(() => this.savePinnedSettings(), 300);
     this.saveActivityDebounced = debounce(() => this.saveActivity(), 1500);
     this.saveEffectiveDebounced = debounce(() => this.saveEffectiveRecords(), 1500);
@@ -2951,7 +3608,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
         name: pinned ? tr("釘選目前檔案") : tr("取消釘選目前檔案"),
         checkCallback: (checking) => {
           const file = this.app.workspace.getActiveFile();
-          if (!(file instanceof TFile) || !["md", "canvas"].includes(file.extension)) return false;
+          if (!isSupportedRecentFile(file, this.settings)) return false;
           if (this.isPinned(file.path) === pinned) return false;
           if (!checking) this.setPinned(file.path, pinned);
           return true;
@@ -2966,19 +3623,29 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     this.registerEvent(this.app.vault.on("modify", (file) => this.onVaultChanged(file)));
     this.registerEvent(this.app.vault.on("create", (file) => this.onVaultChanged(file)));
     this.registerEvent(this.app.vault.on("delete", (file) => {
+      if (file && isSyncRecordPath(file.path)) {
+        if (this.settings.syncSortHistory && file.path !== this.getOwnSyncRecordPath()) this.syncReadDebounced();
+        return;
+      }
       this.clearPendingLocalEditTimer(file && file.path);
       this.invalidateFileCache(file);
       this.removeActivityForFile(file);
       this.changeEffectivePaths(file, null);
       this.settings.pinnedPaths = this.settings.pinnedPaths.filter((path) => path !== file.path && !path.startsWith(file.path + "/"));
+      if (this.settings.syncSortHistory) this.syncWriteDebounced();
       this.scheduleRefresh();
     }));
     this.registerEvent(this.app.vault.on("rename", (file, oldPath) => {
+      if ((file && isSyncRecordPath(file.path)) || isSyncRecordPath(oldPath)) {
+        if (this.settings.syncSortHistory) this.syncReadDebounced();
+        return;
+      }
       this.clearPendingLocalEditTimer(oldPath);
       this.migrateActivityPath(file, oldPath);
       this.migrateCachePath(file, oldPath);
       this.changeEffectivePaths(file, oldPath);
       this.settings.pinnedPaths = normalizePinnedPaths(this.settings.pinnedPaths.map((path) => path === oldPath ? file.path : path.startsWith(oldPath + "/") ? file.path + path.slice(oldPath.length) : path));
+      if (this.settings.syncSortHistory) this.syncWriteDebounced();
       this.scheduleRefresh();
     }));
 
@@ -3017,6 +3684,13 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
     this.app.workspace.onLayoutReady(() => {
       if (this.unloaded) return;
+      if (this.settings.syncSortHistory) {
+        this.applySyncSettings(true).catch(error => {
+          this.syncLastError = String(error && error.message || error);
+          this.updateSyncSettingsStatus();
+          console.warn("ReNotes: optional sorting sync startup failed", error);
+        });
+      }
       if (this.sidebarLayoutReadyHandled) return this.sidebarStartupPromise;
       this.sidebarLayoutReadyHandled = true;
       this.sidebarStartupPromise = this.restoreRecentNotesSidebar();
@@ -3036,6 +3710,11 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     if (this.sidebarRestoringLeaves) this.sidebarRestoringLeaves.clear();
     if (this.localEditTokens) this.localEditTokens.clear();
     for (const timer of (this.pendingLocalEditTimers || new Map()).values()) window.clearTimeout(timer);
+    if (this.syncWriteDebounced) {
+      this.syncWriteDebounced.cancel();
+      if (this.settings && this.settings.syncSortHistory) this.publishSharedRecords().catch(() => {});
+    }
+    if (this.syncReadDebounced) this.syncReadDebounced.cancel();
     for (const fn of [this.saveActivityDebounced, this.saveEffectiveDebounced, this.refreshForActivityDebounced, this.scheduleRefresh]) {
       if (fn && fn.cancel) fn.cancel();
     }
@@ -3043,10 +3722,216 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     if (this.effectiveDirty) this.saveEffectiveRecords();
   }
 
+
+  getOwnSyncRecordPath() {
+    return this.syncDeviceId ? SYNC_DEVICE_FOLDER + "/" + this.syncDeviceId + ".md" : "";
+  }
+
+  async getOrCreateSyncDeviceId() {
+    if (this.syncDeviceId) return this.syncDeviceId;
+    let id = "";
+    try { id = await this.app.loadLocalStorage(DEVICE_SYNC_ID_KEY); } catch (error) {}
+    if (typeof id !== "string" || !/^d[a-z0-9]{10,48}$/.test(id)) {
+      id = "d" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+      await this.app.saveLocalStorage(DEVICE_SYNC_ID_KEY, id);
+    }
+    this.syncDeviceId = id;
+    return id;
+  }
+
+  async ensureSyncRecordFolder() {
+    for (const folder of [SYNC_FOLDER, SYNC_DEVICE_FOLDER]) {
+      if (this.app.vault.getAbstractFileByPath(folder)) continue;
+      if (typeof this.app.vault.createFolder !== "function") throw new Error("Vault folder creation is not available");
+      try { await this.app.vault.createFolder(folder); }
+      catch (error) {
+        if (!this.app.vault.getAbstractFileByPath(folder)) throw error;
+      }
+    }
+  }
+
+  collectSyncSnapshot() {
+    const activity = Object.create(null);
+    const effective = Object.create(null);
+    const goodPath = path => typeof path === "string" && path.length > 0 && path.length < 1024
+      && !isSyncRecordPath(path) && !path.startsWith("/") && !path.includes("\\");
+    const validTime = time => Number.isFinite(time) && time > 0 && time < 4102444800000;
+    const recentActivity = Object.entries(getActivityMap(this)).filter(([path]) => goodPath(path))
+      .sort((a, b) => Math.max(b[1]?.lastOpened || 0, b[1]?.lastLocalEdit || 0)
+        - Math.max(a[1]?.lastOpened || 0, a[1]?.lastLocalEdit || 0)).slice(0, 1200);
+    for (const [path, event] of recentActivity) {
+      if (!event || typeof event !== "object") continue;
+      const record = {};
+      if (validTime(event.lastLocalEdit)) record.lastLocalEdit = event.lastLocalEdit;
+      if (this.settings.syncRecentOpens && validTime(event.lastOpened)) record.lastOpened = event.lastOpened;
+      if (Object.keys(record).length) activity[path] = record;
+    }
+    const recentEffective = Object.entries(this.effectiveRecords || {}).filter(([path, item]) =>
+      goodPath(path) && item && validTime(item.t) && typeof item.fp === "string" && item.fp.length <= 180)
+      .sort((a, b) => b[1].t - a[1].t).slice(0, 1500);
+    for (const [path, item] of recentEffective) effective[path] = { fp: item.fp, t: item.t };
+    return { schema: 1, deviceId: this.syncDeviceId, updatedAt: Date.now(), activity, effective };
+  }
+
+  async publishSharedRecords() {
+    if (!this.settings.syncSortHistory || this.unloaded) return false;
+    if (this.syncPublishing) { this.syncPublishPending = true; return this.syncPublishing; }
+    const publish = (async () => {
+      do {
+        this.syncPublishPending = false;
+        await this.getOrCreateSyncDeviceId();
+        await this.ensureSyncRecordFolder();
+        const ownPath = this.getOwnSyncRecordPath();
+        const body = "# ReNotes sync data\n\nThis file stores optional per-device sorting history. Do not edit manually.\n\n" +
+          "~~~json\n" + JSON.stringify(this.collectSyncSnapshot()) + "\n~~~\n";
+        if (!this.settings.syncSortHistory || this.unloaded) return false;
+        const previous = this.app.vault.getAbstractFileByPath(ownPath);
+        if (previous && !(previous instanceof TFile)) throw new Error("Sync target is not a file");
+        if (previous) await this.app.vault.modify(previous, body);
+        else await this.app.vault.create(ownPath, body);
+        this.syncLastPublished = Date.now();
+        this.syncLastError = "";
+        this.updateSyncSettingsStatus();
+      } while (this.syncPublishPending && this.settings.syncSortHistory && !this.unloaded);
+      return true;
+    })();
+    this.syncPublishing = publish;
+    try { return await publish; }
+    catch (error) {
+      this.syncLastError = String(error && error.message || error);
+      this.updateSyncSettingsStatus();
+      console.warn("ReNotes: could not write the optional Vault sync record", error);
+      return false;
+    }
+    finally { this.syncPublishing = null; }
+  }
+
+  async loadSharedRecords() {
+    if (!this.settings.syncSortHistory || this.unloaded) return false;
+    if (this.syncReading) { this.syncReadPending = true; return this.syncReading; }
+    const read = (async () => {
+      do {
+        this.syncReadPending = false;
+        await this.getOrCreateSyncDeviceId();
+        const files = this.app.vault.getFiles().filter(file => file instanceof TFile &&
+          file.path.startsWith(SYNC_DEVICE_FOLDER + "/") && file.extension === "md"
+          && file.path !== this.getOwnSyncRecordPath()
+          && (!file.stat || !file.stat.size || file.stat.size < 950000)).slice(0, 32);
+        const mergedActivity = Object.create(null), mergedEffective = new Map();
+        let validDevices = 0;
+        let ignored = 0;
+        for (const file of files) {
+          try {
+            const content = await this.app.vault.cachedRead(file);
+            if (typeof content !== "string" || content.length > 950000) continue;
+            const marker = "~~~json\n";
+            const start = content.indexOf(marker);
+            if (start === -1) continue;
+            const end = content.indexOf("\n~~~", start + marker.length);
+            if (end === -1) continue;
+            const data = JSON.parse(content.slice(start + marker.length, end));
+            const expectedDevice = file.basename;
+            if (!data || data.schema !== 1 || data.deviceId !== expectedDevice || !/^d[a-z0-9]{10,48}$/.test(data.deviceId)) continue;
+            validDevices++;
+            const safePath = path => typeof path === "string" && path.length < 1024 && !isSyncRecordPath(path)
+              && !path.startsWith("/") && !path.includes("\\") && !["__proto__", "constructor", "prototype"].includes(path);
+            const safeTime = n => Number.isFinite(n) && n > 0 && n < 4102444800000;
+            for (const [path, item] of Object.entries(data.activity || {}).slice(0, 1200)) {
+              if (!safePath(path) || !item || typeof item !== "object") continue;
+              const target = mergedActivity[path] || (mergedActivity[path] = {});
+              if (safeTime(item.lastLocalEdit)) target.lastLocalEdit = Math.max(target.lastLocalEdit || 0, item.lastLocalEdit);
+              if (this.settings.syncRecentOpens && safeTime(item.lastOpened)) target.lastOpened = Math.max(target.lastOpened || 0, item.lastOpened);
+            }
+            for (const [path, item] of Object.entries(data.effective || {}).slice(0, 1500)) {
+              if (!safePath(path) || !item || typeof item.fp !== "string" || item.fp.length > 180 || !safeTime(item.t)) continue;
+              if (!mergedEffective.has(path)) mergedEffective.set(path, new Map());
+              const versions = mergedEffective.get(path);
+              versions.set(item.fp, Math.max(versions.get(item.fp) || 0, item.t));
+            }
+          } catch (error) {
+            ignored++;
+            console.warn("ReNotes: ignored malformed remote sync record", file.path, error);
+          }
+        }
+        if (!this.settings.syncSortHistory || this.unloaded) return false;
+        const fingerprint = JSON.stringify({
+          activity: mergedActivity,
+          effective: Array.from(mergedEffective, ([path, versions]) => [path, Array.from(versions)])
+        });
+        const changed = fingerprint !== this.syncMergedFingerprint;
+        this.syncMergedFingerprint = fingerprint;
+        this.mergedSyncActivity = mergedActivity;
+        this.mergedSyncEffective = mergedEffective;
+        this.syncReceivedDevices = validDevices;
+        this.syncIgnoredRecords = ignored;
+        this.syncLastRead = Date.now();
+        this.syncLastError = "";
+        this.updateSyncSettingsStatus();
+        if (changed) await this.refreshViews();
+      } while (this.syncReadPending && !this.unloaded && this.settings.syncSortHistory);
+      return true;
+    })();
+    this.syncReading = read;
+    try { return await read; }
+    catch (error) {
+      this.syncLastError = String(error && error.message || error);
+      this.updateSyncSettingsStatus();
+      console.warn("ReNotes: could not read shared sorting history", error);
+      return false;
+    } finally { this.syncReading = null; }
+  }
+
+  getSyncSettingsStatus() {
+    if (!this.settings.syncSortHistory) return tr("同步排序紀錄目前關閉；原有本機紀錄仍保留。");
+    if (this.syncLastError) return tr("同步紀錄處理失敗：") + this.syncLastError;
+    const devices = Number(this.syncReceivedDevices) || 0;
+    const date = this.syncLastRead ? new Date(this.syncLastRead).toLocaleString(resolveReNotesLanguage() === "en" ? "en-US" : "zh-TW") : tr("尚未讀取");
+    const normal = trf("已讀取 {0} 台其他裝置的紀錄；本機最後檢查：{1}", devices, date);
+    return this.syncIgnoredRecords ? normal + " · " + trf("略過 {0} 份損壞紀錄", this.syncIgnoredRecords) : normal;
+  }
+
+  updateSyncSettingsStatus() {
+    if (this.syncStatusElement) this.syncStatusElement.textContent = this.getSyncSettingsStatus();
+  }
+
+  async applySyncSettings(enabled) {
+    if (!enabled) {
+      this.syncReadDebounced?.cancel();
+      this.syncWriteDebounced?.cancel();
+      this.mergedSyncActivity = Object.create(null);
+      this.mergedSyncEffective = new Map();
+      this.syncMergedFingerprint = "";
+      this.syncReceivedDevices = 0;
+      this.syncIgnoredRecords = 0;
+      this.syncLastError = "";
+      this.updateSyncSettingsStatus();
+      await this.refreshViews();
+      return;
+    }
+    await this.getOrCreateSyncDeviceId();
+    await this.ensureSyncRecordFolder();
+    await this.loadSharedRecords();
+    await this.publishSharedRecords();
+    this.updateSyncSettingsStatus();
+    await this.refreshViews();
+  }
+
   async loadSettings() {
     const data = await this.loadData();
     this.pendingActivityMigration = false;
     this.settings = Object.assign({}, DEFAULT_SETTINGS, data);
+    this.settings.additionalFileTypes = getSelectedFileTypes(this.settings);
+    this.settings.customFileExtensions = String(this.settings.customFileExtensions || "").slice(0, 512);
+    this.settings.rememberTypeFilter = this.settings.rememberTypeFilter !== false;
+    if (Array.isArray(this.settings.typeFilterSelection)) {
+      this.settings.typeFilterSelection = normalizeTypeSelection(this.settings.typeFilterSelection, this.settings);
+    } else {
+      // Preserve old defaultTypeFilter without writing a migration on startup.
+      this.settings.typeFilterSelection = null;
+    }
+    this.settings.syncSortHistory = this.settings.syncSortHistory === true;
+    this.settings.syncRecentOpens = this.settings.syncRecentOpens === true;
+    this.settings.countFrontmatterEdits = this.settings.countFrontmatterEdits === true;
     setReNotesLanguagePreference(this.settings.interfaceLanguage);
     delete this.settings.fileActivity;
     const storedLayoutVersion = Number(data && data.layoutVersion);
@@ -3059,8 +3944,11 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
         }
       }
       this.settings.sortMode = "effective";
-      this.settings.layoutVersion = 5;
     }
+    // v6 only adds layout preferences; existing values and all v5 settings are preserved.
+    const upgradeListLayout = data && Object.keys(data).length > 0
+      && (!Number.isFinite(storedLayoutVersion) || storedLayoutVersion < 6);
+    if (!Number.isFinite(storedLayoutVersion) || storedLayoutVersion < 6) this.settings.layoutVersion = 6;
     this.persistedPinnedPaths = normalizePinnedPaths(data && data.pinnedPaths);
     // 啟動時 vault 索引可能尚未就緒，載入階段不依檔案是否存在過濾；列表渲染只會顯示實際存在的項目，
     // 失效路徑留到使用者下一次明確釘選操作時才清理。
@@ -3085,7 +3973,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
       this.fileActivity = mergeActivity(this.fileActivity, data.fileActivity);
       this.pendingActivityMigration = true;
     }
-    if (this.pendingActivityMigration || upgradeLayout) await this.saveSettings();
+    if (this.pendingActivityMigration || upgradeLayout || upgradeListLayout) await this.saveSettings();
   }
 
   async saveSettings() {
@@ -3110,7 +3998,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
   setPinned(path, pinned) {
     const file = this.app.vault.getAbstractFileByPath(path);
-    if (!(file instanceof TFile) || !["md", "canvas"].includes(file.extension)) return;
+    if (!isSupportedRecentFile(file, this.settings)) return;
     if (this.isPinned(path) === pinned) return;
     this.settings.pinnedPaths = this.settings.pinnedPaths.filter((value) => value !== path);
     if (pinned) this.settings.pinnedPaths.unshift(path);
@@ -3124,7 +4012,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     this.pendingPinSave = false;
     this.settings.pinnedPaths = this.settings.pinnedPaths.filter((path) => {
       const file = this.app.vault.getAbstractFileByPath(path);
-      return file instanceof TFile && ["md", "canvas"].includes(file.extension);
+      return file instanceof TFile && !isSyncRecordPath(file.path);
     });
     this.persistedPinnedPaths = this.settings.pinnedPaths.slice();
     try {
@@ -3167,18 +4055,31 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     return this.effectiveSavePromise;
   }
 
-  observeEffectiveContent(file, content, fp) {
+  observeEffectiveContent(file, content, fingerprints) {
     if (this.unloaded || this.shouldSkipHashForSize(file)) return null;
     const map = this.effectiveRecords;
     const previous = map[file.path];
     const m = getFileStatNumber(file, "mtime"), s = getFileStatNumber(file, "size");
-    if (previous && previous.m === m && previous.s === s) return previous;
-    fp = fp || contentFingerprint(content, file.extension);
-    const entry = { fp, t: previous && previous.fp === fp ? previous.t : m, m, s };
+    const markdown = file.extension === "md";
+    const currentVersion = !markdown || previous && previous.v === EFFECTIVE_FINGERPRINT_VERSION;
+    if (previous && currentVersion && previous.m === m && previous.s === s) return previous;
+    const hashes = fingerprints || effectiveFingerprints(content, file.extension);
+    const fp = hashes.fp;
+    const unchanged = previous && (currentVersion
+      ? previous.fp === fp && (!markdown || !this.settings.countFrontmatterEdits || previous.fh === hashes.fh)
+      : previous.fp === hashes.legacyFp);
+    const entry = { fp, t: unchanged ? previous.t : m, m, s };
+    if (markdown) {
+      entry.v = EFFECTIVE_FINGERPRINT_VERSION;
+      entry.fh = hashes.fh;
+    }
     map[file.path] = entry;
     pruneEffectiveRecords(map);
     this.effectiveDirty = true;
     this.saveEffectiveDebounced();
+    if (this.settings.syncSortHistory && (!previous || previous.fp !== entry.fp || previous.t !== entry.t)) {
+      this.syncWriteDebounced();
+    }
     return entry;
   }
 
@@ -3234,17 +4135,22 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const existing = map[file.path] && typeof map[file.path] === "object" ? map[file.path] : {};
     map[file.path] = Object.assign({}, existing, patch);
     this.saveActivityDebounced();
+    if (this.settings.syncSortHistory && (Number.isFinite(patch.lastLocalEdit)
+      || (this.settings.syncRecentOpens && Number.isFinite(patch.lastOpened)))) {
+      this.syncWriteDebounced();
+    }
   }
 
   markFileOpened(file) {
-    if (this.settings.trackRecentOpened !== false) {
+    if (this.settings.trackRecentOpened !== false && isSupportedRecentFile(file, this.settings)) {
       this.touchActivity(file, { lastOpened: Date.now() });
       if (["opened", "smart"].includes(this.settings.sortMode)) {
         this.refreshForActivityDebounced();
       }
     }
 
-    if (this.settings.baselineContentHashOnOpen !== false && this.settings.confirmContentChange !== false) {
+    if (this.settings.baselineContentHashOnOpen !== false && this.settings.confirmContentChange !== false
+      && !isMetadataOnlyFile(file, this.settings)) {
       this.updateContentHashBaseline(file, "open");
     }
   }
@@ -3292,7 +4198,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
   storeContentHash(file, content, patch = {}) {
     if (!(file instanceof TFile)) return false;
-    if (!isSupportedRecentFile(file, this.settings)) return false;
+    if (!isSupportedRecentFile(file, this.settings) || isMetadataOnlyFile(file, this.settings)) return false;
     const hash = simpleContentHash(content);
     const size = Number(file.stat && file.stat.size) || String(content || "").length;
     this.touchActivity(file, Object.assign({
@@ -3308,7 +4214,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
   async updateContentHashBaseline(file, source = "baseline") {
     if (!(file instanceof TFile)) return;
-    if (!isSupportedRecentFile(file, this.settings)) return;
+    if (!isSupportedRecentFile(file, this.settings) || isMetadataOnlyFile(file, this.settings)) return;
     if (this.localEditTokens && this.localEditTokens.has(file.path)) return;
     const path = file.path;
     const map = getActivityMap(this);
@@ -3658,6 +4564,10 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
   }
 
   onVaultChanged(file) {
+    if (file && isSyncRecordPath(file.path)) {
+      if (this.settings.syncSortHistory && file.path !== this.getOwnSyncRecordPath()) this.syncReadDebounced();
+      return; // Never feed internal sync markdown into Recent, and never re-read on own writes.
+    }
     if (file instanceof TFile && !isSupportedRecentFile(file, this.settings)) {
       if (/^(png|jpg|jpeg|webp|gif|avif|svg)$/i.test(file.extension)) this.scheduleRefresh();
       return;
@@ -3813,6 +4723,8 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     const entry = this.itemCache.get(file.path);
     if (!entry) return null;
     if (entry.cacheVersion !== CACHE_FORMAT_VERSION) return null;
+    if (file.extension === "md" && !this.shouldSkipHashForSize(file) && (typeof entry.effectiveFingerprint !== "string"
+      || typeof entry.effectiveFrontmatterHash !== "string" || typeof entry.effectiveLegacyFingerprint !== "string")) return null;
     if (entry.mtime !== getFileStatNumber(file, "mtime")) return null;
     if (entry.size !== getFileStatNumber(file, "size")) return null;
     if (entry.extension !== file.extension) return null;
@@ -3918,11 +4830,20 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
   async getParsedFileEntry(file, stats) {
     if (!(file instanceof TFile)) return null;
     if (!isSupportedRecentFile(file, this.settings)) return null;
+    if (isMetadataOnlyFile(file, this.settings)) {
+      // Never decode PDF, image, audio, video, Base or other attachments as text.
+      return {
+        path: file.path, extension: file.extension, h1: "", markdownLines: [],
+        tags: [], imagePath: "", canvasInfo: null, canvasSearchText: "", metadataOnly: true
+      };
+    }
 
     stats.cacheLookups += 1;
     const cached = this.getValidCacheEntry(file);
     if (cached) {
-      if (cached.effectiveFingerprint) this.observeEffectiveContent(file, "", cached.effectiveFingerprint);
+      if (cached.effectiveFingerprint) this.observeEffectiveContent(file, "", {
+        fp: cached.effectiveFingerprint, fh: cached.effectiveFrontmatterHash, legacyFp: cached.effectiveLegacyFingerprint
+      });
       if (file.extension === "md") cached.imagePath = findNoteImagePath(this.app, file, "", cached.imageLinks || []);
       stats.cacheHits += 1;
       return cached;
@@ -3947,8 +4868,16 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
     const parseStart = nowMs();
     const entry = this.parseFileForCache(file, content);
-    const effective = this.observeEffectiveContent(file, content);
-    entry.effectiveFingerprint = effective && effective.fp;
+    if (!this.shouldSkipHashForSize(file)) {
+      const fingerprints = effectiveFingerprints(content, file.extension);
+      this.observeEffectiveContent(file, content, fingerprints);
+      entry.effectiveFingerprint = fingerprints.fp;
+      if (file.extension === "md") {
+        entry.effectiveFrontmatterHash = fingerprints.fh;
+        // 快取命中也能比對無版本紀錄，不能拿空字串重算舊指紋。
+        entry.effectiveLegacyFingerprint = fingerprints.legacyFp;
+      }
+    }
     stats.parseCount += 1;
     stats.parseDurationMs += Math.round(nowMs() - parseStart);
 
@@ -4234,7 +5163,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
     }
 
     const menu = new Menu();
-    if (["md", "canvas"].includes(freshFile.extension)) {
+    if (isSupportedRecentFile(freshFile, this.settings)) {
       const pinned = this.isPinned(freshFile.path);
       menu.addItem((item) => item
         .setTitle(pinned ? tr("取消釘選") : tr("釘選"))
@@ -4596,7 +5525,9 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
         }
       }
 
-      const isCanvas = file.extension === "canvas";
+      const fileType = getRecentFileType(file, this.settings);
+      const isCanvas = fileType === "canvas";
+      const isExtra = fileType !== "markdown" && !isCanvas;
       const canvasInfo = isCanvas ? entry.canvasInfo : null;
       if (isCanvas && canvasInfo) {
         stats.canvasParsed += 1;
@@ -4606,15 +5537,17 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
       const h1 = entry.h1 || "";
       let title = file.basename;
-      if (!isCanvas && this.settings.titleSource === "h1") title = h1 || file.basename;
-      if (!isCanvas && this.settings.titleSource === "auto") title = h1 || file.basename;
+      if (fileType === "markdown" && this.settings.titleSource === "h1") title = h1 || file.basename;
+      if (fileType === "markdown" && this.settings.titleSource === "auto") title = h1 || file.basename;
 
       const snippetLinesArray = isCanvas
         ? getCanvasPreviewLinesFromInfo(canvasInfo, this.settings)
         : (Array.isArray(entry.markdownLines) ? entry.markdownLines : []);
-      const snippet = snippetLinesArray.length > 0
-        ? truncate(snippetLinesArray.slice(0, snippetLines).join(" "), isCanvas ? 220 : 160)
-        : (isCanvas ? tr("Canvas 白板") : tr(this.settings.emptySnippetText));
+      const snippet = isExtra
+        ? [file.extension.toUpperCase(), formatExtraFileSize(file.stat && file.stat.size)].filter(Boolean).join(" · ")
+        : snippetLinesArray.length > 0
+          ? truncate(snippetLinesArray.slice(0, snippetLines).join(" "), isCanvas ? 220 : 160)
+          : (isCanvas ? tr("Canvas 白板") : tr(this.settings.emptySnippetText));
 
       if (!pinned) regularCount += 1;
       items.push({
@@ -4623,7 +5556,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
         title,
         snippet,
         imagePath: entry.imagePath || "",
-        hasSnippetContent: snippetLinesArray.length > 0,
+        hasSnippetContent: isExtra || snippetLinesArray.length > 0,
         folder: file.parent ? file.parent.path : "",
         tags,
         mtime: sortInfo.timestamp,
@@ -4631,7 +5564,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
         lastOpened: sortInfo.opened || 0,
         lastLocalEdit: sortInfo.localEdit || 0,
         sortReason: sortInfo.reason || tr("檔案修改"),
-        type: isCanvas ? "canvas" : "markdown",
+        type: fileType,
         canvas: canvasInfo ? {
           nodeCount: canvasInfo.nodeCount,
           fileNodes: canvasInfo.fileNodes,
@@ -4665,7 +5598,7 @@ module.exports = class RecentNotesFeedPlugin extends Plugin {
 
 module.exports.__test = {
   EFFECTIVE_STORAGE_KEY, RENOTES_ICON, contentFingerprint, stableSerialize, normalizeEffectiveRecords, pruneEffectiveRecords, getEffectiveTime,
-  DEFAULT_SETTINGS, tr, trf, resolveReNotesLanguage, setReNotesLanguagePreference, EN_TRANSLATIONS, ACTIVITY_STORAGE_KEY, RecentNotesFeedView, RecentNotesFeedSettingTab, ReNotesDeleteModal, getSortDeviceHint,
+  DEFAULT_SETTINGS, getListLayout, tr, trf, resolveReNotesLanguage, setReNotesLanguagePreference, EN_TRANSLATIONS, ACTIVITY_STORAGE_KEY, RecentNotesFeedView, RecentNotesFeedSettingTab, ReNotesDeleteModal, getSortDeviceHint,
   mergeActivity, formatRelativeTime, getSecondLine, simpleContentHash, pruneActivity, computeSortInfo,
    getDateGroup, formatDateGroup, formatNoteTime, getRecentLocalDayKey, formatRecentDateLabel, getRecentDateIndex, truncateRecentCanvasLink, getWidthClass, scaleCanvasNodes, parseCanvasContent, normalizePinnedPaths,
    getLayoutDensity, getEffectiveSnippetLines, normalizeImageLink, findNoteImagePath, getImageFile
