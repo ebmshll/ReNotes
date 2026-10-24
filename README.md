@@ -2,16 +2,6 @@
 
 **Find the note. Keep the flow.**
 
-### 1.3.0 — Choose your list layout / 選擇清單版面
-
-Open **Settings → ReNotes → Appearance → List layout** to choose **Classic cards**, **Compact list** (two lines per note), **Slim cards** (preview, one tag and `+N`), or **Two-column wall** (left-to-right grid, Canvas covers). Desktop defaults to Classic cards; mobile now defaults to Slim cards. To restore the previous mobile appearance, choose **Mobile layout → Classic cards**. **Follow desktop** uses the desktop choice. Changes apply to an open sidebar immediately.
-
-在 **設定 → ReNotes → 外觀 → 清單版面** 分別選擇桌機與手機版面：**經典卡片**、**緊湊清單**、**瘦身卡片**、**雙欄牆**。桌機預設維持經典卡片，手機預設改為瘦身卡片；要恢復原本手機外觀，將「手機版面」選為「經典卡片」，也可選「跟隨桌機」。開著的清單會立即更新，不需重載。
-
-Compact list hides folders and tags; Slim cards show the first tag plus the remaining count. Wall falls back to Slim cards below 300px, uses more columns on desktop above 520px, and disables the drag handle. Density adjusts vertical padding in Compact list and Slim cards; Wall ignores it. The older mobile list style applies only to Classic cards. The compact layouts omit linked-note chips and detailed Canvas statistics to keep their rows short; these remain available in Classic cards. Layout preferences sync with `data.json`; existing settings and pins are retained during the v5→v6 migration.
-
-緊湊清單隱藏資料夾與標籤；瘦身卡片顯示第一顆標籤與其餘數量。雙欄牆低於 300px 退回瘦身卡片，桌機寬於 520px 自動增加欄數，牆模式停用拖曳把手。「版面密度」只微調清單與瘦身卡片的上下內距，牆模式忽略密度；舊「手機列表樣式」只作用於經典卡片。新版面省略連結筆記晶片與 Canvas 詳細統計以維持列高，經典卡片仍可使用這些功能。版面偏好隨 `data.json` 同步；v5→v6 保留既有設定與釘選。
-
 ReNotes is a visual **Obsidian recent notes plugin** that brings Markdown notes and Canvas boards into one focused sidebar. Browse recent work using preview cards, pinned notes, date navigation, search, and flexible sorting, with English and Traditional Chinese interface support.
 
 [**Install from Obsidian**](https://community.obsidian.md/plugins/recent-notes-feed) · [GitHub Releases](https://github.com/ebmshll/ReNotes/releases/latest) · [Features](#feature-showcase) · [Installation](#installation) · [FAQ](#frequently-asked-questions) · [繁體中文](#繁體中文)
@@ -40,6 +30,12 @@ It is a useful companion for **daily notes, Bullet Journaling, project notes, kn
 - **Optional cross-device sorting history:** Share edit times through your existing Vault sync service. This is off by default; recent-open history is shared only when separately enabled.
 - **Traditional Chinese and English:** Choose a language manually or follow Obsidian automatically. The main sidebar, dates, and settings are localized; a few secondary file-menu labels remain in Chinese in this release.
 - **Desktop drag-to-Canvas:** Use a drag handle to add a Markdown file reference to an Obsidian Canvas board; compatibility may vary by Obsidian version.
+
+### Choose a list layout
+
+Open **Settings → ReNotes → Appearance → List layout** to choose **Classic cards**, **Compact list** (two lines per note), **Slim cards** (preview, one tag and `+N`), or **Two-column wall** (left-to-right grid, Canvas covers). Desktop defaults to Classic cards; mobile defaults to Slim cards. Choose **Mobile layout → Classic cards** for the classic mobile appearance, or **Follow desktop** to use the desktop choice. Changes apply to an open sidebar immediately.
+
+Compact list hides folders and tags; Slim cards show the first tag plus the remaining count. Wall falls back to Slim cards below 300px, uses more columns on desktop above 520px, and disables the drag handle. Density adjusts vertical padding in Compact list and Slim cards; Wall ignores it. Compact layouts omit linked-note chips and detailed Canvas statistics; these remain available in Classic cards.
 
 ## Feature showcase
 
@@ -74,10 +70,6 @@ Explore the redesigned English-first mobile-layout visuals (rendered at full des
 
 *The phone displays are illustrative mobile UI renderings using ReNotes components and sample notes, created with HTML, CSS and SVG (not AI-generated screenshots).*
 
-**Effective edit sorting in 1.3.0:** Only Markdown body changes count as edits by default. Frontmatter rewritten by other plugins keeps notes in place. Enable **Count frontmatter changes as edits** near **Reset effective edit-time baseline** in advanced settings to include property changes. Switching this setting preserves the current order. Existing fingerprints migrate on observation, preserving their saved time when the old full-file fingerprint still matches.
-
-**Known limitation:** Notes already moved forward by an older version have the newer mtime saved as their effective time. Their earlier time cannot be recovered automatically. Resetting the baseline uses current file times; it does not restore earlier times. Files over the configured hash-size limit still fall back to mtime.
-
 ## Installation
 
 ### Install from Obsidian (recommended)
@@ -94,6 +86,8 @@ Explore the redesigned English-first mobile-layout visuals (rendered at full des
 3. Restart Obsidian, then enable **ReNotes** in **Settings → Community plugins**.
 
 ## Frequently asked questions
+
+**What counts as an effective edit?** Markdown body changes count by default; automatic frontmatter rewrites keep notes in place. Enable **Count frontmatter changes as edits** in advanced settings to include property changes. Earlier times already overwritten by older versions cannot be restored automatically. Resetting the baseline uses current file times, and files over the configured hash-size limit use mtime.
 
 **Does the date menu filter notes?** No. It scrolls to the selected day and keeps the rest of the list available. Date counts reflect non-pinned items in the current filtered list; if only pinned items remain, those are counted instead.
 
@@ -147,6 +141,10 @@ ReNotes 是一款 **Obsidian 近期筆記外掛**。無論你使用 Markdown 寫
 
 ReNotes 提供**釘選筆記、關鍵字搜尋、檔案類型篩選、資料夾納入／排除條件，以及排除指定標籤**，以及精簡、標準、寬鬆等不同卡片密度。側欄變窄時也會自動調整布局；行動裝置提供適合觸控的操作方式。
 
+在 **設定 → ReNotes → 外觀 → 清單版面** 分別選擇桌機與手機版面：**經典卡片、緊湊清單、瘦身卡片、雙欄牆**。桌機預設經典卡片，手機預設瘦身卡片；手機也可選回經典卡片，或跟隨桌機設定。開著的清單會立即更新，不需重載。
+
+緊湊清單隱藏資料夾與標籤；瘦身卡片顯示第一顆標籤與其餘數量。雙欄牆低於 300px 退回瘦身卡片，桌機寬於 520px 自動增加欄數，並停用拖曳把手。緊湊清單與瘦身卡片可調整密度。新版面省略連結筆記晶片與 Canvas 詳細統計，經典卡片仍可使用這些功能。
+
 在桌面版 Obsidian，Markdown 卡片另有拖曳把手，可將筆記引用拖入 Canvas。實際拖曳行為取決於所使用的 Obsidian 版本。
 
 ### 05｜繁體中文與 English：跟隨 Obsidian 自動切換
@@ -170,23 +168,12 @@ ReNotes 提供**釘選筆記、關鍵字搜尋、檔案類型篩選、資料夾�
 
 介面語言可選「自動（跟隨 Obsidian）」、「繁體中文」或「英文」。
 
-**目前版本：** 1.2.4-beta.5 · **外掛 ID：** `recent-notes-feed` · **Manifest 最低版本：** Obsidian 1.4.0
-
-**1.2.4-beta.5 更新：**預設只有 Markdown 內文改變才算有效編輯；其他外掛自動改屬性（例如 Canvas 備份連結、標籤）不會讓筆記跳到最前面。可在進階設定「重設有效編輯時間基準」旁開啟「屬性（Frontmatter）變更也算編輯」。切換設定本身不會重排；舊紀錄在讀取時比對舊全檔指紋，未變就保留時間並升級。
-
-**已知限制：**已經因舊版被抬到前面的筆記，其時間已記錄為新的 mtime，無法自動回溯、不會自我修正。「重設有效編輯時間基準」會以目前 mtime 建立新基準，不能還原更早時間。超過設定雜湊大小上限的檔案仍使用 mtime。
-
-## 本機測試
-
-完整套件共 21 個，各以獨立 Node 程序執行（例如 `cmd /c node tests\run.cjs`）：
-
-`run`、`feature-sync-extra`、`feature-edge`、`ui-simplification`、`native-settings`、`type-icons`、`i18n`、`linked-doc-only`、`date-a1`、`date-progress`、`perf`、`canvas-link-navigation`、`delete-modal`、`drag-sort`、`rnf4`、`rnf5`、`rnf6`、`rnf6-v101`、`rnf7`、`rnf7-round2`、`rnf-frontmatter`。
-
-`rnf4`、`rnf5`、`rnf6`、`rnf6-v101`、`rnf7`、`rnf7-round2` 是匯出案例註冊函式的模組，直接執行不會跑案例；`run.cjs` 實際執行核心 103 項（其中沿用 `rnf6-v101` 相容副本）。新增的 `rnf-frontmatter` 可獨立執行，涵蓋備份建立／刪除、解析邊界、設定、遷移、快取、同步與效能。此次完整執行紀錄保存在 `artifacts/round1/`。
-
-本隔離工作區最後一輪以 `cmd /c node --require ./artifacts/workspace-guard.cjs tests\<suite>.cjs` 保護讀寫邊界。既有 `type-icons` 包含工作區外的部署／安裝檔檢查，會被保護器阻擋；另有兩處未列在允許修改範圍的舊版本斷言。這些未通過項目與真機驗收清單詳見 `REPORT-RNFFM.md`。
+**目前版本：** 1.3.0 · **外掛 ID：** `recent-notes-feed` · **最低版本：** Obsidian 1.4.0
 
 ## 常見問題（FAQ）
+
+### 什麼變動會算有效編輯？
+預設只有 Markdown 內文改變才算，其他外掛自動改屬性不會讓筆記跳到最前面。可在進階設定開啟「屬性（Frontmatter）變更也算編輯」。舊版已覆寫的有效時間無法自動回溯；「重設有效編輯時間基準」會以目前 mtime 建立基準，不能還原更早時間。超過設定雜湊大小上限的檔案仍使用 mtime。
 
 ### ReNotes 與 Obsidian 檔案總管有什麼不同？
 檔案總管主要依資料夾顯示檔案；ReNotes 著重最近使用的筆記與 Canvas，並提供時間分組、縮圖、釘選和日期跳轉。
